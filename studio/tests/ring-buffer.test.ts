@@ -3,7 +3,7 @@ import {
   EventRingBuffer,
   KIND_SYNAPSE,
   KIND_NODE_FIRE,
-} from "../../studio/src/scrubber/ring-buffer";
+} from "../src/scrubber/ring-buffer";
 
 describe("EventRingBuffer", () => {
   it("pushes without growing TypedArrays", () => {

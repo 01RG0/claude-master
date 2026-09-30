@@ -21,5 +21,4 @@ test-go:
 
 test-ts:
 	@if [ ! -d studio/node_modules ]; then echo "Missing studio/node_modules; run: make bootstrap"; exit 1; fi
-	npm run typecheck
-	npm test
+	cd studio && npm run typecheck && npm test

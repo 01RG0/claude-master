@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { maskSecret, assertNoSecretStorage } from "../../studio/src/ui/secrets";
-import { GatewayAdmin } from "../../studio/src/ui/gateway-admin";
+import { maskSecret, assertNoSecretStorage } from "../src/ui/secrets";
+import { GatewayAdmin } from "../src/ui/gateway-admin";
 
 describe("secrets / gateway admin", () => {
   it("masks raw keys", () => {

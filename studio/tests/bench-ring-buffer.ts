@@ -5,7 +5,7 @@
  * Target: seek << 16ms; push without realloc.
  * Run: npm run bench:buffer  (from studio/)
  */
-import { EventRingBuffer, KIND_SYNAPSE } from "../../studio/src/scrubber/ring-buffer.ts";
+import { EventRingBuffer, KIND_SYNAPSE } from "../src/scrubber/ring-buffer";
 
 const CAP = 250_000;
 const buf = new EventRingBuffer(CAP);

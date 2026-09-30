@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pulseIntensity } from "../../studio/src/shaders/pulse-math";
+import { pulseIntensity } from "../src/shaders/pulse-math";
 
 describe("edge pulse formula", () => {
   it("peaks when progress aligns with traveling phase", () => {

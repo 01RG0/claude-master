@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { MockWsServer } from "../../studio/src/graph/mock-ws";
-import { BrainWebSocket } from "../../studio/src/graph/ws-client";
+import { MockWsServer } from "../src/graph/mock-ws";
+import { BrainWebSocket } from "../src/graph/ws-client";
 
 describe("Mock WebSocket server", () => {
   it("delivers snapshot to client", async () => {
