@@ -1,0 +1,21 @@
+# Environment variables & secrets
+.env
+*.env
+.env.*
+
+# Logs & temp
+*.log
+*.tmp
+.cache/
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+
+# Language build artifacts
+__pycache__/
+*.pyc
+dist/
+bin/
+node_modules/
