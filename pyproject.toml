@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claude-master-brain"
+version = "0.1.0"
+description = "Brain daemon for claude-master: episodic memory, skill graph, reflection engine"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlite-vec>=0.1.0",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.29",
+    "websockets>=12",
+    "pydantic>=2.6",
+    "httpx>=0.27",
+    "networkx>=3.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["brain*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["brain", "tests"]
+pythonpath = ["."]

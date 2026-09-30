@@ -1,0 +1,257 @@
+openapi: "3.0.3"
+info:
+  title: Claude Master Brain API
+  version: "0.1.0"
+  description: >
+    Internal REST + WebSocket API served by the Python brain daemon on
+    http://localhost:7700. All clients (hookshim, gateway, studio) communicate
+    through this interface. Secrets must never appear in request or response
+    bodies.
+
+servers:
+  - url: http://localhost:7700
+
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Liveness / readiness check
+      responses:
+        "200":
+          description: Daemon is healthy
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthResponse" }
+
+  /hook:
+    post:
+      operationId: handleHook
+      summary: >
+        Called by hookshim on every Claude Code hook event.
+        Returns context to inject and an optional block decision.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/HookRequest" }
+      responses:
+        "200":
+          description: Hook processed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HookResponse" }
+
+  /nodes:
+    get:
+      operationId: listNodes
+      summary: List brain nodes with optional type filter
+      parameters:
+        - name: type
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes: { type: array, items: { $ref: "#/components/schemas/BrainNode" } }
+                  total: { type: integer }
+
+  /query/associations:
+    post:
+      operationId: queryAssociations
+      summary: Spreading-activation query from seed node IDs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [seed_ids]
+              properties:
+                seed_ids:
+                  type: array
+                  items: { type: string }
+                max_hops:
+                  type: integer
+                  default: 3
+                min_weight:
+                  type: number
+                  default: 0.1
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes: { type: array, items: { $ref: "#/components/schemas/BrainNode" } }
+                  edges: { type: array, items: { $ref: "#/components/schemas/BrainEdge" } }
+                  activation_scores: { type: object, additionalProperties: { type: number } }
+
+  /outcome:
+    post:
+      operationId: reportOutcome
+      summary: Report tool execution outcome to trigger Hebbian update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/OutcomeReport" }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weight_delta: { type: number }
+                  updated_edges: { type: integer }
+
+  /sleep/trigger:
+    post:
+      operationId: triggerSleep
+      summary: Manually trigger nightly sleep consolidation (also run by watchdog)
+      responses:
+        "202":
+          description: Sleep job started
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run_id: { type: string }
+
+  /sleep/status/{run_id}:
+    get:
+      operationId: sleepStatus
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SleepRun" }
+
+  /stats:
+    get:
+      operationId: stats
+      summary: Aggregated model stats and key health (masked keys)
+      responses:
+        "200":
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SystemStats" }
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, uptime_s, db_size_bytes]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        uptime_s: { type: number }
+        db_size_bytes: { type: integer }
+        node_count: { type: integer }
+        edge_count: { type: integer }
+
+    HookRequest:
+      type: object
+      required: [event_type, session_id, payload]
+      properties:
+        event_type:
+          type: string
+          enum: [UserPromptSubmit, PreToolUse, PostToolUse, Stop]
+        session_id: { type: string }
+        payload: { type: object }   # event-specific; see contracts/hook-payloads.md
+
+    HookResponse:
+      type: object
+      properties:
+        allow: { type: boolean, default: true }
+        block_reason: { type: string }
+        additional_context: { type: string }  # injected into prompt when UserPromptSubmit
+        outcome_reward: { type: number }
+
+    BrainNode:
+      type: object
+      required: [id, node_type, name, created_at]
+      properties:
+        id: { type: string }
+        node_type: { type: string }
+        name: { type: string }
+        content: { type: string }
+        difficulty: { type: number }
+        stability: { type: number }
+        last_accessed_at: { type: integer }
+        created_at: { type: integer }
+
+    BrainEdge:
+      type: object
+      required: [id, source_id, target_id, relation_type, weight]
+      properties:
+        id: { type: string }
+        source_id: { type: string }
+        target_id: { type: string }
+        relation_type: { type: string }
+        weight: { type: number }
+        valid_at: { type: integer }
+        invalid_at: { type: integer, nullable: true }
+
+    OutcomeReport:
+      type: object
+      required: [session_id, event_type, reward]
+      properties:
+        session_id: { type: string }
+        event_type: { type: string }
+        tool_name: { type: string }
+        command_summary: { type: string }
+        reward: { type: number, minimum: -1.0, maximum: 1.0 }
+        node_ids: { type: array, items: { type: string } }
+
+    SleepRun:
+      type: object
+      properties:
+        run_id: { type: string }
+        started_at: { type: integer }
+        finished_at: { type: integer, nullable: true }
+        phase: { type: string }
+        nodes_processed: { type: integer }
+        edges_strengthened: { type: integer }
+        edges_pruned: { type: integer }
+        lessons_added: { type: integer }
+        skills_added: { type: integer }
+
+    SystemStats:
+      type: object
+      properties:
+        models:
+          type: array
+          items:
+            type: object
+            properties:
+              model_id: { type: string }
+              provider: { type: string }
+              successes: { type: integer }
+              failures: { type: integer }
+              avg_latency_ms: { type: number }
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              provider: { type: string }
+              key_prefix: { type: string }   # e.g. "gsk_****" – masked
+              is_active: { type: boolean }
+              cooldown_until: { type: integer, nullable: true }

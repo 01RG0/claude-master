@@ -1,0 +1,114 @@
+claude-master — Third-Party Notices and License Attribution
+============================================================
+
+This repository contains clean-room ports of published algorithms and selective
+use of permissively licensed libraries. No Affero GPL (AGPL) or GPL source code
+is incorporated. This NOTICE documents attribution and quarantine policy.
+
+---------------------------------------------------------------------------
+PERMISSIVE ATTRIBUTIONS (MIT / Apache-2.0)
+---------------------------------------------------------------------------
+
+The following components inform algorithms or dependencies used in this project.
+Where noted as "algorithm port", only public mathematical / behavioral
+descriptions were reimplemented; upstream source was not copied.
+
+MIT
+---
+* Deterministic Stuck & Loop Detector (concept)
+  Source: OpenHands/software-agent-sdk — openhands/sdk/conversation/stuck_detector.py
+  License: MIT
+
+* DSR Power-Law Forgetting / FSRS-5 (algorithm port)
+  Source: open-spaced-repetition/py-fsrs — fsrs/fsrs.py
+  License: MIT
+
+* Priority-Queue BFS Spreading Activation (algorithm port)
+  Sources: nhadaututtheky/neural-memory; OSU-NLP-Group/HippoRAG
+  License: MIT
+
+* Three-Factor Neuromodulated Hebbian Learning (algorithm port)
+  Sources: huawjcn/GHL; sss777999/Brain
+  License: MIT
+
+* Adaptive Cooldown Cache & Retry Parser (algorithm port)
+  Source: BerriAI/litellm — litellm/router.py / router_utils/cooldown_cache.py (MIT core)
+  License: MIT
+  NOTE: Extract / port only from the open-source MIT core. Do NOT use or vendor
+  anything under litellm enterprise/ (proprietary).
+
+* Reflexion Execution Harness & Episodic Buffer (algorithm / prompt pattern port)
+  Source: noahshinn/reflexion — programming_runs/reflexion.py
+  License: MIT
+
+* Docstring-Indexed Skill Store (algorithm port)
+  Source: MineDojo/Voyager — voyager/agents/skill.py
+  License: MIT
+
+* Instanced WebGL Edge & Pulse Shaders / graph visualization
+  Source: jacomyal/sigma.js (and related packages)
+  License: MIT
+
+* Pre-Allocated TypedArray Ring Buffer & Scrubber (concept)
+  Inspired by: vasturiano/force-graph
+  License: MIT
+
+* Claude Code / Model Context Protocol hook integration patterns
+  Source: @modelcontextprotocol/sdk
+  License: MIT
+
+Apache-2.0
+----------
+* Embedded SIMD Vector Search (sqlite-vec / vec0)
+  Source: asg017/sqlite-vec
+  License: Apache-2.0
+
+* Bi-Temporal Edge & Contradiction Resolver (algorithm port)
+  Source: getzep/graphiti — graphiti_core/edges.py and edge maintenance utils
+  License: Apache-2.0
+
+* Thompson Sampling Contextual Router (algorithm port)
+  Source: lm-sys/RouteLLM (routellm)
+  License: Apache-2.0
+
+* Cross-Trajectory Lesson Distiller (algorithm port)
+  Source: LeapLabTHU/ExpeL — agent/expel.py
+  License: Apache-2.0
+
+---------------------------------------------------------------------------
+QUARANTINE — AGPL / GPL (DO NOT IMPORT OR COPY)
+---------------------------------------------------------------------------
+
+The following projects are explicitly quarantined. Do not copy source, vendor
+binaries, or link as libraries into claude-master:
+
+* free-claude-code (fcc) — AGPL-3.0
+  Policy: Zero-code quarantine. Use only documented Claude Code environment
+  redirection (e.g. ANTHROPIC_BASE_URL); never import fcc source.
+
+* QuantumNous/new-api — AGPL-3.0
+  Policy: Dropped. Do not adopt. Prefer clean-room AdaptiveCooldownCache from
+  MIT-licensed litellm core concepts.
+
+* jakdot/pyactr — GPL-3.0
+  Policy: Clean-room algorithmic port from academic literature only.
+  Do not import or copy pyactr code.
+
+* songquanpeng/one-api — Custom MIT + attribution requirements
+  Policy: Dropped to avoid non-standard attribution ambiguity; implement
+  channel routing independently.
+
+---------------------------------------------------------------------------
+ADDITIONAL NOTES
+---------------------------------------------------------------------------
+
+* BerriAI/litellm: root may be labeled NOASSERTION on GitHub because an
+  enterprise/ subfolder contains proprietary add-ons. Only MIT-licensed core
+  files/concepts are eligible for ports. Never touch litellm enterprise/.
+
+* Stale research artifacts (e.g. reflexion, self-refine) may be used only as
+  pattern references under their permissive licenses; do not pull unmaintained
+  monolithic packages as runtime dependencies.
+
+For questions about license compliance, see research/risks.md and the V3
+license audit card.

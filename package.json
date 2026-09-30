@@ -1,0 +1,13 @@
+{
+  "name": "claude-master",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Multi-language workspace orchestrator for claude-master (Python + Go + TypeScript)",
+  "scripts": {
+    "test": "npm --prefix studio run test",
+    "typecheck": "npm --prefix studio run typecheck"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
