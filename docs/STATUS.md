@@ -41,14 +41,16 @@
 
 ---
 
-## Test Results (as of 2026-09-30 23:42 UTC)
+## Test Results (as of 2026-09-30 00:28 UTC)
 
 | Language | Command | Result |
 | :--- | :--- | :--- |
-| Python | `python -m pytest -q` | **80 passed** |
-| Go | `go test ./...` | **all packages pass** |
+| Python | `python -m pytest -q` | **151 passed** |
+| Go | `cd gateway && go test ./...` + hookshim + watchdog | **all pass** |
 | TypeScript | `cd studio && npm test` | **17 passed** (5 files) |
 | Full | `make test` | **PASS** |
+
+Includes: 15 E2E bootstrap tests, 56 chaos + security tests, 17 studio tests.
 
 ## Measured Budgets
 
