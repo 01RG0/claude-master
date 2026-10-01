@@ -70,6 +70,8 @@ class StuckDetector:
             pattern = "repeating_action_observation"
         elif self._check_repeating_action_error():
             pattern = "repeating_action_error"
+        elif self._check_repeating_action_only():
+            pattern = "repeating_action_observation"
         elif self._check_monologue():
             pattern = "monologue"
         elif self._check_pingpong():
@@ -145,6 +147,23 @@ class StuckDetector:
         # Check the last REPEAT_ACTION_THRESHOLD pairs are identical
         tail = pairs[-self.REPEAT_ACTION_THRESHOLD:]
         return len(set(k1 + k2 for k1, k2 in tail)) == 1
+
+    def _check_repeating_action_only(self) -> bool:
+        """True if ≥ REPEAT_ACTION_THRESHOLD consecutive action events are identical.
+
+        Claude Code emits PreToolUse hooks as standalone action events (no paired
+        observation in the window), so a pure-action repeat must also be caught.
+        """
+        events = list(self._events)
+        if len(events) < self.REPEAT_ACTION_THRESHOLD:
+            return False
+
+        tail = events[-self.REPEAT_ACTION_THRESHOLD:]
+        if not all(e.get("type") == "action" for e in tail):
+            return False
+
+        keys = [self._event_key(e) for e in tail]
+        return len(set(keys)) == 1
 
     def _check_repeating_action_error(self) -> bool:
         """True if ≥ REPEAT_ERROR_THRESHOLD consecutive error events are identical."""

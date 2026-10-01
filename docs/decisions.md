@@ -89,3 +89,55 @@ Evaluating safety of running 'git status' in a developer workspace.
     - Instructions: *Is this a routine safe developer action?*
     - **Probability (True)**: `0.9984`
 ---
+
+### Decision Record: `req_f16e7529c9af0352c9184168c83c596b`
+- **Timestamp**: `2026-10-01 00:07:52Z`
+- **Model**: `drex-v1.5` | **Latency**: `467.9ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9984`
+---
+
+### Decision Record: `req_c9ac9d330f42a36e4b2ef9b5ca2c2559`
+- **Timestamp**: `2026-10-01 00:08:49Z`
+- **Model**: `drex-v1.5` | **Latency**: `273.0ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9984`
+---
+
+### Decision Record: `req_6c1c24e363899c7413900547f0c9daf6`
+- **Timestamp**: `2026-10-01 00:10:18Z`
+- **Model**: `drex-v1.5` | **Latency**: `395.7ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9984`
+---
+
+### Decision Record: `req_d6d1db602ec1e67e469edc65b6af8683`
+- **Timestamp**: `2026-10-01 00:12:12Z`
+- **Model**: `drex-v1.5` | **Latency**: `272.6ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9984`
+---

@@ -139,6 +139,32 @@ class GraphStore(BrainDB):
         ).fetchall()
         return [dict(r) for r in rows]
 
+    def get_edge_weight(self, source_id: str, target_id: str) -> float | None:
+        """Return the current weight of the active edge source→target, or None."""
+        row = self.conn.execute(
+            "SELECT weight FROM brain_edges "
+            "WHERE source_id = ? AND target_id = ? AND invalid_at IS NULL",
+            (source_id, target_id),
+        ).fetchone()
+        return float(row["weight"]) if row else None
+
+    def set_edge_weight(self, source_id: str, target_id: str, weight: float) -> None:
+        """Set the weight of the active edge source→target, creating it if absent."""
+        for nid in (source_id, target_id):
+            if not self.conn.execute(
+                "SELECT 1 FROM brain_nodes WHERE id = ?", (nid,)
+            ).fetchone():
+                self.upsert_node(nid, "concept", nid, "")
+        existing = self.conn.execute(
+            "SELECT id FROM brain_edges "
+            "WHERE source_id = ? AND target_id = ? AND invalid_at IS NULL",
+            (source_id, target_id),
+        ).fetchone()
+        if existing:
+            self.update_edge_weight(existing["id"], weight)
+        else:
+            self.add_edge(source_id, target_id, "lateral", weight=weight)
+
     def update_edge_weight(self, edge_id: str, new_weight: float) -> None:
         """Update weight and updated_at for a specific edge."""
         self.conn.execute(
@@ -146,6 +172,44 @@ class GraphStore(BrainDB):
             (new_weight, _now_ms(), edge_id),
         )
         self.conn.commit()
+
+    def get_all_outgoing_weights(self, source_id: str) -> dict[str, float]:
+        """Return {target_id: weight} for all active outgoing edges from source_id."""
+        rows = self.conn.execute(
+            "SELECT target_id, weight FROM brain_edges "
+            "WHERE source_id = ? AND invalid_at IS NULL",
+            (source_id,),
+        ).fetchall()
+        return {r["target_id"]: float(r["weight"]) for r in rows}
+
+    def set_all_outgoing_weights(self, source_id: str, weights: dict[str, float]) -> None:
+        """Replace all active outgoing edges from source_id with the given weights."""
+        self.conn.execute(
+            "UPDATE brain_edges SET invalid_at = strftime('%s','now')*1000 "
+            "WHERE source_id = ? AND invalid_at IS NULL",
+            (source_id,),
+        )
+        for tgt, w in weights.items():
+            self.set_edge_weight(source_id, tgt, w)
+        self.conn.commit()
+
+    def get_outgoing_edges(self, source_id: str, min_weight: float = 0.0) -> list[dict]:
+        """Return active outgoing edge dicts (target_id, weight, role, access_count)."""
+        rows = self.conn.execute(
+            "SELECT target_id, weight, relation_type AS role, access_count "
+            "FROM brain_edges "
+            "WHERE source_id = ? AND invalid_at IS NULL AND weight >= ?",
+            (source_id, min_weight),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def get_all_edges(self) -> list[tuple[str, str, float]]:
+        """Return all (source_id, target_id, weight) tuples for active edges."""
+        rows = self.conn.execute(
+            "SELECT source_id, target_id, weight FROM brain_edges "
+            "WHERE invalid_at IS NULL"
+        ).fetchall()
+        return [(r["source_id"], r["target_id"], float(r["weight"])) for r in rows]
 
     # ------------------------------------------------------------------
     # Recursive CTE neighbour traversal

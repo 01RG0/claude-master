@@ -1,0 +1,34 @@
+# claude-master gateway configuration (TOML).
+#
+# The Go gateway's config.go parses JSON, but the on-disk config is authored
+# in TOML for human readability. A JSON equivalent lives alongside this file
+# (config.json) and is what the gateway actually loads at runtime. The TOML
+# source of truth is kept in sync with the JSON by the bootstrap script.
+
+[server]
+listen_addr = ":8080"
+brain_socket = "/tmp/claude_brain.sock"
+
+[providers.groq]
+base_url = "https://api.groq.com/openai/v1"
+privacy_policy = "zero_retention"
+models = ["llama-3.3-70b-versatile"]
+key_pools = [{ account_label = "personal", env_var = "GROQ_API_KEY", priority = 10 }]
+
+[providers.cerebras]
+base_url = "https://api.cerebras.ai/v1"
+privacy_policy = "zero_retention"
+models = ["llama3.1-70b"]
+key_pools = [{ account_label = "personal", env_var = "CEREASRAS_API_KEY", priority = 20 }]
+
+[providers.gemini]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+privacy_policy = "public_data_only"
+models = ["gemini-2.0-flash-exp"]
+key_pools = [{ account_label = "personal", env_var = "GEMINI_API_KEY", priority = 100 }]
+
+[routing]
+strategy = "thompson_sampling"
+cooldown_base_s = 60
+cooldown_max_s = 3600
+github_models_fallback = true
