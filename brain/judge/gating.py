@@ -127,6 +127,12 @@ class GatingPolicy:
         -------
         GatingResult
         """
+        # Defensive coercion: non-string commands must not crash the gate.
+        if not isinstance(command_summary, str):
+            command_summary = str(command_summary) if command_summary is not None else ""
+        if not isinstance(tool_name, str):
+            tool_name = str(tool_name) if tool_name is not None else ""
+
         # Fast path 1: explicitly safe
         if self.is_safe(command_summary):
             return GatingResult(

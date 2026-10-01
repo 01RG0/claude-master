@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	reSecretLike = regexp.MustCompile(`(?i)(api[_-]?key|secret[_-]?key|access[_-]?token|bearer\s+[a-z0-9._\-]{16,}|BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})`)
+	reSecretLike = regexp.MustCompile(`(?i)(api[_-]?key|secret[_-]?key|access[_-]?token|bearer\s+[a-z0-9._\-]{16,}|BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_\-]{20,})`)
 	reEnvFile    = regexp.MustCompile(`(?i)(?:^|[\s"'=/])\.env(?:\.[a-z0-9_-]+)?(?:$|[\s"'])`)
 	reGitDiff    = regexp.MustCompile(`(?m)^diff --git |(?m)^@@ -\d+|^\+\+\+ [ab]/`)
 	reSourcePath = regexp.MustCompile(`(?i)(?:^|[\s"'` + "`" + `])(?:[\w./-]+\.(?:go|py|ts|tsx|js|jsx|rs|java|c|cpp|h|hpp|rb|php|cs|swift|kt|scala|sql|sh|yaml|yml|toml|json|md))(?:$|[\s"'` + "`" + `:])`)

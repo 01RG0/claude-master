@@ -65,10 +65,13 @@ class BrainServer:
 
     def handle_hook(self, payload: dict) -> dict[str, Any]:
         """Evaluate a hook payload: stuck-check, gate, build context."""
-        tool = payload.get("tool_name", "")
-        command = payload.get("input", {}).get("command", "")
+        tool = payload.get("tool_name", "") or ""
+        raw_input = payload.get("input")
+        command = ""
+        if isinstance(raw_input, dict):
+            command = str(raw_input.get("command", "") or "")
         event = payload.get("hook_event_name", "PreToolUse")
-        session_id = payload.get("session_id", "default")
+        session_id = str(payload.get("session_id", "default"))
 
         # 1. Record event into the session window and check for stuck patterns
         evt = {
