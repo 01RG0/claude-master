@@ -1,0 +1,157 @@
+{
+  "listen_addr": ":8080",
+  "brain_socket": "/tmp/claude_brain.sock",
+  "request_timeout_s": 120,
+  "providers": [
+    {
+      "name": "groq",
+      "base_url": "https://api.groq.com/openai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "GROQ_API_KEY", "priority": 10 }
+      ]
+    },
+    {
+      "name": "cerebras",
+      "base_url": "https://api.cerebras.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["llama3.1-70b", "llama3.1-8b"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "CEREBRAS_API_KEY", "priority": 20 }
+      ]
+    },
+    {
+      "name": "mistral",
+      "base_url": "https://api.mistral.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["mistral-large-latest", "mistral-small-latest"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "MISTRAL_API_KEY", "priority": 30 }
+      ]
+    },
+    {
+      "name": "cohere",
+      "base_url": "https://api.cohere.ai/v2",
+      "privacy_policy": "zero_retention",
+      "models": ["command-r-plus", "command-r"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "COHERE_API_KEY", "priority": 40 }
+      ]
+    },
+    {
+      "name": "openrouter",
+      "base_url": "https://openrouter.ai/api/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["meta-llama/llama-3.3-70b-instruct:free", "google/gemini-2.0-flash-001"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "OPENROUTER_API_KEY", "priority": 50 }
+      ]
+    },
+    {
+      "name": "tokenharbor",
+      "base_url": "https://tokenharbor.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "TOKEN_HARBOR_API_KEY", "priority": 60 }
+      ]
+    },
+    {
+      "name": "codecraft",
+      "base_url": "https://codecraftapi.com/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "CODECRAFT_API_KEY", "priority": 70 }
+      ]
+    },
+    {
+      "name": "aihubmix",
+      "base_url": "https://aihubmix.com/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "AIHUBMIX_API_KEY", "priority": 80 }
+      ]
+    },
+    {
+      "name": "apertis",
+      "base_url": "https://api.apertis.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "APERTIS_API_KEY", "priority": 90 }
+      ]
+    },
+    {
+      "name": "atessa",
+      "base_url": "https://atessa.top/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "ATESSA_API_KEY", "priority": 100 }
+      ]
+    },
+    {
+      "name": "pooled",
+      "base_url": "https://ai.pooled.dev/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "POOLED_API_KEY", "priority": 110 }
+      ]
+    },
+    {
+      "name": "anyapi",
+      "base_url": "https://api.anyapi.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "ANYAPI_API_KEY", "priority": 120 }
+      ]
+    },
+    {
+      "name": "aihorde",
+      "base_url": "https://aihorde.net/api/v1",
+      "privacy_policy": "public_data_only",
+      "models": ["*"],
+      "key_pools": [
+        { "account_label": "anon", "env_var": "AI_HORDE_ANON_KEY", "priority": 130 }
+      ]
+    },
+    {
+      "name": "alibaba",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["qwen2.5-72b-instruct", "qwen2.5-7b-instruct"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "ALIBABA_API_KEY", "priority": 140 }
+      ]
+    },
+    {
+      "name": "xai",
+      "base_url": "https://api.x.ai/v1",
+      "privacy_policy": "zero_retention",
+      "models": ["grok-3", "grok-3-mini"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "XAI_API_KEY", "priority": 150 }
+      ]
+    },
+    {
+      "name": "gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "privacy_policy": "public_data_only",
+      "models": ["gemini-2.0-flash-exp", "gemini-1.5-flash"],
+      "key_pools": [
+        { "account_label": "personal", "env_var": "GEMINI_API_KEY", "priority": 200 }
+      ]
+    }
+  ],
+  "routing": {
+    "strategy": "thompson_sampling",
+    "cooldown_base_s": 60,
+    "cooldown_max_s": 3600,
+    "github_models_fallback_only": true
+  }
+}
