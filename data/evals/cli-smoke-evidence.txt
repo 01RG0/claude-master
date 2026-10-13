@@ -1,0 +1,24 @@
+Real CLI gateway smoke log excerpts
+==================================
+
+Run ID: 5938f663-2716-4dc8-bd21-5da09b84d37e
+CLI `sonnet` alias resolved to `ministral-8b-latest`; request included 26 tools.
+
+2026/10/14 02:26:37 gateway: translate provider=groq model=openai/gpt-oss-120b note=max_tokens clamped 128000->16384 (provider cap)
+2026/10/14 02:26:39 gateway: provider=mistral model=mistral-small-latest HTTP 429 cooldown=1m0s
+
+Run ID: 3e6341b8-b5d9-4b0e-9d13-9d8093346233
+CLI warned that the explicit upstream model was unrecognized, then sent the
+request to the gateway. The gateway request log recorded:
+
+{"blocks":["system:text","text"],"door":"anthropic","mapped":"openai/gpt-oss-120b","max_tokens":32000,"messages":2,"requested":"openai/gpt-oss-120b","stream":true,"tools":26,"ts":"2026-10-13T23:28:29Z"}
+
+The gateway then attempted provider fallback routes. Relevant redacted log lines:
+
+2026/10/14 02:28:29 gateway: translate provider=groq model=openai/gpt-oss-120b note=max_tokens clamped 32000->16384 (provider cap)
+2026/10/14 02:28:31 gateway: provider=mistral model=mistral-small-latest HTTP 429 cooldown=1m0s
+2026/10/14 02:28:33 gateway: translate provider=groq model=qwen/qwen3.8-27b note=max_tokens clamped 32000->16384 (provider cap)
+
+Both CLI runs returned a textual `tool_code` block. Neither returned executed
+tool results; filesystem and command-output oracles failed. Provider cost was
+not captured or reconciled, and is NOT MEASURED.

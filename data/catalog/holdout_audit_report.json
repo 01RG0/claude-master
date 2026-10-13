@@ -1,0 +1,705 @@
+{
+  "title": "Classification Holdout Audit & Hard Cases Evaluation",
+  "dataset_path": "D:\\pRoG\\claude-master\\data\\catalog\\holdout_dataset.json",
+  "total_samples": 65,
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "specificity": 1.0,
+    "f1_score": 1.0
+  },
+  "confusion_matrix": {
+    "true_positive_agentic": 30,
+    "true_negative_non_agentic": 35,
+    "false_positive": 0,
+    "false_negative": 0
+  },
+  "misclassified_count": 0,
+  "misclassified_models": [],
+  "details": [
+    {
+      "model_id": "anthropic/claude-3-7-sonnet-thought-preview",
+      "category": "novel_agentic",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "deepseek-ai/deepseek-vl2-tiny",
+      "category": "novel_multimodal",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat",
+        "vision"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openrouter/auto",
+      "category": "meta_router",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "inclusionai/ling-3.0-flash-vl:free",
+      "category": "novel_multimodal",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat",
+        "vision"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "google/gemini-2.5-pro-preview-03-25",
+      "category": "novel_agentic",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "mistralai/mistral-large-2411",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "qwen/qvq-72b-preview",
+      "category": "reasoning_multimodal",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "meta-llama/llama-3.3-70b-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "cohere/command-r-plus-08-2024",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "x-ai/grok-3-beta",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "01-ai/yi-lightning",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "zhipu/glm-4-plus",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "internlm/internlm2_5-20b-chat",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "baichuan-inc/baichuan-4",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "minimax/minimax-text-01",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "stepfun/step-2-16k",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "deepseek-ai/deepseek-coder-v2.5",
+      "category": "agentic_coding",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "qwen/qwen-2.5-coder-32b-instruct",
+      "category": "agentic_coding",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "allenai/olmo-2-13b-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "tiiuae/falcon-180b-chat",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "amazon/nova-pro-v1",
+      "category": "agentic_multimodal",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "microsoft/phi-4-mini-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "databricks/dbrx-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "upstage/solar-pro-preview-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "snowflake/arctic-instruct",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "deepseek-ai/deepseek-r1-zero",
+      "category": "agentic_reasoning",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/o3-mini-high",
+      "category": "agentic_reasoning",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "google/gemma-3-27b-it",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "alibabacloud/qwen-omni-turbo",
+      "category": "agentic_multimodal",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat",
+        "vision"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "anthropic/claude-3-5-haiku-20241022",
+      "category": "agentic_chat",
+      "expected_agentic": true,
+      "predicted_agentic": true,
+      "predicted_modalities": [
+        "tool_calling",
+        "text_chat"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "amazon/titan-embed-text-v2",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/text-embedding-3-large",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/text-embedding-3-small",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "baai/bge-m3-embeddings",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "cohere/embed-english-v3.0",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "cohere/embed-multilingual-v3.0",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "voyageai/voyage-3-large-embed",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "nomic-ai/nomic-embed-text-v1.5",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "intfloat/e5-mistral-7b-instruct-embedding",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "google/text-embedding-004",
+      "category": "embeddings",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "embeddings"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "scale/rerank-v2-turbo",
+      "category": "rerank",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "rerank"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "cohere/rerank-v3.5",
+      "category": "rerank",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "rerank"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "baai/bge-reranker-large",
+      "category": "rerank",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "rerank"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "jinaai/jina-reranker-v2-base-multilingual",
+      "category": "rerank",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "rerank"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "mixedbread-ai/mxbai-rerank-large-v1",
+      "category": "rerank",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "rerank"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "meta-llama/llama-guard-4-12b",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "meta-llama/llama-guard-3-8b",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/omni-moderation-latest",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "google/shieldgemma-9b-safety",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "ibm-granite/granite-guardian-3.1-8b",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "meta/prompt-guard-86m",
+      "category": "guard",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "classification_guard"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "black-forest-labs/flux-1-schnell",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "black-forest-labs/flux-1-dev",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "stabilityai/stable-diffusion-3.5-large",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/dall-e-3",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "ideogram/ideogram-v2-turbo-canvas",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "midjourney/midjourney-v6.1",
+      "category": "image_gen",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "image_generation"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "elevenlabs/multilingual-v2",
+      "category": "audio_tts",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_tts"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "deepgram/aura-orpheus-en",
+      "category": "audio_tts",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_tts"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "playht/play-3.0-mini-speech",
+      "category": "audio_tts",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_tts"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/tts-1-hd",
+      "category": "audio_tts",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_tts"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "openai/whisper-large-v3-turbo",
+      "category": "audio_stt",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_stt"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "deepgram/nova-2-asr",
+      "category": "audio_stt",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_stt"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "distil-whisper/distil-large-v3-stt",
+      "category": "audio_stt",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_stt"
+      ],
+      "correct": true
+    },
+    {
+      "model_id": "facebook/seamless-m4t-v2-stt",
+      "category": "audio_stt",
+      "expected_agentic": false,
+      "predicted_agentic": false,
+      "predicted_modalities": [
+        "audio_stt"
+      ],
+      "correct": true
+    }
+  ]
+}

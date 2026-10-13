@@ -1,0 +1,563 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Empirical model evaluation task suite for universal gateway and agent quality.",
+  "categories": [
+    "tool_call_validity",
+    "multi_step_tool_loop",
+    "code_edit_correctness",
+    "instruction_following_reasoning",
+    "vision_understanding",
+    "language_quality"
+  ],
+  "task_count": 17,
+  "tasks": [
+    {
+      "task_id": "tool_call_validity_01",
+      "category": "tool_call_validity",
+      "name": "search_logs_schema_adherence",
+      "description": "Verify function calling schema adherence and correct argument extraction for log searching.",
+      "prompt": "Find all ERROR logs from 'auth-service' that occurred within the past 2 hours. Limit results to 20.",
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "search_logs",
+            "description": "Search service operational logs with filtering.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "service_name": {
+                  "type": "string",
+                  "description": "Target service identifier"
+                },
+                "min_severity": {
+                  "type": "string",
+                  "enum": [
+                    "DEBUG",
+                    "INFO",
+                    "WARN",
+                    "ERROR"
+                  ],
+                  "description": "Minimum severity level"
+                },
+                "time_range_hours": {
+                  "type": "integer",
+                  "description": "Lookback window in hours"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Maximum entries to return"
+                }
+              },
+              "required": [
+                "service_name",
+                "min_severity"
+              ]
+            }
+          }
+        }
+      ],
+      "validation": {
+        "type": "tool_call",
+        "expected_function": "search_logs",
+        "expected_args": {
+          "service_name": "auth-service",
+          "min_severity": "ERROR",
+          "time_range_hours": 2,
+          "limit": 20
+        }
+      }
+    },
+    {
+      "task_id": "tool_call_validity_02",
+      "category": "tool_call_validity",
+      "name": "calculate_tax_argument_extraction",
+      "description": "Verify precise numeric and enum argument extraction across schema fields.",
+      "prompt": "Calculate income tax for a single taxpayer in California with an annual income of $125000 and $12000 in deductions.",
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "calculate_tax",
+            "description": "Calculate state and federal tax estimation.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "income": {
+                  "type": "number",
+                  "description": "Gross annual income in USD"
+                },
+                "state": {
+                  "type": "string",
+                  "description": "Two-letter US state code or state name"
+                },
+                "filing_status": {
+                  "type": "string",
+                  "enum": [
+                    "single",
+                    "married_joint",
+                    "head_of_household"
+                  ]
+                },
+                "deductions": {
+                  "type": "number",
+                  "description": "Total allowable deductions"
+                }
+              },
+              "required": [
+                "income",
+                "state",
+                "filing_status"
+              ]
+            }
+          }
+        }
+      ],
+      "validation": {
+        "type": "tool_call",
+        "expected_function": "calculate_tax",
+        "expected_args": {
+          "income": 125000,
+          "filing_status": "single",
+          "deductions": 12000
+        },
+        "state_match": [
+          "CA",
+          "California",
+          "california",
+          "ca"
+        ]
+      }
+    },
+    {
+      "task_id": "tool_call_validity_03",
+      "category": "tool_call_validity",
+      "name": "nested_filter_schema_validation",
+      "description": "Validate extraction of nested object schemas with arrays and type constraints.",
+      "prompt": "Schedule an engineering sync titled 'Sprint Retrospective' with attendees ['alice@company.com', 'bob@company.com'] for 45 minutes with recording enabled.",
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "schedule_calendar_event",
+            "description": "Create a calendar event with participants and options.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "attendees": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "duration_minutes": {
+                  "type": "integer"
+                },
+                "record_session": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "title",
+                "attendees",
+                "duration_minutes"
+              ]
+            }
+          }
+        }
+      ],
+      "validation": {
+        "type": "tool_call",
+        "expected_function": "schedule_calendar_event",
+        "expected_args": {
+          "title": "Sprint Retrospective",
+          "duration_minutes": 45,
+          "record_session": true
+        },
+        "attendees_contains": [
+          "alice@company.com",
+          "bob@company.com"
+        ]
+      }
+    },
+    {
+      "task_id": "multi_step_tool_loop_01",
+      "category": "multi_step_tool_loop",
+      "name": "user_quota_audit_chain",
+      "description": "Multi-step tool call chain: lookup user ID from email, then query quota and synthesize decision.",
+      "prompt": "Check if user 'sarah.connor@cyberdyne.org' has exceeded her storage quota, and report her usage and quota limit.",
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "lookup_user",
+            "description": "Get user account details by email address.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "get_storage_quota",
+            "description": "Retrieve current storage metrics by user ID.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "user_id"
+              ]
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step_number": 1,
+          "expected_call": "lookup_user",
+          "expected_args": {
+            "email": "sarah.connor@cyberdyne.org"
+          },
+          "mock_response": {
+            "user_id": "usr_9981",
+            "name": "Sarah Connor",
+            "tier": "pro"
+          }
+        },
+        {
+          "step_number": 2,
+          "expected_call": "get_storage_quota",
+          "expected_args": {
+            "user_id": "usr_9981"
+          },
+          "mock_response": {
+            "used_gb": 42.5,
+            "limit_gb": 50.0,
+            "exceeded": false
+          }
+        }
+      ],
+      "validation": {
+        "type": "multi_step",
+        "required_tool_sequence": [
+          "lookup_user",
+          "get_storage_quota"
+        ],
+        "final_answer_must_contain": [
+          "42.5",
+          "50",
+          "not exceeded"
+        ]
+      }
+    },
+    {
+      "task_id": "multi_step_tool_loop_02",
+      "category": "multi_step_tool_loop",
+      "name": "incident_root_cause_chain",
+      "description": "Multi-step tool call chain: check service status, inspect dependency, and summarize root cause.",
+      "prompt": "Investigate why the 'checkout-service' is reporting errors and find the exact bottleneck.",
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "check_service_status",
+            "description": "Inspect service health status and downstream dependencies.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "service": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "service"
+              ]
+            }
+          }
+        },
+        {
+          "type": "function",
+          "function": {
+            "name": "inspect_db_pool",
+            "description": "Get database connection pool metrics.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "cluster_id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cluster_id"
+              ]
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step_number": 1,
+          "expected_call": "check_service_status",
+          "expected_args": {
+            "service": "checkout-service"
+          },
+          "mock_response": {
+            "status": "degraded",
+            "error": "DB_CONNECTION_TIMEOUT",
+            "dependency": "db-orders-main"
+          }
+        },
+        {
+          "step_number": 2,
+          "expected_call": "inspect_db_pool",
+          "expected_args": {
+            "cluster_id": "db-orders-main"
+          },
+          "mock_response": {
+            "active_connections": 200,
+            "max_connections": 200,
+            "queued_waiters": 85
+          }
+        }
+      ],
+      "validation": {
+        "type": "multi_step",
+        "required_tool_sequence": [
+          "check_service_status",
+          "inspect_db_pool"
+        ],
+        "final_answer_must_contain": [
+          "pool",
+          "connection"
+        ]
+      }
+    },
+    {
+      "task_id": "code_edit_correctness_01",
+      "category": "code_edit_correctness",
+      "name": "normalize_url_function",
+      "description": "Generate clean Python function to normalize URLs: lowercases scheme and host, removes default ports (80/443), strips trailing slashes on non-root paths, and sorts query parameters.",
+      "prompt": "Write a Python function `normalize_url(url: str) -> str` that performs standard URL normalization:\n1. Lowercase scheme and host (leave path casing intact).\n2. Remove standard default ports (:80 for http, :443 for https).\n3. Remove trailing slashes from path unless the path is simply '/'.\n4. Sort query parameters alphabetically by key. If no query parameters, omit '?'.\nOutput ONLY the python code inside a ```python ``` code block.",
+      "test_suite": "\ndef run_tests(normalize_url):\n    assert normalize_url('HTTP://Example.COM:80/path/?b=2&a=1') == 'http://example.com/path?a=1&b=2'\n    assert normalize_url('https://MySite.org:443/') == 'https://mysite.org/'\n    assert normalize_url('http://test.io/api/v1/') == 'http://test.io/api/v1'\n    assert normalize_url('http://alpha.com:8080/deep/dir/?z=9&m=4') == 'http://alpha.com:8080/deep/dir?m=4&z=9'\n    assert normalize_url('https://secure.net/page') == 'https://secure.net/page'\n    return True\n",
+      "target_symbol": "normalize_url"
+    },
+    {
+      "task_id": "code_edit_correctness_02",
+      "category": "code_edit_correctness",
+      "name": "merge_intervals_algorithm",
+      "description": "Implement merge_intervals algorithm in Python passing edge cases and sorted order tests.",
+      "prompt": "Write a Python function `merge_intervals(intervals: list[list[int]]) -> list[list[int]]` that merges all overlapping intervals and returns an array of the non-overlapping intervals in ascending order.\nOutput ONLY the python code inside a ```python ``` code block.",
+      "test_suite": "\ndef run_tests(merge_intervals):\n    assert merge_intervals([[1,3],[2,6],[8,10],[15,18]]) == [[1,6],[8,10],[15,18]]\n    assert merge_intervals([[1,4],[4,5]]) == [[1,5]]\n    assert merge_intervals([[6,8],[1,9],[2,4],[4,7]]) == [[1,9]]\n    assert merge_intervals([]) == []\n    assert merge_intervals([[1,4]]) == [[1,4]]\n    return True\n",
+      "target_symbol": "merge_intervals"
+    },
+    {
+      "task_id": "code_edit_correctness_03",
+      "category": "code_edit_correctness",
+      "name": "token_bucket_rate_limiter",
+      "description": "Implement TokenBucket rate limiter class with capacity, refill_rate, and take() method.",
+      "prompt": "Implement a Python class `TokenBucket` for rate limiting:\n```python\nclass TokenBucket:\n    def __init__(self, capacity: float, refill_rate: float, initial_tokens: float = None):\n        pass\n    def consume(self, tokens: float = 1.0, current_time: float = None) -> bool:\n        pass\n```\n`capacity`: maximum bucket capacity.\n`refill_rate`: tokens added per unit time.\n`initial_tokens`: initial tokens (defaults to capacity if None).\n`consume(tokens, current_time)`: returns True if sufficient tokens existed to consume, False otherwise.\nOutput ONLY the python code inside a ```python ``` code block.",
+      "test_suite": "\ndef run_tests(TokenBucket):\n    tb = TokenBucket(capacity=10.0, refill_rate=2.0, initial_tokens=5.0)\n    assert tb.consume(3.0, current_time=0.0) is True\n    assert tb.consume(3.0, current_time=0.0) is False  # only 2 left\n    assert tb.consume(4.0, current_time=2.0) is True   # refilled 4 tokens (2 + 4 = 6)\n    assert tb.consume(10.0, current_time=2.0) is False\n    assert tb.consume(10.0, current_time=100.0) is True # capped at capacity 10\n    return True\n",
+      "target_symbol": "TokenBucket"
+    },
+    {
+      "task_id": "reasoning_gsm8k_croissants",
+      "category": "instruction_following_reasoning",
+      "name": "gsm8k_bakery_inventory_arithmetic",
+      "description": "Multi-step arithmetic word problem requiring step-by-step reasoning and exact tag extraction.",
+      "prompt": "Solve this math problem step by step:\nA bakery baked 120 croissants in the morning. They sold 3/4 of them by noon. In the afternoon, they baked 60 more croissants and sold 40% of their total afternoon stock before closing. How many croissants remained unsold at the end of the day?\n\nShow your step-by-step calculation, and place your final numeric answer inside <answer>X</answer>.",
+      "validation": {
+        "type": "exact_tag",
+        "tag": "answer",
+        "expected_value": "54",
+        "tolerance": 0.01
+      }
+    },
+    {
+      "task_id": "reasoning_rack_deduction",
+      "category": "instruction_following_reasoning",
+      "name": "deductive_server_rack_ordering",
+      "description": "5-element ordering puzzle under spatial and negative constraints.",
+      "prompt": "Solve the following server rack logic puzzle:\nFive servers (Alpha, Beta, Gamma, Delta, Epsilon) occupy slots 1 to 5 from top to bottom (slot 1 is top, slot 5 is bottom).\n1. Alpha is in slot 1.\n2. Beta is in the slot immediately above Delta.\n3. Gamma is neither in slot 2 nor in slot 5.\n4. Epsilon is located in a slot below Delta.\n\nDetermine which slot number Gamma occupies. Explain the logical deduction, and output your final slot number inside <answer>X</answer>.",
+      "validation": {
+        "type": "exact_tag",
+        "tag": "answer",
+        "expected_value": "4"
+      }
+    },
+    {
+      "task_id": "reasoning_strict_negative_constraints",
+      "category": "instruction_following_reasoning",
+      "name": "strict_format_and_negative_constraints",
+      "description": "Strict compliance with bullet count, word length bounds, and negative vocabulary bans.",
+      "prompt": "List exactly 3 best practices for hardening cloud server SSH configurations.\nAdhere to all of the following rules without exception:\n1. Output exactly 3 bullet points starting with '* '.\n2. Each bullet point must be between 5 and 9 words long.\n3. Do not include the words 'password', 'key', or 'root' in your response.\n4. Do not include any greeting, intro, or concluding text.",
+      "validation": {
+        "type": "constrained_text",
+        "bullet_prefix": "* ",
+        "bullet_count": 3,
+        "min_words_per_bullet": 5,
+        "max_words_per_bullet": 9,
+        "forbidden_words": [
+          "password",
+          "key",
+          "root"
+        ]
+      }
+    },
+    {
+      "task_id": "vision_ui_button_inspection",
+      "category": "vision_understanding",
+      "name": "ui_dialog_button_identification",
+      "description": "Inspect UI modal image, extract primary action button text and visual color.",
+      "prompt": "Inspect this dialog box image. Identify the primary confirmation button label and its dominant color.\nRespond with a valid JSON object matching this schema:\n{\"button_label\": string, \"button_color\": string}",
+      "image_b64": "iVBORw0KGgoAAAANSUhEUgAAAZAAAADICAIAAABJdyC1AAAVrUlEQVR4nO3dd1gU1xoG8DOzu7C7ApoYE2OMGlFCCAgoXWNHsbcottgL5QFuDCgq2PXarhpNxIpGIipYERRFbMGC0gRUsITYjSVRkV3YNvcZhhAurLiXmMCR9/f4xzrlnG9m3JdzhnWHKVCqCAAADdjqLgAAwFAILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGogsACAGggsAKAGAgsAqIHAAgBqILAAgBoILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCoIf4rO2ddufnmKgGA2sLGyrxqO2KEBQC1Y4QlcG5t+SYqAYC3X3Jazl/ZHSMsAKAGAgsAqIHAAgBqILAAgBoILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGogsACAGggsAKAGAgsAqIHAAgBqILAAgBoILACgBgILAKiBwAIAalRnYH38qWM/z3H9Pcf3GjQ6/VK2gXuZW7sZ3sW3azcTQnKu3dwSEVXl8noOHLUz+oDhO/5fFf4VwtEB1B5v4CEUVWYkkRzYFU4IuZpz3T9oVsLBHW+8i9VrNwf4jLe0MLe0MK9yeQqFcuR4P7lc1rdXN1KTCEdX3VUA1LIp4WeWLW/fuSeMTfwCQzdu2f7o8ZOho336DB4zdLTPo8dPHj95OnK8X+8vR/t9E6J3ICO8/u23Z2Mmfd3Pc9zgkZOfPP1tyYq1BQrF4JGTSzco16ywfOGy1X2HjO3g8WXckUS95cnlstkzpqwP3/7s+QvvgOmDhk/sM3hMWkbJkNDc2m3OwhW9vxzdZ/AY4SgE5frq1GNI3i+3CSH5L186dejNcZy5tZt/0CyHL3pu/THKO2B6m3Y91m2KIIS8qpdydZY9OoDaokCpqvKf86lXz6de5aqq+eeuwotTSecHDpvAcdxHLR2OnzzDcdxkv2m79sRwHLdrT4yXf7B3wPTofbEcx8XFJzZq0abc7qWvfb+esWf/IY7jInftC5wxv+w2wotyzXIc19jCIWzjNo7jfrl1x9bFXW95HMep1OrPWncMCJqdkpbJcdyde/c7dP9SWPVRS4d9MYc5jovae3DUxIBX9bU6LPy79Vs4jtsXc3juohUcxzVq0SYlLfPOvfsNmrZKTc+6fffe5w6dOY7T24veOstWCEAFITSqnDnVOSVUqdX9PMdxHGdmarJq6VxCiEjEdvjChRBy5vzF1cvnEUL69+4+f/EqlmVXLZ1DCOnWpYNIpGdUqNNxhJDTZ5JXLOE3GzKob68eXStuVq5ZYcdhQ/oTQpo2afzixctXlarVaCUS8YnTZ/Ju8aMkfp6oVGq1OpGIZRjS06MLIaRfr26zF/znVX2FTAvwCgj2nTTmcMIJP6+x/OCWZexafS4SsRKJxK6VFcuySqWSEKK3FwPrBHi71Yh7WKXEIhHL8nnE8fnzJ5VKLbzQcTruj3VCSBFCnr/IV6n5DbRanbCnSMSamZpU7LFcs0INdc1MhdcM88pS0zKyPvu0ZdblnKhtYcbGxjqdLvliuhCdLMuKWJGwmbGR0av6+qhRQ5ZlHzx8dOfOfWsr/tGzRhKJ0ILU2Eg4aoFGo63Yi4F1ArzdasQ9rIrauTrGHEoghMQcSmjr4ujkYHf46AlCyKH4xNIgMDMzybl2kxCye38cU/wmbm1nLWz24869C5Z8K4SaTqd7VbPCMOe1xTx7/mLe4pV+3mOdHOzi4o8TQhJPJq1au0lYq9Foj534iRByIO5oOzfHSvrq39sjdP6yLp3aVd6d3l701lnu6ADeetU5wqrEnJnfBEyd9cP2aLlctnrZvKIile+UmZt+2OHUxs7YSCJss2hu8ASfwPfqv9vazlpYOD80KGDq7M3bdpqZmny/chEhxMWp9cjx/pFbvtPbrCEzVoYwao3Gz3tcWxfHZk0+njJ97tbtUWKRaGXx3FMYH8UeTvhu/Za6ZqbfLuXbbP5J01Xfb6rYV79e3WbOWTwzyK/yfhfMmlqxF73KHR3AW48pUKqqvHPWFX6A49yan+DUWubWbjezzxqy5b37D/0DQ/dEbvz7iwKooZLTcgghNlb/98eMavSU8O0Tn3By5Hj/OTO/qe5CAChWQ6eEFDFweOXh3tHDvePfXw7A2wwjLACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGogsACAGggsAKAGAgsAqIHAAgBqILAAgBoILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGpUZ2CN9Zm+YFnY/GVrZ85febX4CYOGm+gfUsnamMP8c/3eoMq7K+tU0oV5S76fPm9F1uVrFddmZF0d4xNc5VINL+ONn4EqqFiDQqFct2XnBIOPAqAGBZZYLAoJ8g4N8vEaN/SHyP1vsOWD1fR2fZH/8vS5lNCpPn6TRm7bWf6ICguL9scdE4lKHhP9t5ZaXWeg8hqWrwn/pGljPLga6H5qTuNGDX9/9rxAofwhct+zF/kajWbE4D7mnzS5e//h5ojdCkVhx3ZOPdzbP3+Rv2lbdEGB8v336ws7zpi3IsBr1Afvv6dUFs5csOo/C6YxDLMn5khhkWrxyg1e44Zt2LqrsKhIamw8aYxnvbolj3qf6B/Sqb3LjZu3CEO8xw1r8N67E/1DNq5eULp24+oFR44nnUq6wDDM0IG9bD63IIRE7TuceyPvZYFicD8PB3trYePp81ZM9R//Tr26ao0mePbyKb5ju3VqyzBM/XfqvSxQlDvMnXviPLq237wtunRJ5aXmvywQjlcsFvlMGG5malK6Y+UFX7uZJzTrN/mrcqdU2N7B3qZZk4+6dyl5BrUhh08Iee0F0ltD8NeTSsv29xpVr67p7v3xb/SfD9QiNeIeVtaVa1aWLSKjD3br0m7GlMm+E0ZsithNCDl6/MzQgb1Cp/rEHjlJCImMjnVxtJs1zdfBzlqt1hBC3JzsU9KzCSGXsnMcW9sID6wf1Le71Ngo+OtJ26Nj3JzsZ031dXOyj4w+WNqdWqNp3rTxrGm+ndu7/BgVo7ek/bHHZk319Z04Iik5VdjF1KROaJDPv7xHlx06ObdplZpxmRByJeeGrbXlR40+cHawJYRcSM20t7Uq22Dujbzfn79wKV5bqvJSt0cddHawDQnydnWy333gSOXnsGzBpc1WPKXCsbg62ZWmlSGHL3jtBdJbQ9lmS39mANA3wtJotAuWhWm12vsPHy2ZGxS6cNWvj54Kq4qKVDqdbviXvc9dzEjLvKIsLORDIffGhNGDCSH2tlYMy2eTq5P995u29+reMTXjcm+PTuXav5p7c9IYTz5WHG137o0rXc4QxsHehl/uYBsZHVtuLx3HEUJsbSzDwnd07ejmPW4Yv5QjHdo6EkI+/KCBQskXI3BuY7tt5/6uHd3SL11xdbYXFv76+GnskZMzA71KN1NrNJFRB//lM+ZVp0JvqdlXr08YxR/vF65tHFvzBeulv+BimZdzy51StpiNlYXhrUXvj8+9nufR9YuKrZW7QHprKN29dFgKQGVgCfewCCGx8SdOn72o0+mm/WuiRCLmOC73eh7Lst+u2+bUplX3zu2OneQfVqrRaIUdOR1H+LcVqf9uPZZhf3/2/PHT35p+3Khc+8VvPT0YlmGL806oofRdKtwV1hb34jV2aM61nw8fO302OX3yWE+RWCSXy0p2L9PUhw0bvCxQKJWFv9y5N3r4AP5GVVHRmvURE8cMKTuDu5iapSwq+n7j9uINVGHhO8q+pV9VKvfHcbIsK5dJy656bcElm1U4pYQQEcsKQ9H/t7Ut2/dUfoH07jW4v4f+ywBA6ZTQ2sriZt5tC/NPLqZnFf8qLUf4BdPPt+44O9iq1WqNhp8AWrRoJsy/UtKzShKLEBdH2x93xdhaW5ZtUMfxrCzNL6RmChO0zz41/3OtVpeRlUMISU65ZGXZghAil0nv3n9ICDmTnEYYolAWzl+2tqV5U5/xwzOyrvKn6X/f4WW1sfs8Jv64ebMmDMNwHLcufGfPbh1aFN8tEvKLn7o62y+dGxQS5B0S5C01NiqbVpWU2rxZE+F4T/yUvGvvobKdvrZgodmKp1Sv17YmqPwCvaqGSq67cHIAKLvp3qjh+3fuPpjxjVf4j3sST50TsawwFXLv2HbO4jVNGzeSy2RqjWbkkL5h4TuOHk+yMG8mEZdU7uxgu23ngSEDepRt0LJl8/98Fz7+q8Ebf4hKPHWu+E72kNK1Eon4Qlpm7JETdeSyiaP55aOHDVi9PsLM1MT8kyYSsVguk9q3spq1aDXHcQN6u1devHMb2+C5y2cG8kPF02dTMi/nvnypOH7qvFRqFOg3ftXaH8rdxymnklJHevbduDUq4cQZuUwqZFzDDxrEHDret2fn1xYsNDt2xKDNEbvLnlK9DDz8kZ59y7VW9gJJJGK9NQT6jX9Vv689OQDlMAVKFamqrCv8h6ecW//P6OYf9vS3Z+u37poxZbLhu5T9pRgA/JOS0/jJjY3VnzMe+kZYVZZ26fLuA0eE29UA8NajfoQFALVnhFUjbroDABgCgQUA1EBgAQA1EFgAQA0EFgBQA4EFANRAYAEANRBYAEANBBYAUAOBBQDUQGABADUQWABADQQWAFADgQUA1EBgAQA1EFgAQA0EFgBQA4EFANRAYAEANRBYAEANBBYAUAOBBQDUQGABADUQWABADQQWAFADgQUA1EBgAQA1EFgAQA0EFgBQA4EFANRAYAEANRBYAEANBBYAUAOBBQDUQGABADUQWABADQQWAFBDXN0FAC8t63ptOxGtbVq+alWDEcn/bC1QFY+3O5N/HAKrpmjSuCGpNW7ffVj5BvL3LP+pWqAqFE9ySHXAlBAAqIHAAgBqILAAgBoILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGogsACAGggsAKAG/vPz2yAh8WR8QqJMJpVKpV4Txr5X/9031fKIcV7bw9cRSuQuN8u4pSWESETMjnOq6GSVgTtmLzazDn5h4MbWjUXBfaUSEdFoSVCk8v4zneEVWjQUObcQRSQZWhiUg8Ci3qWs7J/Onvv3vFAjI6O0jMzVazfMCw0mtZJaQzzXFPBf9mDEbJ4oVxRxcRnqN97L8uGysRsUD57pethKZvaX+m5VGL7vtYfaaw/5SIWqQWBRb//BQyOHDjYyMuK/ZMqu1fmLKVqt9t6Dh2EbwxUFii6dO/Tt6SGMlXp263o1N7egQOE5eKCLY5sX+flhG8LzCwrEIvHXfl4ikWjjlohnz55rNJoxI4e1bNGcUEuh4hbFFM4ZKEu6ppk3SNbAjJGIyMIDhcL4K3ux2Y5zKvtmIo4jU7Yr7zwtGSI1MGOWD5PLjYmiiATuUGzzquMdrvjlic5EysQFmXRckM9x/Gb1TVnj4vdNQrb66UuurpzR20V8pvryPa2ns9GY9YqHz3VGYnI02LTzwvzMf/OjuXfrMIuHyurKGbWWBEQoNFpSsRGoCIFFvTt3733SrFnpX30mjiOEHDqS8NWwIU0aN/YPnC4ElkajMTUzWTB75q+PHoXMXeTi2GZrxA43F6cv2romnjy9I3qvVqPt5eFu0cL88ZOni5atXLlkAaHZ1fvaZg3Ymf2kW08Xpd/SNnqHDZ8o91j6khBiJGYyb2sXHigc4CAJHSCdtKlkiBTaX3YgTbX3onqgoySkn+xAqrpbK8mG40WdPhPHX1ILaUUIWRpbuDvA5MQV9d4U9bnrmqXDZHq7OJimPpWjMZEy7jbiiCSVW0vxqasa3R+NhAyQxmWoD6SqhzgbTenBTzArNgIVIbCop9XpuYcyevjQpLPnU9IylEqlsITjdF06tCeEfPD++woFvzAz+7LPJD7dOrVv5+rk4B8448GvvwobFxUV6XQ6lqX4dzJillFrufaW4qbvlRyFzJgRsUSrIxzh4jP5qWJchjqkv6x0F5cWosBIPrxi09XBfaRLDhZ+O0q24XiRu41kXWJR6WbRyaqjWeruNpLZA6VHMjV6u9By3E+5Gr6LdPWcQbKIJFUXa0lM6p/z07YW4mk7+Kuw56LqcCaTEGxSsRGoCIFFvY8+bJh365ZFC/PiVOLWhG3095m0bNUaVyfHXh7u8QmJwmZisbhOHXnJPgwjJJ0wamBZVi6Xa3Xa2dODJBIJx3FXcq5RnVaEELumotz7us8bi0atKyhSE5Yhjs3FQgroOP6PQKX54xV/VvjTUur+M52OIw3rsh/XZ6/cK5mj1TdhmjVgU/O0UcmqxMvqo8GmHEcqdqHVlnTx8yPdO3LGRMpYNxbN2l3yw4MQImJKetPqSL6SE7NMxUagIrr/UQIhxKNb18hdu9Vq/ud50tnzajX/Y/zGz3ltXZ1UKrWwvPjdWP5aW5ibX0hJ5e/FHD8ZsSPqs08tzl9I4b9gPuPSnv0HqT63deVMcF9pWGJRSp7Go5WEENLRSuzjbiysFbNMJyt+YS87ydnrJeeHEHLuuqanHb+8p53k/A0+oWLT1aEDpCeu/Dky4jiydqy8UT3+ZNarw9z7Xae3i7KOZqt9uhpn3NKUTioJIRm3Nd1s+L2GuhpN6yN9bSMgwAiLeu1cnR88eBg4PdTMzKxuXbNJ40YRQnq4dwmeNb9Z0yZ15HK1WiOR6LnQY0cN/279psNHj8nl8gCfycrCwrUbwo8cO86yIt/J/FSRENKo4Qd79h8c1L8PoYFETHb51REiKexY0fkbmttPdP8eKhvR1kirJdN2lgxwitRcD1vx5M5GL5Tc1OJ5Wd5jna+78cIDhUuHyUa4GSlUJKh4bshP6AbKlsUWlnbxWwEXvFO5dpy8SM1pdfzHGvKVXMUuyopL5wdinmv+57bU/H18X6O+MMpXcl//qDQxZipvBARMgbLqHwnJunKTEOLcGs8L+KvSsq7XtodQVP7UnL/1IRSGf+qqUT12+QjZ8O/5j0pAWYonOVV7ak5yGv/0Chsr/g5GFWCEBaCfu7VkSk/jwEiMd2oQBBbUOgYOrxKy1QnZb/5zp/BX4KY7AFADgQUA1EBgAQA1EFgAQA0EFgBQA4EFANRAYAEANRBYAEANBBYAUAOBBQDUQGABADUQWABADQQWAFADgQUA1EBgAQA18H1YNcXtuw+ru4QaRPGE/15KgHIQWDVCJd8XXAtV7bt3oTbAlBAAqIHAAgBqILAAgBoILACgBgILAKiBwAIAaiCwAIAaCCwAoAYCCwCogcACAGogsACAGggsAKAGAgsAqIHAAgBqILAAgBoILACgBgILAGrTN44mp+HbbAHgn4ARFgBQgylQqqq7BgAAg2CEBQDUQGABADUQWABADQQWAFADgQUA1EBgAQA1EFgAQA0EFgBQA4EFANRAYAEANRBYAEANBBYAUAOBBQDUQGABADUQWABADQQWAFADgQUA1EBgAQChxX8BLld3RFwvdqUAAAAASUVORK5CYII=",
+      "media_type": "image/png",
+      "validation": {
+        "type": "json_fields",
+        "fields": {
+          "button_label": [
+            "Deploy Service",
+            "deploy service",
+            "Deploy"
+          ],
+          "button_color": [
+            "blue",
+            "Blue",
+            "#1e6ef0",
+            "azure",
+            "navy"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "vision_chart_latency_inspection",
+      "category": "vision_understanding",
+      "name": "latency_chart_peak_analysis",
+      "description": "Read bar chart image to determine service with highest latency and its numeric value.",
+      "prompt": "Inspect the attached service latency p95 bar chart. Identify which service has the highest latency and what its latency value is in milliseconds.\nRespond with a valid JSON object in this format:\n{\"service\": string, \"latency_ms\": number}",
+      "image_b64": "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",
+      "media_type": "image/png",
+      "validation": {
+        "type": "json_fields",
+        "fields": {
+          "service": [
+            "Search",
+            "search"
+          ],
+          "latency_ms": 240
+        }
+      }
+    },
+    {
+      "task_id": "vision_status_grid_inspection",
+      "category": "vision_understanding",
+      "name": "cluster_status_grid_counting",
+      "description": "Count green healthy indicators versus red failed indicators in status diagram.",
+      "prompt": "Inspect the attached cluster health nodes diagram. Count how many nodes are green (healthy) and how many are red (failed).\nRespond in valid JSON:\n{\"green_count\": number, \"red_count\": number}",
+      "image_b64": "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",
+      "media_type": "image/png",
+      "validation": {
+        "type": "json_fields",
+        "fields": {
+          "green_count": 3,
+          "red_count": 1
+        }
+      }
+    },
+    {
+      "task_id": "language_arabic_morphology_nuance",
+      "category": "language_quality",
+      "name": "arabic_semantic_nuance_and_syntax",
+      "description": "Distinguish semantic and rhetorical nuances between السنة and العام in Classical Arabic and provide exact syntactic parsing (إعراب).",
+      "prompt": "اشرح باختصار الفرق الدلالي والبلاغي بين كلمتي 'السنة' و'العام' في القرآن الكريم واللغة العربية الفصحى. ثم بيّن الوجه الإعرابي الصحيح لكلمة 'عاماً' في قوله تعالى: (فَلَبِثَ فِيهِمْ أَلْفَ سَنَةٍ إِلَّا خَمْسِينَ عَامًا). اكتب إجابة علمية محكمة ودقيقة لغوياً.",
+      "validation": {
+        "type": "keyword_semantic",
+        "required_any_groups": [
+          [
+            "شدة",
+            "مشقة",
+            "قحط",
+            "صعوبة",
+            "جدب",
+            "كرب"
+          ],
+          [
+            "رخاء",
+            "خصب",
+            "يسر",
+            "راحة",
+            "نعمة",
+            "سعة"
+          ],
+          [
+            "مستثنى",
+            "تمييز"
+          ]
+        ]
+      }
+    },
+    {
+      "task_id": "language_arabic_technical_translation",
+      "category": "language_quality",
+      "name": "arabic_systems_terminology_clarity",
+      "description": "Translate complex systems engineering concept into idiomatic, rigorous Arabic without awkward transliterations.",
+      "prompt": "ترجم النص الهندسي التالي إلى لغة عربية سليمة ومهنية عالية الدقة:\n'Zero-copy buffer pooling reduces memory allocation overhead and minimizes CPU cache misses in high-throughput network gateways.'\nيجب أن تكون الترجمة رصينة، وتستخدم المصطلحات التقنية المعيارية.",
+      "validation": {
+        "type": "keyword_semantic",
+        "required_any_groups": [
+          [
+            "دون نسخ",
+            "بدون نسخ",
+            "صفرية النسخ"
+          ],
+          [
+            "مخازن مؤقتة",
+            "التخزين المؤقت"
+          ],
+          [
+            "إخفاقات",
+            "فقدان",
+            "misses"
+          ],
+          [
+            "بوابات",
+            "شبكية"
+          ]
+        ]
+      }
+    },
+    {
+      "task_id": "language_english_technical_clarity",
+      "category": "language_quality",
+      "name": "distributed_systems_raft_conciseness",
+      "description": "Explain Raft log replication and election safety with dense precision under 120 words without filler.",
+      "prompt": "Explain how the Raft consensus algorithm guarantees log consistency and prevents split-brain during leader election. Maintain high technical density, strict accuracy, and professional engineering clarity. Do not use conversational filler (e.g. 'Sure!', 'In conclusion'). Stay strictly under 130 words.",
+      "validation": {
+        "type": "technical_density",
+        "max_words": 130,
+        "required_concepts": [
+          "quorum",
+          "majority",
+          "term",
+          "log"
+        ]
+      }
+    }
+  ]
+}

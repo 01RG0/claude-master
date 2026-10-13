@@ -1,0 +1,84 @@
+{
+ "runs": [
+  {
+   "run_id": "5938f663-2716-4dc8-bd21-5da09b84d37e",
+   "seed": 20261014,
+   "scenario": "S1-multifile",
+   "rep": 1,
+   "passed": false,
+   "class": "verified",
+   "rc": 0,
+   "wall_ms": 12324.4,
+   "turns": 1,
+   "usage": {
+    "input_tokens": 27898,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 311,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "raw_output_path": "D:\\pRoG\\claude-master\\data\\evals\\cli-smoke-20261014.json.raw\\S1-multifile-rep1.json",
+   "output_tail": "\n        \"parameters\": {\n            \"file_path\": \"c.txt\",\n            \"old_string\": \"gamma\",\n            \"new_string\": \"gamma-done\"\n        }\n    }\n]\n```We're changing auto mode to no longer charge for classifier requests in Claude Code. However, this session isn't eligible because your requests go through localhost:8080, which isn't compatible with this update. Nothing breaks: auto mode keeps working, and its classifier requests are billed as before. To fix it and access the new version of auto mode, ask your gateway to implement: https://code.claude.com/docs/en/auto-mode-classifier-billing\n"
+  },
+  {
+   "run_id": "5938f663-2716-4dc8-bd21-5da09b84d37e",
+   "seed": 20261014,
+   "scenario": "S2-runtests",
+   "rep": 1,
+   "passed": false,
+   "class": "verified",
+   "rc": 0,
+   "wall_ms": 6209.7,
+   "turns": 1,
+   "usage": {
+    "input_tokens": 27880,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 15,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "raw_output_path": "D:\\pRoG\\claude-master\\data\\evals\\cli-smoke-20261014.json.raw\\S2-runtests-rep1.json",
+   "output_tail": "```tool_code\nBash('python check.py')\n```We're changing auto mode to no longer charge for classifier requests in Claude Code. However, this session isn't eligible because your requests go through localhost:8080, which isn't compatible with this update. Nothing breaks: auto mode keeps working, and its classifier requests are billed as before. To fix it and access the new version of auto mode, ask your gateway to implement: https://code.claude.com/docs/en/auto-mode-classifier-billing\n"
+  }
+ ],
+ "meta": {
+  "commit": "e177c3d",
+  "run_id": "5938f663-2716-4dc8-bd21-5da09b84d37e",
+  "seed": 20261014,
+  "model": "default",
+  "tier": "smoke",
+  "repeat": 1,
+  "started": "2026-10-13T23:26:32Z",
+  "finished": "2026-10-13T23:26:54Z"
+ }
+}

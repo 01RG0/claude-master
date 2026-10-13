@@ -3,6 +3,9 @@
 *.env
 .env.*
 !.env.example
+.cm_token
+.backups/
+data/backups/
 
 # Logs & temp
 *.log

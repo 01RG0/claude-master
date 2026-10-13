@@ -44,6 +44,7 @@ func main() {
 		cfg.ListenAddr = *listen
 	}
 	srv := gateway.NewServer(cfg)
+	srv.ApplyRoutingState(gateway.CapsPathBesideConfig(*configPath))
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

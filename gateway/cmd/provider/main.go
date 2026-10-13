@@ -260,8 +260,42 @@ func pinban(cmd string, args []string) {
 	model := fs.String("model", "", "model id")
 	cfgPath := configPath(fs, args)
 	_ = loadConfig(cfgPath)
-	// pin/ban are runtime + config concerns; record intent via admin file.
-	fmt.Printf("%s %s: use gateway /v1/admin/keys {action:%q} at runtime; config pinning lands in capabilities.json\n", cmd, *model, cmd)
+	if *model == "" {
+		fatal(fmt.Errorf("--model is required"))
+	}
+	path := capsPath(cfgPath)
+	st := gateway.LoadRoutingState(path)
+	switch cmd {
+	case "ban":
+		st.BannedModels = appendUnique(st.BannedModels, *model)
+		st.PinnedModels = removeStr(st.PinnedModels, *model)
+	case "pin":
+		st.PinnedModels = appendUnique(st.PinnedModels, *model)
+		st.BannedModels = removeStr(st.BannedModels, *model)
+	}
+	if err := gateway.SaveRoutingState(path, st); err != nil {
+		fatal(err)
+	}
+	fmt.Printf("%s %s -> %s (honoured on next gateway start; live via POST /v1/admin/keys)\n", cmd, *model, path)
+}
+
+func appendUnique(xs []string, v string) []string {
+	for _, x := range xs {
+		if x == v {
+			return xs
+		}
+	}
+	return append(xs, v)
+}
+
+func removeStr(xs []string, v string) []string {
+	out := xs[:0]
+	for _, x := range xs {
+		if x != v {
+			out = append(out, x)
+		}
+	}
+	return out
 }
 
 func validate(args []string) {

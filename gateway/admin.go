@@ -96,6 +96,15 @@ func (s *Server) handleAdminKeys(w http.ResponseWriter, r *http.Request) {
 		respond(map[string]interface{}{"ok": true, "banned": in.Models})
 	default:
 		writeAnthropicError(w, 400, "invalid_request_error", "action must be add|remove|rotate|set-models|pin|ban")
+		return
+	}
+	// Persist pin/ban outside the lock (PersistPinned takes s.mu).
+	if in.Action == "pin" || in.Action == "ban" {
+		s.mu.Unlock()
+		if err := s.PersistPinned(); err != nil {
+			log.Printf("gateway: persist pin/ban: %s", redactForLog(err.Error()))
+		}
+		s.mu.Lock()
 	}
 }
 

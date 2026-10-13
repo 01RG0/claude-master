@@ -65,6 +65,9 @@ class BrainServer:
         # Per-session event windows for stuck detection
         self._sessions: dict[str, deque[dict]] = {}
         self.hooks_handled = 0
+        from brain.api_handlers import APIHandlerRegistry
+        self.api_registry = APIHandlerRegistry(self)
+        self.bypass_mode = False
 
     # ------------------------------------------------------------------
     # Hook endpoint (called by socket_server)
@@ -83,6 +86,9 @@ class BrainServer:
             command = cmd_val if isinstance(cmd_val, str) else ""
         event = payload.get("hook_event_name", "PreToolUse")
         session_id = str(payload.get("session_id", "default"))
+
+        if getattr(self, "bypass_mode", False):
+            return {"allow": True, "block_reason": "", "additional_context": ""}
 
         # 1. Record event into the session window and check for stuck patterns
         evt = {
@@ -337,34 +343,55 @@ def main(argv: list[str] | None = None) -> int:
     t = threading.Thread(target=_run_socket, daemon=True)
     t.start()
 
-    # HTTP server
-    from http.server import HTTPServer
-    httpd = HTTPServer((args.host, args.port), build_app(server))
+    # Prefer FastAPI admin API when the concurrent brain/api layer imports;
+    # fall back to the stdlib health/hook app so e2e never hard-depends on WIP.
+    use_uvicorn = False
+    try:
+        from brain.api.app import create_app
+        import uvicorn  # noqa: F401
+        app = create_app(server)
+        use_uvicorn = True
+    except Exception as exc:
+        logger.warning("FastAPI admin API unavailable (%s); using stdlib HTTP", exc)
+
     logger.info("HTTP API listening on http://%s:%d", args.host, args.port)
+    try:
+        if use_uvicorn:
+            import uvicorn
+            uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+        else:
+            from http.server import HTTPServer
+            httpd = HTTPServer((args.host, args.port), build_app(server))
 
-    def shutdown(*_):
-        logger.info("Shutting down...")
-        def _do_shutdown():
+            def shutdown(*_):
+                def _do_shutdown():
+                    try:
+                        loop = asyncio.new_event_loop()
+                        loop.run_until_complete(socket_server.stop())
+                        loop.close()
+                    except Exception:
+                        pass
+                    httpd.shutdown()
+                threading.Thread(target=_do_shutdown, daemon=True).start()
+
+            signal.signal(signal.SIGINT, shutdown)
             try:
-                loop = asyncio.new_event_loop()
-                loop.run_until_complete(socket_server.stop())
-                loop.close()
-            except Exception:
+                signal.signal(signal.SIGTERM, shutdown)
+            except (AttributeError, ValueError, OSError):
                 pass
-            httpd.shutdown()
-        threading.Thread(target=_do_shutdown, daemon=True).start()
-
-    signal.signal(signal.SIGINT, shutdown)
-    try:
-        signal.signal(signal.SIGTERM, shutdown)
-    except (AttributeError, ValueError, OSError):
-        pass  # SIGTERM unavailable on Windows
-
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
+            try:
+                httpd.serve_forever()
+            except KeyboardInterrupt:
+                pass
+    except (KeyboardInterrupt, SystemExit):
         pass
     finally:
+        try:
+            loop = asyncio.new_event_loop()
+            loop.run_until_complete(socket_server.stop())
+            loop.close()
+        except Exception:
+            pass
         try:
             server.store.close()
         except Exception:

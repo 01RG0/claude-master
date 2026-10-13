@@ -133,6 +133,7 @@
       "name": "apertis",
       "base_url": "https://api.apertis.ai/v1",
       "privacy_policy": "zero_retention",
+      "enabled": false,
       "models": [
         "*"
       ],
@@ -163,6 +164,7 @@
       "name": "pooled",
       "base_url": "https://ai.pooled.dev/v1",
       "privacy_policy": "zero_retention",
+      "enabled": false,
       "models": [
         "*"
       ],
@@ -178,6 +180,7 @@
       "name": "anyapi",
       "base_url": "https://api.anyapi.ai/v1",
       "privacy_policy": "zero_retention",
+      "enabled": false,
       "models": [
         "*"
       ],
@@ -208,6 +211,7 @@
       "name": "alibaba",
       "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "privacy_policy": "zero_retention",
+      "enabled": false,
       "models": [
         "qwen2.5-72b-instruct",
         "qwen2.5-7b-instruct"

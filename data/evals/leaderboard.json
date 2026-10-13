@@ -1,0 +1,307 @@
+{
+  "version": "1.0.0",
+  "benchmark_timestamp": "2026-10-13T22:44:09.305686+00:00",
+  "total_models": 4,
+  "models": [
+    {
+      "model": "openai/gpt-oss-120b",
+      "sample_size_N": 17,
+      "success_rate": 0.5882,
+      "ci_95": [
+        0.3601,
+        0.7839
+      ],
+      "ttft_ms": 216.36,
+      "throughput_tok_s": 501.68,
+      "avg_task_latency_ms": 3395.18,
+      "category_breakdown": {
+        "tool_call_validity": {
+          "sample_size_N": 3,
+          "passed": 3,
+          "success_rate": 1.0,
+          "ci_95": [
+            0.4385,
+            1.0
+          ],
+          "avg_score": 1.0
+        },
+        "multi_step_tool_loop": {
+          "sample_size_N": 2,
+          "passed": 2,
+          "success_rate": 1.0,
+          "ci_95": [
+            0.3424,
+            1.0
+          ],
+          "avg_score": 0.835
+        },
+        "code_edit_correctness": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0667
+        },
+        "instruction_following_reasoning": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.5667
+        },
+        "vision_understanding": {
+          "sample_size_N": 3,
+          "passed": 1,
+          "success_rate": 0.3333,
+          "ci_95": [
+            0.0615,
+            0.7923
+          ],
+          "avg_score": 0.1667
+        },
+        "language_quality": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.6667
+        }
+      },
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "model": "qwen/qwen3.8-27b",
+      "sample_size_N": 17,
+      "success_rate": 0.4706,
+      "ci_95": [
+        0.2617,
+        0.6904
+      ],
+      "ttft_ms": 1123.86,
+      "throughput_tok_s": 48.62,
+      "avg_task_latency_ms": 5358.38,
+      "category_breakdown": {
+        "tool_call_validity": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.6667
+        },
+        "multi_step_tool_loop": {
+          "sample_size_N": 2,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.6576
+          ],
+          "avg_score": 0.2
+        },
+        "code_edit_correctness": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.7333
+        },
+        "instruction_following_reasoning": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.6667
+        },
+        "vision_understanding": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "language_quality": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.7767
+        }
+      },
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "model": "gpt-oss-120b",
+      "sample_size_N": 17,
+      "success_rate": 0.1176,
+      "ci_95": [
+        0.0329,
+        0.3434
+      ],
+      "ttft_ms": 445.36,
+      "throughput_tok_s": 47.39,
+      "avg_task_latency_ms": 178.9,
+      "category_breakdown": {
+        "tool_call_validity": {
+          "sample_size_N": 3,
+          "passed": 2,
+          "success_rate": 0.6667,
+          "ci_95": [
+            0.2077,
+            0.9385
+          ],
+          "avg_score": 0.6667
+        },
+        "multi_step_tool_loop": {
+          "sample_size_N": 2,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.6576
+          ],
+          "avg_score": 0.0
+        },
+        "code_edit_correctness": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "instruction_following_reasoning": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "vision_understanding": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "language_quality": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        }
+      },
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "model": "qwen-3.8-27b",
+      "sample_size_N": 17,
+      "success_rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.1843
+      ],
+      "ttft_ms": 0.0,
+      "throughput_tok_s": 0.0,
+      "avg_task_latency_ms": 0.0,
+      "category_breakdown": {
+        "tool_call_validity": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "multi_step_tool_loop": {
+          "sample_size_N": 2,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.6576
+          ],
+          "avg_score": 0.0
+        },
+        "code_edit_correctness": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "instruction_following_reasoning": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "vision_understanding": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        },
+        "language_quality": {
+          "sample_size_N": 3,
+          "passed": 0,
+          "success_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.5615
+          ],
+          "avg_score": 0.0
+        }
+      },
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    }
+  ]
+}

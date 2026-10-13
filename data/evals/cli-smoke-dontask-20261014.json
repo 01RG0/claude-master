@@ -1,0 +1,51 @@
+{
+ "runs": [
+  {
+   "run_id": "8978df4b-5f83-4bc2-87cf-291c625ebbfe",
+   "seed": 20261014,
+   "scenario": "S1-multifile",
+   "rep": 1,
+   "passed": true,
+   "class": "verified",
+   "rc": 0,
+   "wall_ms": 14829.5,
+   "turns": 7,
+   "usage": {
+    "input_tokens": 75636,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 447,
+    "output_tokens_details": {
+     "thinking_tokens": 0
+    },
+    "server_tool_use": {
+     "web_search_requests": 0,
+     "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+     "ephemeral_1h_input_tokens": 0,
+     "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "",
+    "iterations": [],
+    "speed": "standard",
+    "fallback_credit": null
+   },
+   "cli_reported_cost_usd": 0.155742,
+   "provider_cost_usd": null,
+   "raw_output_path": "D:\\pRoG\\claude-master\\data\\evals\\cli-smoke-dontask-20261014.json.raw\\S1-multifile-rep1.json",
+   "output_tail": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`"
+  }
+ ],
+ "meta": {
+  "commit": "e177c3d",
+  "run_id": "8978df4b-5f83-4bc2-87cf-291c625ebbfe",
+  "seed": 20261014,
+  "model": "default",
+  "tier": "full",
+  "repeat": 1,
+  "started": "2026-10-13T23:29:52Z",
+  "finished": "2026-10-13T23:30:10Z"
+ }
+}

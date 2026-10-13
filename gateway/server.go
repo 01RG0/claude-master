@@ -545,8 +545,28 @@ func (s *Server) pickModel(p Provider, ar *AnthropicRequest) string {
 	if sel == "" {
 		sel = s.cfg.Routing.Strategy
 	}
-	cands := append([]string{}, p.Models...)
+	// "*" means "any model acceptable" in config/scan (see diffModels); it is
+	// not a real upstream id. Sending model="*" yields 404 (apertis).
+	s.mu.Lock()
+	pinned := s.pinned
+	s.mu.Unlock()
+	cands := make([]string, 0, len(p.Models))
+	for _, m := range p.Models {
+		if m == "" || m == "*" {
+			continue
+		}
+		if banned, ok := pinned[m]; ok && banned {
+			continue
+		}
+		cands = append(cands, m)
+	}
 	if len(cands) == 0 {
+		if ar != nil && ar.Model != "" && ar.Model != "*" {
+			if banned, ok := pinned[ar.Model]; ok && banned {
+				return ""
+			}
+			return ar.Model
+		}
 		return ""
 	}
 	switch sel {

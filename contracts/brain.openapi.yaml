@@ -1,257 +1,735 @@
-openapi: "3.0.3"
+openapi: 3.0.3
 info:
-  title: Claude Master Brain API
-  version: "0.1.0"
-  description: >
-    Internal REST + WebSocket API served by the Python brain daemon on
-    http://localhost:7700. All clients (hookshim, gateway, studio) communicate
-    through this interface. Secrets must never appear in request or response
-    bodies.
-
+  title: Claude Master Brain & Management API
+  version: 0.1.0
+  description: Unified REST API consumed by cm CLI and Studio UI.
 servers:
-  - url: http://localhost:7700
-
+- url: http://127.0.0.1:7700
 paths:
-  /health:
+  /api/v1/status:
     get:
-      operationId: health
-      summary: Liveness / readiness check
+      operationId: status
+      summary: System component status
       responses:
-        "200":
-          description: Daemon is healthy
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/HealthResponse" }
-
-  /hook:
-    post:
-      operationId: handleHook
-      summary: >
-        Called by hookshim on every Claude Code hook event.
-        Returns context to inject and an optional block decision.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/HookRequest" }
-      responses:
-        "200":
-          description: Hook processed
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/HookResponse" }
-
-  /nodes:
-    get:
-      operationId: listNodes
-      summary: List brain nodes with optional type filter
-      parameters:
-        - name: type
-          in: query
-          schema: { type: string }
-        - name: limit
-          in: query
-          schema: { type: integer, default: 50 }
-        - name: offset
-          in: query
-          schema: { type: integer, default: 0 }
-      responses:
-        "200":
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  nodes: { type: array, items: { $ref: "#/components/schemas/BrainNode" } }
-                  total: { type: integer }
-
-  /query/associations:
-    post:
-      operationId: queryAssociations
-      summary: Spreading-activation query from seed node IDs
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [seed_ids]
-              properties:
-                seed_ids:
-                  type: array
-                  items: { type: string }
-                max_hops:
-                  type: integer
-                  default: 3
-                min_weight:
-                  type: number
-                  default: 0.1
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  nodes: { type: array, items: { $ref: "#/components/schemas/BrainNode" } }
-                  edges: { type: array, items: { $ref: "#/components/schemas/BrainEdge" } }
-                  activation_scores: { type: object, additionalProperties: { type: number } }
-
-  /outcome:
-    post:
-      operationId: reportOutcome
-      summary: Report tool execution outcome to trigger Hebbian update
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/OutcomeReport" }
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  weight_delta: { type: number }
-                  updated_edges: { type: integer }
-
-  /sleep/trigger:
-    post:
-      operationId: triggerSleep
-      summary: Manually trigger nightly sleep consolidation (also run by watchdog)
-      responses:
-        "202":
-          description: Sleep job started
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  run_id: { type: string }
-
-  /sleep/status/{run_id}:
+  /api/v1/bypass:
     get:
-      operationId: sleepStatus
-      parameters:
-        - name: run_id
-          in: path
-          required: true
-          schema: { type: string }
+      operationId: bypass_status
+      summary: Get bypass mode status
       responses:
-        "200":
+        '200':
+          description: Successful operation
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/SleepRun" }
-
-  /stats:
+              schema:
+                type: object
+    post:
+      operationId: bypass_set
+      summary: Set bypass mode on or off
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/system/lifecycle:
+    post:
+      operationId: lifecycle
+      summary: Manage system daemon lifecycle
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/doctor:
     get:
-      operationId: stats
-      summary: Aggregated model stats and key health (masked keys)
+      operationId: doctor
+      summary: Run diagnostic checks on system components
       responses:
-        "200":
+        '200':
+          description: Successful operation
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/SystemStats" }
-
-components:
-  schemas:
-    HealthResponse:
-      type: object
-      required: [status, uptime_s, db_size_bytes]
-      properties:
-        status: { type: string, enum: [ok, degraded] }
-        uptime_s: { type: number }
-        db_size_bytes: { type: integer }
-        node_count: { type: integer }
-        edge_count: { type: integer }
-
-    HookRequest:
-      type: object
-      required: [event_type, session_id, payload]
-      properties:
-        event_type:
-          type: string
-          enum: [UserPromptSubmit, PreToolUse, PostToolUse, Stop]
-        session_id: { type: string }
-        payload: { type: object }   # event-specific; see contracts/hook-payloads.md
-
-    HookResponse:
-      type: object
-      properties:
-        allow: { type: boolean, default: true }
-        block_reason: { type: string }
-        additional_context: { type: string }  # injected into prompt when UserPromptSubmit
-        outcome_reward: { type: number }
-
-    BrainNode:
-      type: object
-      required: [id, node_type, name, created_at]
-      properties:
-        id: { type: string }
-        node_type: { type: string }
-        name: { type: string }
-        content: { type: string }
-        difficulty: { type: number }
-        stability: { type: number }
-        last_accessed_at: { type: integer }
-        created_at: { type: integer }
-
-    BrainEdge:
-      type: object
-      required: [id, source_id, target_id, relation_type, weight]
-      properties:
-        id: { type: string }
-        source_id: { type: string }
-        target_id: { type: string }
-        relation_type: { type: string }
-        weight: { type: number }
-        valid_at: { type: integer }
-        invalid_at: { type: integer, nullable: true }
-
-    OutcomeReport:
-      type: object
-      required: [session_id, event_type, reward]
-      properties:
-        session_id: { type: string }
-        event_type: { type: string }
-        tool_name: { type: string }
-        command_summary: { type: string }
-        reward: { type: number, minimum: -1.0, maximum: 1.0 }
-        node_ids: { type: array, items: { type: string } }
-
-    SleepRun:
-      type: object
-      properties:
-        run_id: { type: string }
-        started_at: { type: integer }
-        finished_at: { type: integer, nullable: true }
-        phase: { type: string }
-        nodes_processed: { type: integer }
-        edges_strengthened: { type: integer }
-        edges_pruned: { type: integer }
-        lessons_added: { type: integer }
-        skills_added: { type: integer }
-
-    SystemStats:
-      type: object
-      properties:
-        models:
-          type: array
-          items:
-            type: object
-            properties:
-              model_id: { type: string }
-              provider: { type: string }
-              successes: { type: integer }
-              failures: { type: integer }
-              avg_latency_ms: { type: number }
-        keys:
-          type: array
-          items:
-            type: object
-            properties:
-              provider: { type: string }
-              key_prefix: { type: string }   # e.g. "gsk_****" – masked
-              is_active: { type: boolean }
-              cooldown_until: { type: integer, nullable: true }
+              schema:
+                type: object
+    post:
+      operationId: doctor_fix
+      summary: Apply automated doctor fixes
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/explain/{req_id}:
+    get:
+      operationId: explain
+      summary: Explain routing and gating decisions for a request
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers:
+    get:
+      operationId: provider_list
+      summary: List configured model providers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: provider_add
+      summary: Add or update a provider
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers/{name}:
+    delete:
+      operationId: provider_delete
+      summary: Remove a provider by name
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers/remove:
+    post:
+      operationId: provider_remove
+      summary: Remove a provider
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers/test:
+    post:
+      operationId: provider_test
+      summary: Test provider connectivity
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers/scan:
+    post:
+      operationId: provider_scan
+      summary: Scan all configured providers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/providers/probe:
+    post:
+      operationId: provider_probe
+      summary: Probe specific provider capabilities
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/keys:
+    get:
+      operationId: key_list
+      summary: List registered API keys with masking
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: key_add
+      summary: Add a new API key
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/keys/{key_id}:
+    delete:
+      operationId: key_delete
+      summary: Remove an API key by id
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/keys/remove:
+    post:
+      operationId: key_remove
+      summary: Remove an API key
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/keys/rotate:
+    post:
+      operationId: key_rotate
+      summary: Rotate an existing API key
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/keys/test:
+    post:
+      operationId: key_test
+      summary: Test API key validity
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models:
+    get:
+      operationId: model_list
+      summary: List models and their runtime statuses
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models/probe:
+    post:
+      operationId: model_probe
+      summary: Probe model capabilities and latency
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models/pin:
+    post:
+      operationId: model_pin
+      summary: Pin model to prevent fallback
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models/ban:
+    post:
+      operationId: model_ban
+      summary: Ban model from selection pool
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models/override:
+    post:
+      operationId: model_override
+      summary: Set alias override for model
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/models/compare:
+    post:
+      operationId: model_compare_post
+      summary: Compare models benchmark, cost, and latency
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    get:
+      operationId: model_compare
+      summary: Compare models benchmark, cost, and latency
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/routes:
+    get:
+      operationId: route_get
+      summary: Get current routing configuration and policies
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: route_set
+      summary: Update routing strategy and rules
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/routes/simulate:
+    post:
+      operationId: route_simulate
+      summary: Simulate routing for a given request
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/drex/status:
+    get:
+      operationId: drex_status
+      summary: Get Drex judge and gating status
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/drex/config:
+    get:
+      operationId: drex_config_get
+      summary: Get Drex configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: drex_config_set
+      summary: Update Drex configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/drex/decisions:
+    get:
+      operationId: drex_decisions
+      summary: Get recent Drex decisions log
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/drex/accuracy:
+    get:
+      operationId: drex_accuracy
+      summary: Get Drex accuracy benchmark metrics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/privacy/rules:
+    get:
+      operationId: privacy_rules_get
+      summary: Get privacy scrubbing and redaction rules
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: privacy_rules_set
+      summary: Add or update privacy redaction rule
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/privacy/redact:
+    post:
+      operationId: privacy_redact
+      summary: Test redaction on a string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/privacy/guards:
+    get:
+      operationId: privacy_guards_get
+      summary: Get active privacy guards
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: privacy_guards_set
+      summary: Update privacy guard settings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/budget/summary:
+    get:
+      operationId: budget_summary
+      summary: Get spend summary and token usage
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/budget/caps:
+    get:
+      operationId: budget_caps_get
+      summary: Get spending caps
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: budget_caps_set
+      summary: Set spending caps
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/budget/projections:
+    get:
+      operationId: budget_projections
+      summary: Get spending rate projections
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/brain/lessons:
+    get:
+      operationId: brain_lessons
+      summary: List lessons distilled in the brain
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/brain/memories:
+    get:
+      operationId: brain_memories
+      summary: List episodic memories and knowledge graph summary
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/brain/decay:
+    post:
+      operationId: brain_decay
+      summary: Trigger FSRS memory decay and sleep consolidation
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/brain/rollback:
+    post:
+      operationId: brain_rollback
+      summary: Rollback recent episodic memory mutations
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/claude/status:
+    get:
+      operationId: claude_status
+      summary: Get Claude Code integration status
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/claude/apply:
+    post:
+      operationId: claude_apply
+      summary: Apply Claude Code integration configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/claude/undo:
+    post:
+      operationId: claude_undo
+      summary: Undo Claude Code integration settings
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/claude/verify:
+    post:
+      operationId: claude_verify
+      summary: Verify end-to-end Claude Code connection
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/test/run:
+    post:
+      operationId: test_run
+      summary: Run test suites
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/test/smoke:
+    post:
+      operationId: test_smoke
+      summary: Run rapid smoke tests across stack
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/test/status:
+    get:
+      operationId: test_status
+      summary: Get status of most recent test run
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/backup/create:
+    post:
+      operationId: backup_create
+      summary: Create backup snapshot of brain DB and config
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/backup/restore:
+    post:
+      operationId: backup_restore
+      summary: Restore from a backup snapshot
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/backup/list:
+    get:
+      operationId: backup_list
+      summary: List available backup snapshots
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/update/check:
+    get:
+      operationId: update_check
+      summary: Check for updates
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/update/apply:
+    post:
+      operationId: update_apply
+      summary: Apply software update
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/update/rollback:
+    post:
+      operationId: update_rollback
+      summary: Rollback update to previous revision
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/config/export:
+    get:
+      operationId: config_export
+      summary: Export sanitized configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/config/import:
+    post:
+      operationId: config_import
+      summary: Import configuration
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/config/reset:
+    post:
+      operationId: config_reset
+      summary: Reset configuration to defaults
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/logs:
+    get:
+      operationId: logs_get
+      summary: Fetch recent system logs with optional level filter
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/logs/stream:
+    get:
+      operationId: logs_stream
+      summary: Stream recent log events
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/v1/logs/export:
+    post:
+      operationId: logs_export
+      summary: Export logs to a specified path
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object

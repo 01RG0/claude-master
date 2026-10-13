@@ -180,6 +180,57 @@ func TestRoleCoercedForToolCalls(t *testing.T) {
 	}
 }
 
+func TestClampMaxTokensDefaultCap(t *testing.T) {
+	ar := &AnthropicRequest{Model: "x", MaxTokens: 128000,
+		Messages: []AnthropicMessage{{Role: "user", Content: json.RawMessage(`"hi"`)}}}
+	or, notes := TranslateRequest(ar, "m", AdapterSpec{})
+	if or.MaxTokens != DefaultMaxTokensCap {
+		t.Fatalf("clamped=%d want %d", or.MaxTokens, DefaultMaxTokensCap)
+	}
+	found := false
+	for _, n := range notes {
+		if strings.Contains(n, "max_tokens clamped") {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Fatalf("expected clamp note, got %v", notes)
+	}
+}
+
+func TestClampMaxTokensAdapterOverride(t *testing.T) {
+	ar := &AnthropicRequest{Model: "x", MaxTokens: 128000,
+		Messages: []AnthropicMessage{{Role: "user", Content: json.RawMessage(`"hi"`)}}}
+	or, _ := TranslateRequest(ar, "m", AdapterSpec{MaxTokens: 4096})
+	if or.MaxTokens != 4096 {
+		t.Fatalf("got %d", or.MaxTokens)
+	}
+	or2, notes := TranslateRequest(&AnthropicRequest{Model: "x", MaxTokens: 100,
+		Messages: []AnthropicMessage{{Role: "user", Content: json.RawMessage(`"hi"`)}}}, "m", AdapterSpec{})
+	if or2.MaxTokens != 100 {
+		t.Fatalf("under-cap should pass through, got %d", or2.MaxTokens)
+	}
+	for _, n := range notes {
+		if strings.Contains(n, "clamped") {
+			t.Fatalf("unexpected clamp note: %v", notes)
+		}
+	}
+}
+
+func TestPickModelWildcardPassthrough(t *testing.T) {
+	s := NewServer(&Config{Providers: []Provider{{Name: "wild", Models: []string{"*"}}},
+		Routing: RoutingConfig{Strategy: "priority"}})
+	got := s.pickModel(s.cfg.Providers[0], &AnthropicRequest{Model: "openai/gpt-oss-20b"})
+	if got != "openai/gpt-oss-20b" {
+		t.Fatalf("wildcard provider should pass resolved model, got %q", got)
+	}
+	got = s.pickModel(Provider{Name: "empty", Models: []string{"*", ""}}, &AnthropicRequest{Model: "*"})
+	if got != "" {
+		t.Fatalf("no real model available → empty, got %q", got)
+	}
+}
+
 func TestToolChoiceMapping(t *testing.T) {
 	if got := mapToolChoice(json.RawMessage(`{"type":"any"}`)); got != "required" {
 		t.Fatalf("any → %v", got)

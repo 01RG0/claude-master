@@ -1,0 +1,240 @@
+{
+  "title": "Empirical Model Evaluation Statistical Power Analysis",
+  "description": "Paired sample-size calculations. These are design assumptions, not benchmark results.",
+  "recommended_task_suite_size": {
+    "minimum_total_tasks": 180,
+    "tasks_per_category": 30,
+    "categories_count": 6,
+    "status": "minimum floor only; not sufficient for the effect targets below"
+  },
+  "paired_effect_targets": {
+    "baseline_rate": 0.5,
+    "discordant_pair_fraction": 0.3,
+    "alpha": 0.05,
+    "target_power": 0.8,
+    "required_tasks_per_category": {
+      "absolute_difference_0_20": 57,
+      "absolute_difference_0_15": 103
+    },
+    "method": "Normal approximation to paired McNemar test with stated discordance assumption",
+    "interpretation": "Planning calculation only; assumptions must be checked against pilot discordant pairs."
+  },
+  "power_matrix": [
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.6,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 388,
+      "required_N_paired_benchmark": 234
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.6,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 519,
+      "required_N_paired_benchmark": 312
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.65,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 170,
+      "required_N_paired_benchmark": 103
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.65,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 227,
+      "required_N_paired_benchmark": 136
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.7,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 93,
+      "required_N_paired_benchmark": 57
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.7,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 124,
+      "required_N_paired_benchmark": 75
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.75,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 58,
+      "required_N_paired_benchmark": 36
+    },
+    {
+      "baseline_p1": 0.5,
+      "target_p2": 0.75,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 77,
+      "required_N_paired_benchmark": 47
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.7,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 356,
+      "required_N_paired_benchmark": 234
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.7,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 477,
+      "required_N_paired_benchmark": 312
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.75,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 152,
+      "required_N_paired_benchmark": 103
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.75,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 203,
+      "required_N_paired_benchmark": 136
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.8,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 82,
+      "required_N_paired_benchmark": 57
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.8,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 109,
+      "required_N_paired_benchmark": 75
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.85,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 49,
+      "required_N_paired_benchmark": 36
+    },
+    {
+      "baseline_p1": 0.6,
+      "target_p2": 0.85,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 65,
+      "required_N_paired_benchmark": 47
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.8,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 294,
+      "required_N_paired_benchmark": 234
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.8,
+      "effect_size_delta": 0.1,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 392,
+      "required_N_paired_benchmark": 312
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.85,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 121,
+      "required_N_paired_benchmark": 103
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.85,
+      "effect_size_delta": 0.15,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 161,
+      "required_N_paired_benchmark": 136
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.9,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 62,
+      "required_N_paired_benchmark": 57
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.9,
+      "effect_size_delta": 0.2,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 82,
+      "required_N_paired_benchmark": 75
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.95,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.8,
+      "required_N_independent": 36,
+      "required_N_paired_benchmark": 36
+    },
+    {
+      "baseline_p1": 0.7,
+      "target_p2": 0.95,
+      "effect_size_delta": 0.25,
+      "alpha": 0.05,
+      "target_power": 0.9,
+      "required_N_independent": 47,
+      "required_N_paired_benchmark": 47
+    }
+  ]
+}

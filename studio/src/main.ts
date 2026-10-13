@@ -1,131 +1,181 @@
+// src/main.ts — Claude Master Studio Application Entrypoint
+
 import "./styles.css";
-import { BrainGraph, BrainWebSocket } from "./graph/index.js";
-import { CanvasScrubber, Scrubber } from "./scrubber/index.js";
-import { GatewayAdmin, InspectorPanel, ReviewQueue } from "./ui/index.js";
+import { store } from "./state/store.js";
+import { Topbar } from "./components/Topbar.js";
+import { OfflineBanner } from "./components/OfflineBanner.js";
+import { Navigation } from "./components/Navigation.js";
+import { CommandPalette } from "./components/CommandPalette.js";
+import { ToastManager } from "./components/ToastManager.js";
+import { BrainWebSocket } from "./graph/index.js";
 import type { BrainEvent } from "./types/events.js";
+
+// Screens
+import { SetupWizardScreen } from "./screens/SetupWizardScreen.js";
+import { HomeScreen } from "./screens/HomeScreen.js";
+import { ProvidersScreen } from "./screens/ProvidersScreen.js";
+import { ModelsScreen } from "./screens/ModelsScreen.js";
+import { RoutingScreen } from "./screens/RoutingScreen.js";
+import { DrexScreen } from "./screens/DrexScreen.js";
+import { PrivacyScreen } from "./screens/PrivacyScreen.js";
+import { BudgetsScreen } from "./screens/BudgetsScreen.js";
+import { BrainScreen } from "./screens/BrainScreen.js";
+import { ClaudeCodeScreen } from "./screens/ClaudeCodeScreen.js";
+import { SettingsScreen } from "./screens/SettingsScreen.js";
+import { LiveRequestsScreen } from "./screens/LiveRequestsScreen.js";
+import { SessionsScreen } from "./screens/SessionsScreen.js";
+import { AlertsScreen } from "./screens/AlertsScreen.js";
+import { DoctorScreen } from "./screens/DoctorScreen.js";
+import { LogsScreen } from "./screens/LogsScreen.js";
+import { DetectionScreen } from "./screens/DetectionScreen.js";
+import { ReportsScreen } from "./screens/ReportsScreen.js";
+import { TestCenterScreen } from "./screens/TestCenterScreen.js";
+import { VersionUpdateScreen } from "./screens/VersionUpdateScreen.js";
 
 function mount(): void {
   const app = document.getElementById("app");
   if (!app) throw new Error("#app missing");
 
+  // Initialize store and fetch dynamic schemas
+  store.initData();
+  (window as any).__STORE__ = store;
+
+  // Initialize global overlays
+  new CommandPalette();
+  new ToastManager();
+
   app.innerHTML = `
-    <div class="app-shell">
-      <div class="topbar">
-        <h1>Synaptic Studio</h1>
-        <span class="muted" id="conn-status">connecting…</span>
-        <div class="spacer"></div>
-        <button type="button" id="btn-live">Live</button>
-        <button type="button" id="btn-pause">Pause</button>
-        <button type="button" id="btn-play">Replay</button>
-        <button type="button" id="btn-seed" class="ghost">Seed 5k</button>
-      </div>
-      <div class="viewport"><div class="sigma-root" id="graph"></div></div>
-      <aside class="sidebar">
-        <section id="inspector"></section>
-        <section id="review-queue"></section>
-        <section id="gateway-admin"></section>
-      </aside>
-      <div class="scrubber-bar">
-        <canvas id="scrubber-canvas" width="1200" height="48"></canvas>
+    <div class="app-layout">
+      <div id="topbar-container"></div>
+      <div id="offline-banner-container"></div>
+      <div class="app-body">
+        <aside id="nav-container"></aside>
+        <main class="main-content" id="screen-container" role="main"></main>
       </div>
     </div>
   `;
 
-  const scrubber = new Scrubber();
-  const graphEl = document.getElementById("graph")!;
-  const brain = new BrainGraph({ container: graphEl, scrubber });
-  const inspector = new InspectorPanel(document.getElementById("inspector")!);
-  const review = new ReviewQueue(document.getElementById("review-queue")!);
-  const gateway = new GatewayAdmin(document.getElementById("gateway-admin")!);
-  const canvas = document.getElementById("scrubber-canvas") as HTMLCanvasElement;
-  const canvasScrubber = new CanvasScrubber(canvas, scrubber);
+  const topbar = new Topbar();
+  document.getElementById("topbar-container")!.appendChild(topbar.getElement());
 
-  brain.setSelectionHandler((id, kind) => {
-    if (!id || !kind) {
-      inspector.setSelection(null, null, null);
+  const offlineBanner = new OfflineBanner();
+  document.getElementById("offline-banner-container")!.appendChild(offlineBanner.getElement());
+
+  const navigation = new Navigation();
+  document.getElementById("nav-container")!.appendChild(navigation.getElement());
+
+  const screenContainer = document.getElementById("screen-container")!;
+
+  let currentScreenInstance: any = null;
+  let activeScreenId = "";
+
+  const renderActiveScreen = () => {
+    const screenId = store.getState().currentScreen;
+    if (screenId === activeScreenId && currentScreenInstance) {
+      currentScreenInstance.render();
       return;
     }
-    const attrs = kind === "node" ? brain.getNodeAttrs(id) : brain.getEdgeAttrs(id);
-    inspector.setSelection(kind, id, attrs);
+
+    activeScreenId = screenId;
+    screenContainer.innerHTML = "";
+
+    switch (screenId) {
+      case "setup":
+        currentScreenInstance = new SetupWizardScreen(screenContainer);
+        break;
+      case "home":
+        currentScreenInstance = new HomeScreen(screenContainer);
+        break;
+      case "providers":
+        currentScreenInstance = new ProvidersScreen(screenContainer);
+        break;
+      case "models":
+        currentScreenInstance = new ModelsScreen(screenContainer);
+        break;
+      case "routing":
+        currentScreenInstance = new RoutingScreen(screenContainer);
+        break;
+      case "drex":
+        currentScreenInstance = new DrexScreen(screenContainer);
+        break;
+      case "privacy":
+        currentScreenInstance = new PrivacyScreen(screenContainer);
+        break;
+      case "budgets":
+        currentScreenInstance = new BudgetsScreen(screenContainer);
+        break;
+      case "brain":
+        currentScreenInstance = new BrainScreen(screenContainer);
+        break;
+      case "claude_code":
+        currentScreenInstance = new ClaudeCodeScreen(screenContainer);
+        break;
+      case "settings":
+        currentScreenInstance = new SettingsScreen(screenContainer);
+        break;
+      case "live_requests":
+        currentScreenInstance = new LiveRequestsScreen(screenContainer);
+        break;
+      case "sessions":
+        currentScreenInstance = new SessionsScreen(screenContainer);
+        break;
+      case "alerts":
+        currentScreenInstance = new AlertsScreen(screenContainer);
+        break;
+      case "doctor":
+        currentScreenInstance = new DoctorScreen(screenContainer);
+        break;
+      case "logs":
+        currentScreenInstance = new LogsScreen(screenContainer);
+        break;
+      case "detection":
+        currentScreenInstance = new DetectionScreen(screenContainer);
+        break;
+      case "reports":
+        currentScreenInstance = new ReportsScreen(screenContainer);
+        break;
+      case "test_center":
+        currentScreenInstance = new TestCenterScreen(screenContainer);
+        break;
+      case "version_update":
+        currentScreenInstance = new VersionUpdateScreen(screenContainer);
+        break;
+      default:
+        currentScreenInstance = new HomeScreen(screenContainer);
+        break;
+    }
+
+    currentScreenInstance.render();
+  };
+
+  // Subscribe to screen changes and re-render
+  store.subscribe((state) => {
+    if (state.currentScreen !== activeScreenId) {
+      renderActiveScreen();
+    }
   });
 
-  const status = document.getElementById("conn-status")!;
-  const wsUrl = (import.meta as ImportMeta & { env?: { VITE_WS_URL?: string } }).env?.VITE_WS_URL
-    ?? "ws://localhost:7700/ws";
+  renderActiveScreen();
+
+  // Connect to Brain Daemon WebSocket for live events
+  const wsUrl = (import.meta as ImportMeta & { env?: { VITE_WS_URL?: string } }).env?.VITE_WS_URL || "ws://localhost:7700/ws";
   const ws = new BrainWebSocket({ url: wsUrl });
 
   ws.onEvent((ev: BrainEvent) => {
-    brain.handleEvent(ev);
-    routeSideEffects(ev, review, gateway);
+    if (ev.event === "gateway_health") {
+      // Update requests or alert if any
+    }
   });
 
   try {
     ws.connect();
-    status.textContent = `ws → ${wsUrl}`;
   } catch {
-    status.textContent = "ws offline (seed locally)";
+    // Daemon offline is handled smoothly by store
   }
-
-  document.getElementById("btn-live")!.onclick = () => scrubber.live();
-  document.getElementById("btn-pause")!.onclick = () => scrubber.pause();
-  document.getElementById("btn-play")!.onclick = () => scrubber.play(2);
-  document.getElementById("btn-seed")!.onclick = () => {
-    brain.seedBenchmarkGraph(5000, 20_000);
-    status.textContent = "seeded 5k/20k (GPU target 60 FPS)";
-  };
 
   window.addEventListener("beforeunload", () => {
-    canvasScrubber.dispose();
-    brain.dispose();
-    scrubber.dispose();
     ws.close();
   });
-}
-
-function routeSideEffects(
-  ev: BrainEvent,
-  review: ReviewQueue,
-  gateway: GatewayAdmin,
-): void {
-  switch (ev.event) {
-    case "circuit_breaker_tripped":
-      review.enqueue(
-        "circuit_breaker_tripped",
-        ev.ts,
-        `${ev.data.pattern} ×${ev.data.iteration} (${ev.data.session_id})`,
-        ev.data as unknown as Record<string, unknown>,
-      );
-      break;
-    case "lesson_extracted":
-      review.enqueue(
-        "lesson_extracted",
-        ev.ts,
-        ev.data.rule_text,
-        ev.data as unknown as Record<string, unknown>,
-      );
-      break;
-    case "skill_learned":
-      review.enqueue(
-        "skill_learned",
-        ev.ts,
-        `${ev.data.name}@v${ev.data.version} (${ev.data.language})`,
-        ev.data as unknown as Record<string, unknown>,
-      );
-      break;
-    case "edge_invalidated":
-      review.enqueue(
-        "edge_invalidated",
-        ev.ts,
-        `${ev.data.edge_id} → ${ev.data.replacement_edge_id}`,
-        ev.data as unknown as Record<string, unknown>,
-      );
-      break;
-    case "gateway_health":
-      gateway.updateHealth(ev.data);
-      break;
-    default:
-      break;
-  }
 }
 
 mount();

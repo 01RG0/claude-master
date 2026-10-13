@@ -1,0 +1,100 @@
+{
+  "profiles": {
+    "main": {
+      "description": "General agentic coding and multi-turn problem solving",
+      "hard_constraints": {
+        "tool_calling": true,
+        "min_context": 32768,
+        "vision": false,
+        "max_budget_usd": 0.10,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.45,
+        "ttft": 0.20,
+        "cost": 0.15,
+        "reliability": 0.20
+      }
+    },
+    "fast": {
+      "description": "Low-latency lightweight queries, inline completions, and simple classification",
+      "hard_constraints": {
+        "tool_calling": false,
+        "min_context": 8192,
+        "vision": false,
+        "max_budget_usd": 0.01,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.15,
+        "ttft": 0.50,
+        "cost": 0.20,
+        "reliability": 0.15
+      }
+    },
+    "subagent": {
+      "description": "Autonomous subagent tool-calling and workflow orchestration",
+      "hard_constraints": {
+        "tool_calling": true,
+        "min_context": 65536,
+        "vision": false,
+        "max_budget_usd": 0.08,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.40,
+        "ttft": 0.15,
+        "cost": 0.20,
+        "reliability": 0.25
+      }
+    },
+    "summarizer": {
+      "description": "Long-context digestion, compression, and report generation",
+      "hard_constraints": {
+        "tool_calling": false,
+        "min_context": 65536,
+        "vision": false,
+        "max_budget_usd": 0.03,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.30,
+        "ttft": 0.20,
+        "cost": 0.40,
+        "reliability": 0.10
+      }
+    },
+    "vision": {
+      "description": "Multimodal visual reasoning, UI review, and diagram analysis",
+      "hard_constraints": {
+        "tool_calling": false,
+        "min_context": 16384,
+        "vision": true,
+        "max_budget_usd": 0.08,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.45,
+        "ttft": 0.20,
+        "cost": 0.15,
+        "reliability": 0.20
+      }
+    },
+    "complex_reasoning": {
+      "description": "Deep architecture, multi-file refactoring, and hard debugging",
+      "hard_constraints": {
+        "tool_calling": true,
+        "min_context": 65536,
+        "vision": false,
+        "max_budget_usd": 0.20,
+        "privacy": "zero_retention"
+      },
+      "soft_objectives": {
+        "quality": 0.60,
+        "ttft": 0.10,
+        "cost": 0.10,
+        "reliability": 0.20
+      }
+    }
+  }
+}

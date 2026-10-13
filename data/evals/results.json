@@ -1,0 +1,777 @@
+{
+  "version": "1.0.0",
+  "benchmark_timestamp": "2026-10-13T22:44:09.305686+00:00",
+  "gateway_url": "http://127.0.0.1:8080",
+  "total_probes": 68,
+  "results": [
+    {
+      "task_id": "tool_call_validity_01",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 354.86,
+      "tool_call": {
+        "name": "search_logs",
+        "args": {
+          "limit": 20,
+          "min_severity": "ERROR",
+          "service_name": "auth-service",
+          "time_range_hours": 2
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_02",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 356.57,
+      "tool_call": {
+        "name": "calculate_tax",
+        "args": {
+          "deductions": 12000,
+          "filing_status": "single",
+          "income": 125000,
+          "state": "CA"
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_03",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 352.18,
+      "tool_call": {
+        "name": "schedule_calendar_event",
+        "args": {
+          "attendees": [
+            "alice@company.com",
+            "bob@company.com"
+          ],
+          "duration_minutes": 45,
+          "record_session": true,
+          "title": "Sprint Retrospective"
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_01",
+      "passed": true,
+      "score": 0.67,
+      "latency_ms": 814.26,
+      "final_content_preview": "sarah connor has **not** exceeded her storage quota. she has used 42.5 gb out of her 50.0 gb limit.",
+      "category": "multi_step_tool_loop",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_02",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 959.04,
+      "final_content_preview": "the pool is saturated — 200/200 connections used with 85 waiters queued, which explains the `db_connection_timeout`. the",
+      "category": "multi_step_tool_loop",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "HTTP Error 502: Bad Gateway",
+      "category": "code_edit_correctness",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_02",
+      "passed": false,
+      "score": 0.2,
+      "latency_ms": 14165.472900000168,
+      "error": "Symbol merge_intervals not found in generated code",
+      "category": "code_edit_correctness",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 15484.36,
+      "error": "",
+      "category": "code_edit_correctness",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_gsm8k_croissants",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 7951.56,
+      "extracted": null,
+      "expected": "54",
+      "category": "instruction_following_reasoning",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_rack_deduction",
+      "passed": true,
+      "score": 0.7,
+      "latency_ms": 1062.76,
+      "extracted": null,
+      "expected": "4",
+      "category": "instruction_following_reasoning",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_strict_negative_constraints",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 156.01,
+      "bullet_count": 3,
+      "forbidden_absent": true,
+      "category": "instruction_following_reasoning",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_ui_button_inspection",
+      "passed": true,
+      "score": 0.5,
+      "latency_ms": 155.63,
+      "extracted": {
+        "button_label": "OK",
+        "button_color": "blue"
+      },
+      "category": "vision_understanding",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_chart_latency_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 143.14,
+      "extracted": {
+        "service": "checkout-api",
+        "latency_ms": 142.5
+      },
+      "category": "vision_understanding",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_status_grid_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 160.71,
+      "extracted": "I cannot view or access attached images. Please provide the cluster health status as text or data, a",
+      "category": "vision_understanding",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_morphology_nuance",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 1037.83,
+      "matched_groups": "0/3",
+      "category": "language_quality",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_technical_translation",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 9269.27,
+      "matched_groups": "4/4",
+      "category": "language_quality",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_english_technical_clarity",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 5294.41,
+      "word_count": 118,
+      "matched_concepts": [
+        "quorum",
+        "majority",
+        "term",
+        "log"
+      ],
+      "category": "language_quality",
+      "model": "openai/gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_01",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 4727.53,
+      "tool_call": {
+        "name": "search_logs",
+        "args": {
+          "service_name": "auth-service",
+          "min_severity": "ERROR",
+          "time_range_hours": 2,
+          "limit": 20
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_02",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 7512.93,
+      "tool_call": {
+        "name": "calculate_tax",
+        "args": {
+          "deductions": 12000,
+          "filing_status": "single",
+          "income": 125000,
+          "state": "California"
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 4635.061300003144,
+      "error": "No tool calls found. Content: ",
+      "category": "tool_call_validity",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_01",
+      "passed": false,
+      "score": 0.2,
+      "latency_ms": 4886.475799998152,
+      "error": "Step 1 missing tool call",
+      "category": "multi_step_tool_loop",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_02",
+      "passed": false,
+      "score": 0.2,
+      "latency_ms": 7340.229999994335,
+      "error": "Step 1 missing tool call",
+      "category": "multi_step_tool_loop",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_01",
+      "passed": false,
+      "score": 0.2,
+      "latency_ms": 16732.009599996672,
+      "error": "Symbol normalize_url not found in generated code",
+      "category": "code_edit_correctness",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_02",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 551.96,
+      "target_symbol": "merge_intervals",
+      "category": "code_edit_correctness",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_03",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 638.53,
+      "target_symbol": "TokenBucket",
+      "category": "code_edit_correctness",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_gsm8k_croissants",
+      "passed": true,
+      "score": 0.7,
+      "latency_ms": 1159.57,
+      "extracted": null,
+      "expected": "54",
+      "category": "instruction_following_reasoning",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_rack_deduction",
+      "passed": true,
+      "score": 0.7,
+      "latency_ms": 1158.85,
+      "extracted": null,
+      "expected": "4",
+      "category": "instruction_following_reasoning",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_strict_negative_constraints",
+      "passed": false,
+      "score": 0.6,
+      "latency_ms": 9450.32,
+      "bullet_count": 0,
+      "forbidden_absent": true,
+      "category": "instruction_following_reasoning",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_ui_button_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 1355.98,
+      "extracted": {
+        "button_label": "Delete",
+        "button_color": "red"
+      },
+      "category": "vision_understanding",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_chart_latency_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 4158.47,
+      "extracted": "```json\n{\n  \"service\": \"Service_X\",  // Replace with the actual service name from the chart\n  \"laten",
+      "category": "vision_understanding",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_status_grid_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 1649.57,
+      "extracted": {
+        "green_count": 5,
+        "red_count": 2
+      },
+      "category": "vision_understanding",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_morphology_nuance",
+      "passed": false,
+      "score": 0.33,
+      "latency_ms": 13715.71,
+      "matched_groups": "1/3",
+      "category": "language_quality",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_technical_translation",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 8399.77,
+      "matched_groups": "4/4",
+      "category": "language_quality",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_english_technical_clarity",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 3019.51,
+      "word_count": 106,
+      "matched_concepts": [
+        "quorum",
+        "majority",
+        "term",
+        "log"
+      ],
+      "category": "language_quality",
+      "model": "qwen/qwen3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_01",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 995.21,
+      "tool_call": {
+        "name": "search_logs",
+        "args": {
+          "service_name": "auth-service",
+          "min_severity": "ERROR",
+          "time_range_hours": 2,
+          "limit": 20
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_02",
+      "passed": true,
+      "score": 1.0,
+      "latency_ms": 2046.06,
+      "tool_call": {
+        "name": "calculate_tax",
+        "args": {
+          "income": 125000,
+          "state": "California",
+          "filing_status": "single",
+          "deductions": 12000
+        }
+      },
+      "category": "tool_call_validity",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "[WinError 10054] An existing connection was forcibly closed by the remote host",
+      "category": "tool_call_validity",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "multi_step_tool_loop",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_02",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "multi_step_tool_loop",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_02",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_gsm8k_croissants",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_rack_deduction",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_strict_negative_constraints",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_ui_button_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_chart_latency_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_status_grid_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_morphology_nuance",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_technical_translation",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_english_technical_clarity",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "gpt-oss-120b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "tool_call_validity",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_02",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "tool_call_validity",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "tool_call_validity_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "tool_call_validity",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "multi_step_tool_loop",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "multi_step_tool_loop_02",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "multi_step_tool_loop",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_01",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_02",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "code_edit_correctness_03",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "code_edit_correctness",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_gsm8k_croissants",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_rack_deduction",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "reasoning_strict_negative_constraints",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "instruction_following_reasoning",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_ui_button_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_chart_latency_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "vision_status_grid_inspection",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "vision_understanding",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_morphology_nuance",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_arabic_technical_translation",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    },
+    {
+      "task_id": "language_english_technical_clarity",
+      "passed": false,
+      "score": 0.0,
+      "latency_ms": 0.0,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "category": "language_quality",
+      "model": "qwen-3.8-27b",
+      "timestamp": "2026-10-13T22:44:09.305686+00:00"
+    }
+  ]
+}

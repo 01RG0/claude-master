@@ -184,10 +184,14 @@ func TranslateRequest(ar *AnthropicRequest, upstreamModel string, adapter Adapte
 		})
 	}
 
+	mt, clampNote := clampMaxTokens(ar.MaxTokens, adapter)
+	if clampNote != "" {
+		notes = append(notes, clampNote)
+	}
 	or := &OpenAIRequest{
 		Model:     upstreamModel,
 		Messages:  msgs,
-		MaxTokens: ar.MaxTokens,
+		MaxTokens: mt,
 		Stream:    ar.Stream,
 		Tools:     tools,
 	}
@@ -203,6 +207,23 @@ func TranslateRequest(ar *AnthropicRequest, upstreamModel string, adapter Adapte
 		notes = append(notes, "thinking config accepted but not forwarded to OpenAI-dialect upstream (emulated client-side)")
 	}
 	return or, notes
+}
+
+// clampMaxTokens enforces the adapter (or default) outbound max_tokens cap.
+// Claude Code routinely requests 128000; free providers 400 on that and the
+// failover chain burns tens of seconds per turn.
+func clampMaxTokens(requested int, adapter AdapterSpec) (int, string) {
+	capN := adapter.MaxTokens
+	if capN <= 0 {
+		capN = DefaultMaxTokensCap
+	}
+	if requested <= 0 {
+		return requested, ""
+	}
+	if requested > capN {
+		return capN, fmt.Sprintf("max_tokens clamped %d->%d (provider cap)", requested, capN)
+	}
+	return requested, ""
 }
 
 // mapToolChoice converts Anthropic tool_choice to the OpenAI equivalent.
