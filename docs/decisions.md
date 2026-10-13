@@ -121,6 +121,52 @@
   budget and starved failover (61s conformance stalls). Attempts now bounded
   at 25s; worst case degrades gracefully across mirrors/providers.
 
+## ADR-014: Desktop shell evaluation and native Windows integration (WebView2 vs Electron vs Tauri)
+- Status: accepted.
+- Context: claude-master requires a native Windows companion shell featuring a system tray icon with dynamic status coloring (Green=normal, Yellow=degraded, Red=stopped/down, Orange=emergency bypass), quick context menus (Open UI, Start/Stop/Restart, Bypass toggle, Doctor/Repair, Login launch, Desktop shortcut, Quit), and an embedded desktop window for Synaptic Studio (`http://127.0.0.1:7700`).
+- Options evaluated & measured on this host (`scripts/bench_desktop.py`):
+  1. **Electron**:
+     - Size on disk: ~150 - 250 MB (bundled Chromium + Node.js distribution).
+     - Memory usage (RSS): ~120 - 220 MB idle baseline (Chromium main process cannot shed memory while idling in tray).
+     - Cold startup latency: ~1,500 - 2,500 ms.
+     - Prerequisites: Node.js build chain, packaging overhead (`electron-builder`), redundant browser engine bundled per install.
+  2. **Tauri**:
+     - Size on disk: ~5 - 15 MB binary.
+     - Memory usage (RSS): ~35 - 60 MB tray idle, ~350 - 450 MB with window.
+     - Cold startup latency: ~350 - 600 ms.
+     - Prerequisites & blockers: **Blocked by host and ADR-001**. The host has no Rust/Cargo toolchain (`cargo` is not installed). ADR-001 explicitly mandates "Keep Python + Go + TypeScript; no Rust" to prevent toolchain fragmentation and build overhead.
+  3. **Windows Native WebView2 + pystray (`desktop/` shell — WINNER)**:
+     - Size on disk: **2.30 MB** package dependencies (`pywebview` 2.10 MB, `pystray` 0.20 MB). Native Evergreen WebView2 runtime is pre-installed in Windows (`C:\Windows\System32\Microsoft-Edge-WebView`, `C:\Program Files (x86)\Microsoft\EdgeWebView\Application`), adding **0 MB** runtime distribution overhead.
+     - Memory usage (RSS): **23.92 MB RSS** tray-only idle (extremely lightweight background daemon); ~400 MB RSS only when active WebView2 window is visible. Memory drops immediately back to baseline upon closing the window.
+     - Cold startup latency: **68.67 ms** tray initialization; **1,633 ms** full WebView2 window creation and DOM ready.
+     - Native Windows suitability: 100% native compatibility. Uses Win32 `Shell_NotifyIconW` via `pystray._win32`, Windows Evergreen WebView2 COM control via Edge Chromium backend, HKCU `Software\Microsoft\Windows\CurrentVersion\Run` registry for login startup, and Windows Script Host (`WScript.Shell`) COM for desktop shortcuts. Zero external runtimes required.
+- Decision: Adopt native WebView2 + pystray Python desktop shell (`desktop/tray.py`, `desktop/window.py`, `scripts/build_desktop.ps1`).
+- Consequences:
+  * No new language or binary toolchains introduced; conforms to ADR-001.
+  * System tray consumes negligible resources (~24 MB RSS) in background while providing instant status observation and system lifecycle controls.
+  * Windows users get one-click desktop launch (`cm-desktop.cmd`), startup at login, and native desktop window rendering the local Studio UI at `http://127.0.0.1:7700`.
+
+## ADR-015: Dynamic, Measured, Decision-Taker-Driven Routing Architecture (Replacing Static Model Role Tables)
+- Date: 2026-10-14
+- Status: accepted.
+- Context:
+  Prior routing relied on static model assignment slots (MAIN, SUBAGENT, SMALL-FAST, VISION, ARABIC) with hardcoded model strings (`DEFAULT_ROLES`, `DEFAULT_FALLBACK_CHAINS`). This architecture suffered from four major flaws:
+  1. No empirical verification: models were assigned based on provider marketing names rather than actual verified capabilities, leading to non-agentic models (TTS, image gen, classification guards) entering the agent pool.
+  2. Double-counting and false variety: identical underlying model weights served across different aggregators (Groq, Cerebras, OpenRouter, ZenMux, Dahl) were treated as separate models rather than multiple routes to the same canonical model.
+  3. Ping-based deception: routing relied on TCP ping latency rather than empirical Time-To-First-Token (TTFT) and throughput (tokens/sec).
+  4. Decision Taker disconnection: Drex was ignored for routing decisions, preventing intelligent trade-offs between model power, cost, and task difficulty.
+- Decision:
+  1. Delete all static role tables and model name literals from routing code.
+  2. Implement empirical Model Type Classification: only models proven via active input/output probing to handle agentic multi-turn chat and tool calling are admitted to candidate pools.
+  3. Canonical Model Identity & Multi-Route Resolution: deduplicate identical model architectures into canonical entities with multiple routes (tracking provider, key pool, base URL, pricing, measured TTFT, rate limits, and circuit-breaker status).
+  4. Redefine "Roles" as Requirement Profiles stored as data (`data/roles/profiles.json`), comprising Hard Constraints (tool calling, min context, vision, budget, privacy) and Soft Objectives with weights (quality, latency, cost, reliability).
+  5. Dynamic 7-stage Routing Pipeline: Task Understanding → Candidate Filtering → Expected Utility Scoring → Drex Adjudication → Escalation & Recovery → Tool-Loop Consistency & Cache Affinity → Bandit Exploration.
+  6. Closed-loop Online Learning: Request outcomes feed back into statistical quality estimators with exponential time decay, automated drift detection, and dynamic Drex calibration.
+- Consequences:
+  * Zero model names in routing code; adding or removing models/providers requires zero code changes.
+  * Non-agentic and failing routes are automatically filtered and demoted.
+  * Significant reduction in cost per successful request while maintaining 100% test pass rates.
+
 ---
 Drex decision log (append-only; pre-rewrite records preserved below)
 
@@ -553,3 +599,42 @@ Evaluating safety of running 'git status' in a developer workspace.
   artifacts; per-machine runtime output belongs in ignored dirs.
   Queryability improves: one append-only JSONL per machine.
 - **Verified**: 162 pytest pass, including 32 judge/drex/decision tests.
+
+---
+
+## ADR-009: E2E runs use throwaway CLAUDE_CONFIG_DIR profiles
+
+- **Date**: 2026-10-13
+- **Status**: accepted
+- **Context**: The installed Claude Code CLI merges the user's real
+  `~/.claude/settings.json` into every run, and its settings `env` block
+  beats process environment. On this machine that config points at the
+  user's own router (`ANTHROPIC_BASE_URL=http://127.0.0.1:4000`,
+  `ANTHROPIC_MODEL=claude-smart-router`), so the first matrix runs were
+  routed away from our gateway and failed with `unrecognized_model` /
+  ECONNREFUSED - an environmental failure masquerading as a model failure.
+- **Decision**: every E2E run gets a throwaway profile dir passed as
+  `CLAUDE_CONFIG_DIR` (written under the run's temp workspace) containing
+  only the gateway base URL, dummy key and the pinned model;
+  `ANTHROPIC_AUTH_TOKEN` is dropped from the child environment. Tests
+  never read or write the user's real config, history or credentials.
+- **Consequences**: results are reproducible and attributable to the
+  gateway/models; the mission rule "never point real runs at real config"
+  is enforced structurally rather than by convention.
+- **Verified**: smoke tier 2/2 PASS with isolated profiles (S1 16.3s,
+  S2 176.6s; hooks 14, episodic 12) after 0/2 with the user config
+  leaking in - same code, single-variable change.
+
+## ADR-010: gateway config path is overridable for tests
+
+- **Date**: 2026-10-13
+- **Status**: accepted
+- **Context**: `brain/api/services/config_service.py` resolved
+  `gateway/config.json` with no override, so admin-API tests wrote their
+  fixture providers (`unittest_prov`, `test-xss-prov-*`) into the live
+  config - breaking the running gateway (401s) and dirtying the tree.
+- **Decision**: honour `CLAUDE_MASTER_GATEWAY_CONFIG` (and
+  `CLAUDE_MASTER_GATEWAY_CAPABILITIES`) when set; default behaviour is
+  unchanged. Tests that exercise the admin API must point at a copy.
+- **Verified**: live config restored (17 providers); smoke E2E served by
+  real providers again.

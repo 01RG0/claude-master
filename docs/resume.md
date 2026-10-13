@@ -59,3 +59,25 @@ re-verified mid-session via `cm test`).
 - Never name a PowerShell parameter `$Args` (automatic variable).
 - Runtime outputs (off/, temp logs) are gitignored; docs/decisions.md
   is ADR-only (ADR-008).
+
+## Session 3 (E2E harness work, same day)
+
+- `scripts/e2e_claude_matrix.py` refactored: scenario registry (S1-S10 with
+  per-scenario setup + ground-truth oracle), `--scenario/--model/--repeat/
+  --tier/--json-out/--resume/--min-pass-rate/--max-runs/--gateway-port`,
+  per-commit JSON artifacts, pass-rate summary.
+- REAL FINDING + FIX: the installed CLI merged the user's real
+  `~/.claude/settings.json` (their router + model) into every run -> runs
+  never reached our gateway. Fixed with a throwaway `CLAUDE_CONFIG_DIR`
+  per run (ADR-009). Smoke tier now 2/2 PASS via real providers
+  (S1 16.3s, S2 176.6s; hooks 14, episodic 12 nodes).
+- REAL FINDING (concurrent session's WIP, fix left uncommitted in its
+  untracked `brain/api/services/config_service.py`): admin-API tests wrote
+  fixture providers into the LIVE gateway/config.json, breaking routing
+  (401s). Added `CLAUDE_MASTER_GATEWAY_CONFIG` env override (ADR-010);
+  live config restored to 17 providers.
+- S2 is slow (176s for one `python check.py` task): provider/model
+  choice + CLI retries - prime candidate for the Part 3 latency work.
+- Next: extend to the full Part-2 matrix (interactive PTY driver, MCP
+  stdio+HTTP, plugins, hooks all events, LSP, permissions, failover
+  residency tests), stats over N reps, `cm e2e report`, per-commit trend.
