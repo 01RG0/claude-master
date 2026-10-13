@@ -39,8 +39,9 @@ Cost accounting: price per 1M input tokens by model
 
 Logging: every decision (state, questions, answers, confidence, latency,
 outcome/caller, model, usage, cost) is appended as one JSON line to
-<log_dir>/decisions.jsonl (default: tempdir/claude-master-logs) and, for human
-readability, to docs/decisions.md. Secrets are never logged (state passed here
+<log_dir>/decisions.jsonl and decisions.md (default:
+tempdir/claude-master-logs; overridable via CLAUDE_DECISIONS_LOG_DIR). Docs are
+never written at runtime — docs/decisions.md is ADR-only. Secrets are never logged (state passed here
 must already be redacted by the caller — see GatingPolicy).
 """
 
@@ -165,13 +166,16 @@ def _log_decision_jsonl(
 
 
 def _log_decision_markdown(
-    repo_root: Path,
+    log_dir: Path,
     state: str,
     questions: dict,
     response: dict,
     latency_ms: float,
 ) -> None:
-    decisions_file = repo_root / "docs" / "decisions.md"
+    # Human-readable mirror of decisions.jsonl. Lives in the runtime log dir,
+    # NEVER under docs/: doc trees are for versioned ADRs, runtime logs are
+    # per-machine outputs (churn there would dirty every git status).
+    decisions_file = log_dir / "decisions.md"
     try:
         decisions_file.parent.mkdir(parents=True, exist_ok=True)
         timestamp = time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime())
@@ -396,7 +400,7 @@ class DrexClient:
                     "usage": data.get("usage", {}),
                 }
                 _log_decision_jsonl(_default_log_dir(), record)
-                _log_decision_markdown(self._repo_root, str(state), questions, data, latency_ms)
+                _log_decision_markdown(_default_log_dir(), str(state), questions, data, latency_ms)
                 self._cache.set(str(state), questions, data)
                 return data
         self._note_failure()

@@ -2,8 +2,8 @@
 """
 Drex Client v2 for Claude Master Brain System.
 - Dynamically resolves DREX_API_KEY from environment or repo-root .env.
-- Accepts decision queries via CLI args or stdin JSON.
-- Appends structured records of every decision to docs/decisions.md.
+- Accepts decision queries via CLI args or stdin JSON. - Appends structured records of every decision to the runtime log dir (never
+   under docs/: that tree is versioned ADRs only).
 - Implements fail-open semantics and short timeouts for runtime safety.
 """
 
@@ -57,8 +57,9 @@ def get_api_key() -> str:
 
 def log_decision_to_file(state: str, questions: dict, response: dict, latency_ms: float):
     root = find_repo_root()
-    decisions_file = root / "docs" / "decisions.md"
-    decisions_file.parent.mkdir(parents=True, exist_ok=True)
+    log_dir = root / "off"
+    decisions_file = log_dir / "decisions.md"
+    log_dir.mkdir(parents=True, exist_ok=True)
     
     timestamp = time.strftime("%Y-%m-%d %H:%M:%SZ", time.gmtime())
     req_id = response.get("request_id", "local_cached")

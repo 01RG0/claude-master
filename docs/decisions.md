@@ -40,7 +40,7 @@
   provider-conf 0.55, deterministic fallbacks (single-candidate, restart
   budget ≥5 → escalate, budget-exhausted → rule). Every decision returns
   `{action, value, confidence, source, reason, raw}`; every call appends JSONL
-  (`decisions.jsonl`) + markdown (`docs/decisions.md`); secrets never logged.
+  (`decisions.jsonl`) + markdown (`decisions.md`, both in the runtime log dir, never under `docs/`); secrets never logged.
 - Consequence: thresholds are initial — calibrate from `decisions.jsonl`,
   see `docs/test-report.md`.
 

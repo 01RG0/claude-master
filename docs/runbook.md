@@ -72,7 +72,7 @@ Drex is reachable; otherwise the schedule applies (degraded mode).
 - Budget: `DREX_BUDGET_USD` (default 5.0); `DrexClient.cost_summary()` shows
   `{calls, input_tokens, cost_usd, fail_open}`. At cap → rule fallbacks.
 - Logs: JSONL (`tempdir/claude-master-logs/decisions.jsonl`, override
-  `CLAUDE_DECISIONS_LOG_DIR`) + `docs/decisions.md`. Every record has
+  `CLAUDE_DECISIONS_LOG_DIR`) + a human-readable `decisions.md` mirror in the same log dir (never under `docs/`). Every record has
   `request_id` (report to support@nace.ai with failures).
 - Timeouts: background 60s + retries (docs-compliant); hook fast-gate 150ms,
   no retries, cache + fail-open (intentional deviation, see ADR-002).
