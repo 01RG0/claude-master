@@ -1124,100 +1124,8 @@
     },
     "cerebras": {
       "models": [
-        "llama3.1-70b",
-        "llama3.1-8b"
-      ],
-      "rows": [
-        {
-          "model": "llama3.1-70b",
-          "chat": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 3015.9186
-          },
-          "streaming": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 273.7144
-          },
-          "tools_single": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 203.2899
-          },
-          "tools_parallel": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 271.2484
-          },
-          "tools_streamed_args": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 194.8192
-          },
-          "vision": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "json_mode": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "ttft_ms": 273.7144,
-          "probed_at": "2026-10-13T20:22:37Z"
-        },
-        {
-          "model": "llama3.1-8b",
-          "chat": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 198.12179999999998
-          },
-          "streaming": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 179.2685
-          },
-          "tools_single": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 185.8955
-          },
-          "tools_parallel": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 194.969
-          },
-          "tools_streamed_args": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404",
-            "latency_ms": 196.9959
-          },
-          "vision": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "json_mode": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "ttft_ms": 179.2685,
-          "probed_at": "2026-10-13T20:22:42Z"
-        }
+        "gpt-oss-120b",
+        "qwen-3.8-27b"
       ]
     },
     "codecraft": {
@@ -1318,17 +1226,100 @@
     },
     "groq": {
       "models": [
-        "openai/gpt-oss-safeguard-20b",
-        "allam-2-7b",
-        "qwen/qwen3.8-27b",
-        "whisper-large-v3-turbo",
-        "whisper-large-v3",
-        "meta-llama/llama-prompt-guard-2-86m",
-        "canopylabs/orpheus-arabic-saudi",
-        "openai/gpt-oss-120b",
-        "openai/gpt-oss-20b",
-        "canopylabs/orpheus-v1-english",
-        "meta-llama/llama-prompt-guard-2-22m"
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant"
+      ],
+      "rows": [
+        {
+          "model": "llama-3.3-70b-versatile",
+          "chat": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 198.87650000000002
+          },
+          "streaming": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 74.3008
+          },
+          "tools_single": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 77.77159999999999
+          },
+          "tools_parallel": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 81.2429
+          },
+          "tools_streamed_args": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 93.81009999999999
+          },
+          "vision": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "json_mode": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "ttft_ms": 74.3008,
+          "probed_at": "2026-10-13T20:31:48Z"
+        },
+        {
+          "model": "llama-3.1-8b-instant",
+          "chat": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 95.8299
+          },
+          "streaming": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 93.2163
+          },
+          "tools_single": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 108.9732
+          },
+          "tools_parallel": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 107.5429
+          },
+          "tools_streamed_args": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 101.90440000000001
+          },
+          "vision": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "json_mode": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "ttft_ms": 93.2163,
+          "probed_at": "2026-10-13T20:31:49Z"
+        }
       ]
     },
     "mistral": {

@@ -379,7 +379,7 @@ def generate_report(results: List[DetectionResult], fuzz: List[Dict], holdout: L
             models = r.capabilities.get("models", [])
             if models:
                 caps_summary = f"{len(models)} models"
-        sim = " 🔬 SIMULATED" if r.simulated else ""
+        sim = " [SIMULATED]" if r.simulated else ""
         err = "; ".join(r.errors[:2]) if r.errors else ""
         lines.append(f"| {r.id} | {r.type} | {r.path} | {r.dialect or '?'} | {r.auth_style or '?'} | {len(r.models_found)} | {caps_summary} | {r.latency_ms:.0f}ms | {err}{sim} |")
 
@@ -489,9 +489,9 @@ def main():
 
     print(f"\nFinal coverage (a+b): {coverage_ab:.1f}%")
     if coverage_ab < 95:
-        print("❌ FAIL: Coverage below 95%")
+        print("FAIL: Coverage below 95%")
         return 1
-    print("✅ PASS: Coverage >= 95%")
+    print("PASS: Coverage >= 95%")
     return 0
 
 
