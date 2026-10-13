@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"testing"
 	"time"
@@ -17,8 +18,11 @@ import (
 func TestColdStartLatency(t *testing.T) {
 	root := findRepoRoot(t)
 	bin := filepath.Join(t.TempDir(), "hookshim")
-	build := exec.Command("go", "build", "-ldflags", "-s -w", "-o", bin, "./hookshim")
-	build.Dir = root
+	if runtime.GOOS == "windows" {
+		bin += ".exe"
+	}
+	build := exec.Command("go", "build", "-ldflags", "-s -w", "-o", bin, ".")
+	build.Dir = filepath.Join(root, "hookshim")
 	build.Env = append(os.Environ(), "CGO_ENABLED=0")
 	if out, err := build.CombinedOutput(); err != nil {
 		t.Fatalf("build: %v\n%s", err, out)

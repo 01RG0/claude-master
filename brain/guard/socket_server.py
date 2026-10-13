@@ -1,7 +1,16 @@
 """
-brain/guard/socket_server.py
-Unix domain socket server: receives JSON hook payloads from hookshim,
-forwards them to the brain HTTP API, and returns JSON responses.
+brain/guard/socket_server.py — hook IPC server (rewrite: dual transport).
+
+Receives newline-terminated JSON hook payloads from hookshim, forwards them
+to the brain HTTP API, and returns newline-terminated JSON responses.
+
+Transports (Windows-first):
+  - TCP loopback (default on Windows, always on): 127.0.0.1:7772
+    No file paths, no AF_UNIX, no spaces/backslash issues, Defender-safe.
+  - Unix domain socket (POSIX only, backward compat): tempdir/claude_brain.sock
+
+The daemon listens on TCP always + Unix socket on POSIX. hookshim dials TCP
+on Windows (or when CLAUDE_BRAIN_TCP is set) and Unix socket on POSIX.
 
 Fail-safe: any network/JSON error returns {'allow': True, 'additional_context': ''}.
 """
@@ -12,6 +21,7 @@ import asyncio
 import json
 import logging
 import os
+import sys
 from typing import Any, Optional
 
 try:
@@ -30,11 +40,13 @@ _BRAIN_TIMEOUT = 0.1
 
 
 class BrainSocketServer:
-    """Async Unix domain socket server that bridges hookshim → brain HTTP API.
+    """Async hook IPC server bridging hookshim → brain HTTP API.
+
+    Listens on TCP loopback always, plus a Unix domain socket on POSIX.
 
     Usage::
 
-        server = BrainSocketServer()
+        server = BrainSocketServer()  # TCP 127.0.0.1:7772 + Unix socket (POSIX)
         await server.start()
         ...
         await server.stop()
@@ -44,58 +56,89 @@ class BrainSocketServer:
         self,
         socket_path: str | None = None,
         brain_api_url: str = "http://localhost:7700",
+        tcp_addr: str | None = None,
+        handle_hook: Any | None = None,
     ) -> None:
-        if socket_path is None:
+        """If *handle_hook* is given, hook payloads are evaluated in-process
+        (no extra HTTP hop). Otherwise they are POSTed to *brain_api_url*."""
+        if socket_path is None and sys.platform != "win32":
             try:
                 from brain.paths import default_socket_path
 
                 socket_path = default_socket_path()
             except Exception:
-                socket_path = "/tmp/claude_brain.sock"
+                socket_path = os.path.join(os.path.expanduser("~"), "claude_brain.sock")
+        # On Windows the default is TCP-only (socket_path stays None unless set).
+        if tcp_addr is None:
+            try:
+                from brain.paths import default_tcp_addr
+
+                tcp_addr = default_tcp_addr()
+            except Exception:
+                tcp_addr = "127.0.0.1:7772"
         self.socket_path = socket_path
+        self.tcp_addr = tcp_addr
         self.brain_api_url = brain_api_url.rstrip("/")
-        self._server: Optional[asyncio.AbstractServer] = None
+        self._handle_hook = handle_hook
+        self._servers: list[asyncio.AbstractServer] = []
 
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
 
     async def start(self) -> None:
-        """Create the Unix domain socket and start listening."""
-        import sys
-
-        if sys.platform == "win32":
-            raise RuntimeError(
-                "Unix domain sockets are not supported on Windows; "
-                "run hooks via HTTP POST to /hook instead."
-            )
-        parent = os.path.dirname(os.path.abspath(self.socket_path))
-        if parent and not os.path.exists(parent):
-            os.makedirs(parent, exist_ok=True)
-        # Remove stale socket file if it exists
-        if os.path.exists(self.socket_path):
-            os.unlink(self.socket_path)
-
-        self._server = await asyncio.start_unix_server(
-            self._handle_client,
-            path=self.socket_path,
-        )
-        logger.info("BrainSocketServer listening on %s", self.socket_path)
-        async with self._server:
-            await self._server.serve_forever()
+        """Start TCP (always) + Unix socket (POSIX only) listeners."""
+        self._servers = []
+        # 1. TCP loopback — primary transport, works everywhere.
+        host, port = self._split_tcp(self.tcp_addr or "127.0.0.1:7772")
+        tcp_server = await asyncio.start_server(self._handle_client, host, port)
+        self._servers.append(tcp_server)
+        logger.info("BrainSocketServer listening on TCP %s:%d", host, port)
+        # 2. Unix domain socket — POSIX backward compat only.
+        if self.socket_path and sys.platform != "win32":
+            parent = os.path.dirname(os.path.abspath(self.socket_path))
+            if parent and not os.path.exists(parent):
+                os.makedirs(parent, exist_ok=True)
+            if os.path.exists(self.socket_path):
+                try:
+                    os.unlink(self.socket_path)
+                except OSError:
+                    pass
+            try:
+                unix_server = await asyncio.start_unix_server(
+                    self._handle_client, path=self.socket_path
+                )
+                self._servers.append(unix_server)
+                logger.info("BrainSocketServer listening on %s", self.socket_path)
+            except OSError as exc:
+                logger.warning("Unix socket unavailable (%s); TCP-only mode", exc)
+        # Block forever serving all listeners (stop() closes them to unblock).
+        await asyncio.gather(*(srv.serve_forever() for srv in self._servers))
 
     async def stop(self) -> None:
-        """Gracefully stop the server."""
-        if self._server is not None:
-            self._server.close()
-            await self._server.wait_closed()
-            self._server = None
-        if os.path.exists(self.socket_path):
+        """Gracefully stop all listeners."""
+        for srv in self._servers:
+            try:
+                srv.close()
+                await srv.wait_closed()
+            except Exception:
+                pass
+        self._servers = []
+        if self.socket_path and sys.platform != "win32" and os.path.exists(self.socket_path):
             try:
                 os.unlink(self.socket_path)
             except OSError:
                 pass
         logger.info("BrainSocketServer stopped")
+
+    @staticmethod
+    def _split_tcp(addr: str) -> tuple[str, int]:
+        try:
+            from brain.paths import split_tcp
+
+            return split_tcp(addr)
+        except Exception:
+            return "127.0.0.1", 7772
 
     # ------------------------------------------------------------------
     # Connection handler
@@ -119,7 +162,19 @@ class BrainSocketServer:
             await self._send_response(writer, _FAILSAFE)
             return
 
-        # Forward to brain API
+        # Forward to brain API (in-process fast path preferred)
+        if self._handle_hook is not None:
+            try:
+                response = await asyncio.get_running_loop().run_in_executor(
+                    None, self._handle_hook, payload
+                )
+                if isinstance(response, dict):
+                    await self._send_response(writer, response)
+                    return
+            except Exception:
+                pass
+            await self._send_response(writer, _FAILSAFE)
+            return
         response = await self._call_brain(payload)
         await self._send_response(writer, response)
 
@@ -171,7 +226,16 @@ class BrainSocketServer:
             )
             writer.write(request)
             await writer.drain()
-            raw_response = await asyncio.wait_for(reader.read(65536), timeout=_BRAIN_TIMEOUT)
+            chunks: list[bytes] = []
+            while True:
+                try:
+                    part = await asyncio.wait_for(reader.read(65536), timeout=_BRAIN_TIMEOUT)
+                except asyncio.TimeoutError:
+                    break
+                if not part:
+                    break
+                chunks.append(part)
+            raw_response = b"".join(chunks)
             writer.close()
 
             # Naive HTTP response parse: find double CRLF, parse JSON body

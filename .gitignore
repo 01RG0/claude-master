@@ -28,3 +28,7 @@ venv/
 hookshim/hookshim
 watchdog/watchdog
 gateway/gateway
+hookshim/hookshim.exe
+watchdog/watchdog.exe
+gateway/gateway.exe
+*.log.err

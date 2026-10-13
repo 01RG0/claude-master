@@ -22,7 +22,7 @@ from collections import deque
 from typing import Any
 
 from brain.store.graph import GraphStore
-from brain.paths import default_db_path, default_socket_path
+from brain.paths import default_db_path, default_socket_path, default_tcp_addr
 from brain.guard.stuck_detector import StuckDetector, StuckResult
 from brain.guard.context_builder import ContextBuilder
 from brain.learning.hebbian import HebbianUpdater
@@ -55,7 +55,9 @@ class BrainServer:
         self.skills = SkillStore(self.store)
         self.distiller = LessonDistiller(self.store)
         self.sleep = SleepConsolidator(self.store)
-        self.drex = DrexClient()
+        # Guard Drex budget: 1.0s covers measured p99 (783ms, 2026-10-13);
+        # down/black-hole fails open without blocking the agent for 60s.
+        self.drex = DrexClient(timeout_s=1.0, max_retries=0)
         self.gating = GatingPolicy(self.drex)
         # Per-session event windows for stuck detection
         self._sessions: dict[str, deque[dict]] = {}
@@ -66,11 +68,15 @@ class BrainServer:
 
     def handle_hook(self, payload: dict) -> dict[str, Any]:
         """Evaluate a hook payload: stuck-check, gate, build context."""
-        tool = payload.get("tool_name", "") or ""
+        tool_val = payload.get("tool_name", "")
+        tool = tool_val if isinstance(tool_val, str) else ""
         raw_input = payload.get("input")
         command = ""
         if isinstance(raw_input, dict):
-            command = str(raw_input.get("command", "") or "")
+            cmd_val = raw_input.get("command", "")
+            # Non-string commands fail safe as "": never str() a list/dict into
+            # a risky-looking repr (e.g. "['rm -rf /']" must not match rm -rf).
+            command = cmd_val if isinstance(cmd_val, str) else ""
         event = payload.get("hook_event_name", "PreToolUse")
         session_id = str(payload.get("session_id", "default"))
 
@@ -243,9 +249,14 @@ def build_app(server: BrainServer):
 
 
 def main(argv: list[str] | None = None) -> int:
+    import sys as _sys
+
     parser = argparse.ArgumentParser(description="claude-master brain daemon")
     parser.add_argument("--db", default=default_db_path())
-    parser.add_argument("--socket", default=default_socket_path())
+    parser.add_argument("--socket", default=(None if _sys.platform == "win32" else default_socket_path()),
+                        help="Unix socket path (POSIX only; ignored on Windows)")
+    parser.add_argument("--tcp", default=default_tcp_addr(),
+                        help="Hook IPC TCP address host:port (default 127.0.0.1:7772)")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=7700)
     args = parser.parse_args(argv)
@@ -258,13 +269,15 @@ def main(argv: list[str] | None = None) -> int:
     server = BrainServer(args.db, args.socket, args.host, args.port)
     logger.info("Brain daemon starting on %s:%d", args.host, args.port)
 
-    # Start Unix socket server in background thread with its own event loop
+    # Start hook IPC server (TCP always + Unix socket on POSIX) in background
     from brain.guard.socket_server import BrainSocketServer
     import threading
 
     socket_server = BrainSocketServer(
         socket_path=args.socket,
+        tcp_addr=args.tcp,
         brain_api_url=f"http://{args.host}:{args.port}",
+        handle_hook=server.handle_hook,  # in-process: skip the HTTP hop
     )
 
     def _run_socket():

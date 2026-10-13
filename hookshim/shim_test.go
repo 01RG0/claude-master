@@ -7,9 +7,49 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 )
+
+func skipUnixOnWindows(t *testing.T) {
+	t.Helper()
+	if runtime.GOOS == "windows" {
+		t.Skip("AF_UNIX not supported on Windows; TCP path covered instead")
+	}
+}
+
+func startMockBrainTCP(t *testing.T, handler func(payload []byte) []byte) (addr string, cleanup func()) {
+	t.Helper()
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("listen tcp: %v", err)
+	}
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for {
+			conn, err := ln.Accept()
+			if err != nil {
+				return
+			}
+			go func(c net.Conn) {
+				defer c.Close()
+				buf := make([]byte, 1<<20)
+				n, _ := c.Read(buf)
+				resp := handler(buf[:n])
+				if !bytes.HasSuffix(resp, []byte("\n")) {
+					resp = append(resp, '\n')
+				}
+				_, _ = c.Write(resp)
+			}(conn)
+		}
+	}()
+	return ln.Addr().String(), func() {
+		ln.Close()
+		<-done
+	}
+}
 
 func startMockBrain(t *testing.T, handler func(payload []byte) []byte) (sock string, cleanup func()) {
 	t.Helper()
@@ -58,6 +98,7 @@ func TestFailOpenMissingSocket(t *testing.T) {
 }
 
 func TestFailOpenSlowDaemon(t *testing.T) {
+	skipUnixOnWindows(t)
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		time.Sleep(80 * time.Millisecond)
 		return []byte(`{"allow":false,"block_reason":"too late"}`)
@@ -76,6 +117,7 @@ func TestFailOpenSlowDaemon(t *testing.T) {
 }
 
 func TestBlockExitCode2(t *testing.T) {
+	skipUnixOnWindows(t)
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		return []byte(`{"allow":false,"block_reason":"force push blocked"}`)
 	})
@@ -101,6 +143,7 @@ func TestBlockExitCode2(t *testing.T) {
 }
 
 func TestAllowWithContext(t *testing.T) {
+	skipUnixOnWindows(t)
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		return []byte(`{"allow":true,"additional_context":"prefer go fmt"}`)
 	})
@@ -122,6 +165,7 @@ func TestAllowWithContext(t *testing.T) {
 }
 
 func TestAllowEmpty(t *testing.T) {
+	skipUnixOnWindows(t)
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		return []byte(`{"allow":true}`)
 	})
@@ -155,6 +199,7 @@ func TestTimeoutFromEnv(t *testing.T) {
 }
 
 func TestForwardPayloadIntact(t *testing.T) {
+	skipUnixOnWindows(t)
 	var got []byte
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		got = append([]byte(nil), bytes.TrimSpace(payload)...)
@@ -174,6 +219,7 @@ func TestForwardPayloadIntact(t *testing.T) {
 
 // MeasureIPCRoundTrip times an in-process query against a fast mock (not cold-start).
 func TestIPCRoundTripBudget(t *testing.T) {
+	skipUnixOnWindows(t)
 	sock, cleanup := startMockBrain(t, func(payload []byte) []byte {
 		return []byte(`{"allow":true}`)
 	})
@@ -199,5 +245,60 @@ func TestMainBinaryUsesEnv(t *testing.T) {
 	p := socketPath()
 	if filepath.Base(p) != "claude_brain.sock" {
 		t.Fatalf("unexpected default socket %q", p)
+	}
+}
+
+func TestTCPBlockExitCode2(t *testing.T) {
+	addr, cleanup := startMockBrainTCP(t, func(payload []byte) []byte {
+		return []byte(`{"allow":false,"block_reason":"tcp force push blocked"}`)
+	})
+	defer cleanup()
+
+	in := []byte(`{"hook_event_name":"PreToolUse","tool_name":"Bash","session_id":"s1"}`)
+	var out bytes.Buffer
+	code := runTCP(bytes.NewReader(in), &out, addr, 2*time.Second)
+	if code != 2 {
+		t.Fatalf("exit=%d want 2", code)
+	}
+}
+
+func TestTCPAllowWithContext(t *testing.T) {
+	addr, cleanup := startMockBrainTCP(t, func(payload []byte) []byte {
+		return []byte(`{"allow":true,"additional_context":"prefer go fmt"}`)
+	})
+	defer cleanup()
+
+	var out bytes.Buffer
+	code := runTCP(bytes.NewReader([]byte(`{"hook_event_name":"UserPromptSubmit"}`)), &out, addr, 2*time.Second)
+	if code != 0 {
+		t.Fatalf("exit=%d want 0", code)
+	}
+}
+
+func TestTCPFailOpenMissingServer(t *testing.T) {
+	// Closed port on loopback refuses instantly → fail-open.
+	var out bytes.Buffer
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	addr := ln.Addr().String()
+	ln.Close()
+	code := runTCP(bytes.NewReader([]byte(`{"hook_event_name":"PreToolUse"}`)), &out, addr, 300*time.Millisecond)
+	if code != 0 || out.Len() != 0 {
+		t.Fatalf("exit=%d out=%q want fail-open", code, out.Bytes())
+	}
+}
+
+func TestDefaultEndpointPrefersTCPOnWindows(t *testing.T) {
+	nw, addr := defaultEndpoint("", "")
+	if runtime.GOOS == "windows" {
+		if nw != "tcp" || addr != defaultTCP {
+			t.Fatalf("got %s %s", nw, addr)
+		}
+	}
+	nw, _ = defaultEndpoint("", "127.0.0.1:9999")
+	if nw != "tcp" {
+		t.Fatalf("explicit tcp env not honoured")
 	}
 }

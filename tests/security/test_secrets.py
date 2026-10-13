@@ -412,9 +412,12 @@ def test_studio_mask_secret_runs_under_node():
     node = _require_node()
     driver = SECURITY_DIR / "goprobe" / "mask_secret_driver.mts"
     driver.parent.mkdir(parents=True, exist_ok=True)
+    # file:// URL with forward slashes: Windows backslash paths are not valid
+    # ESM specifiers (ERR_INVALID_TYPESCRIPT_SYNTAX on Node 24).
+    module_url = STUDIO_SECRETS_TS.as_uri()
     driver.write_text(
         "import { maskSecret, assertNoSecretStorage, maskProviderKeys }\n"
-        f'  from "{STUDIO_SECRETS_TS}";\n'
+        f'  from "{module_url}";\n'
         'const secret = "sk-" + "k".repeat(40);\n'
         "const masked = maskSecret(secret);\n"
         "let threw = false;\n"

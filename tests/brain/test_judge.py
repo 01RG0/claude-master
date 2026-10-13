@@ -198,21 +198,30 @@ class TestGatingPolicy:
 # ---------------------------------------------------------------------------
 
 def _find_key_in_dotenv() -> bool:
-    """Check if NACE/DREX_API_KEY exists in the repo-root .env file."""
+    """Check if a Drex key (any accepted alias) exists in the repo-root .env file."""
     try:
         from pathlib import Path
         current = Path(__file__).resolve().parent
         while current != current.parent:
             env_file = current / ".env"
             if env_file.exists():
-                content = env_file.read_text()
-                return "NACE_API_KEY=" in content or "DREX_API_KEY=" in content
+                upper = env_file.read_text().upper()
+                return ("NACE_API_KEY=" in upper or "DREX_API_KEY=" in upper
+                        or "DREX_API=" in upper or "NACE_API=" in upper)
             if (current / ".git").exists():
                 break
             current = current.parent
     except Exception:
         pass
     return False
+
+
+def _has_any_key() -> bool:
+    for name in ("NACE_API_KEY", "DREX_API_KEY", "DREX_API", "NACE_API",
+                 "nace_api_key", "drex_api_key", "drex_api", "nace_api"):
+        if os.environ.get(name):
+            return True
+    return _find_key_in_dotenv()
 
 
 # ---------------------------------------------------------------------------
@@ -229,8 +238,7 @@ class TestDrexClient:
         client = DrexClient()
         # Key should be a string; empty when no real key is configured (CI-safe).
         assert isinstance(client._api_key, str)
-        if not os.environ.get("NACE_API_KEY") and not os.environ.get("DREX_API_KEY") \
-                and not _find_key_in_dotenv():
+        if not _has_any_key():
             pytest.skip("no real Drex key configured")
 
     def test_client_explicit_key(self):
@@ -258,7 +266,7 @@ class TestDrexClient:
         assert client.evaluate_cached_pct == pytest.approx(0.0)
 
     @pytest.mark.skipif(
-        not os.environ.get("NACE_API_KEY") and not os.environ.get("DREX_API_KEY") and not _find_key_in_dotenv(),
+        not _has_any_key(),
         reason="NACE_API_KEY not available",
     )
     def test_drex_live_call(self):

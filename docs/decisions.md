@@ -298,3 +298,68 @@ Evaluating safety of running 'git status' in a developer workspace.
     - Instructions: *Is this a routine safe developer action?*
     - **Probability (True)**: `0.9984`
 ---
+
+### Decision Record: `req_6c0ad0184153f6a183823fe43d46eb47`
+- **Timestamp**: `2026-10-13 02:23:20Z`
+- **Model**: `drex-v2.0` | **Latency**: `1102.6ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running git status in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9362`
+---
+
+### Decision Record: `req_4bf08824f134071aa8b13b9604fa8f26`
+- **Timestamp**: `2026-10-13 02:30:28Z`
+- **Model**: `drex-v2.0` | **Latency**: `840.6ms`
+- **State Evaluation Context**:
+```text
+Tool: Bash, Category: file_deletion
+```
+- **Questions & Calibrated Answers**:
+  - **`risk_check`** (noul):
+    - Instructions: *Is this tool category likely to cause irreversible harm, data loss, or security exposure in a developer workspace?*
+    - **Probability (True)**: `0.8870`
+---
+
+### Decision Record: `req_c41ab89c6e95d529ecc50b5feaf795e4`
+- **Timestamp**: `2026-10-13 02:30:29Z`
+- **Model**: `drex-v2.0` | **Latency**: `518.5ms`
+- **State Evaluation Context**:
+```text
+Tool: Bash, Category: file_deletion
+```
+- **Questions & Calibrated Answers**:
+  - **`risk_check`** (noul):
+    - Instructions: *Is this tool category likely to cause irreversible harm, data loss, or security exposure in a developer workspace?*
+    - **Probability (True)**: `0.8870`
+---
+
+### Decision Record: `req_00ae350412f4fdab6a935ce50d10da09`
+- **Timestamp**: `2026-10-13 02:33:35Z`
+- **Model**: `drex-v2.0` | **Latency**: `713.8ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9643`
+---
+
+### Decision Record: `req_c7f339d096c457a98544f2d62dce3693`
+- **Timestamp**: `2026-10-13 03:05:10Z`
+- **Model**: `drex-v2.0` | **Latency**: `622.6ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9643`
+---

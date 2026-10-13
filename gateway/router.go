@@ -6,9 +6,11 @@
 package gateway
 
 import (
+	"net"
 	"os"
 	"sort"
 	"strings"
+	"time"
 )
 
 // StaticFallbackChain is used when the brain router/socket is unavailable.
@@ -32,19 +34,60 @@ func IsGitHubModels(p Provider) bool {
 	return strings.Contains(u, "models.github.ai") || strings.Contains(u, "api.githubcopilot")
 }
 
-// BrainAvailable probes the configured brain Unix socket. Fail-open: if the
-// path is empty or missing, returns false and callers use StaticFallbackChain.
-func BrainAvailable(socketPath string) bool {
-	if socketPath == "" {
+// BrainAvailable probes the configured brain endpoint. Fail-open: if the
+// value is empty or unreachable, returns false and callers use StaticFallbackChain.
+// Accepts a Unix socket path (POSIX) or a TCP address (host:port, tcp://...).
+func BrainAvailable(endpoint string) bool {
+	if endpoint == "" {
 		return false
 	}
-	fi, err := os.Stat(socketPath)
+	if isTCPAddr(endpoint) {
+		addr := strings.TrimPrefix(strings.TrimPrefix(strings.TrimSpace(endpoint), "tcp://"), "TCP://")
+		conn, err := net.DialTimeout("tcp", addr, 200*time.Millisecond)
+		if err != nil {
+			return false
+		}
+		_ = conn.Close()
+		return true
+	}
+	fi, err := os.Stat(endpoint)
 	if err != nil {
 		return false
 	}
 	// Unix sockets report as ModeSocket on Linux; accept any existing path
 	// that is not a regular directory as "present".
 	return !fi.IsDir()
+}
+
+func isTCPAddr(v string) bool {
+	v = strings.TrimSpace(v)
+	if strings.HasPrefix(strings.ToLower(v), "tcp://") {
+		return true
+	}
+	if strings.HasPrefix(v, "/") || strings.HasPrefix(v, `\\`) {
+		return false
+	}
+	if len(v) >= 3 && v[1] == ':' && isAlphaByte(v[0]) && (v[2] == '\\' || v[2] == '/') {
+		return false
+	}
+	i := strings.LastIndex(v, ":")
+	if i < 0 {
+		return false
+	}
+	port := v[i+1:]
+	if port == "" {
+		return false
+	}
+	for _, c := range port {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
+}
+
+func isAlphaByte(c byte) bool {
+	return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
 }
 
 // ResolveFallbackOrder returns the provider order to try. Prefer config

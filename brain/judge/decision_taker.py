@@ -52,12 +52,15 @@ class DecisionTaker:
     def __init__(
         self,
         client: Optional[DrexClient] = None,
-        fast_timeout_s: float = 0.15,
+        fast_timeout_s: float = 1.0,
         bg_timeout_s: float = 60.0,
         budget_usd: float = 5.0,
     ) -> None:
-        # Two clients sharing nothing but config: fast-gate (hook path) and
-        # background (sleep/judge/batch). Fast path must never block >150ms.
+        # Two clients sharing nothing but config: fast-gate (risky-path only)
+        # and background (sleep/judge/batch). Measured 2026-10-13, drex-v2.0,
+        # 220 live calls: roundtrip p50=538ms p95=616ms p99=783ms; a 150ms
+        # budget would fail open ~100% — 1.0s covers p99 with margin. The hot
+        # hook path never calls Drex for safe/not-risky commands (rule-only).
         self.fast = client or DrexClient(timeout_s=fast_timeout_s, max_retries=0)
         self._bg_timeout = bg_timeout_s
         self._bg: Optional[DrexClient] = None

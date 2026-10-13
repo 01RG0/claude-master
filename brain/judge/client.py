@@ -129,17 +129,20 @@ def _parse_dotenv_file(path: Path) -> dict[str, str]:
 
 
 def _load_api_key(repo_root: Path) -> Optional[str]:
-    # Docs use NACE_API_KEY; legacy code used DREX_API_KEY. Accept both.
-    for env_name in ("NACE_API_KEY", "DREX_API_KEY"):
-        key = os.environ.get(env_name)
+    # Docs use NACE_API_KEY; legacy code used DREX_API_KEY. Accept both plus
+    # the bare `drex_api` alias found in user .env files (case-insensitive).
+    aliases = ("NACE_API_KEY", "DREX_API_KEY", "DREX_API", "NACE_API")
+    for env_name in aliases:
+        key = os.environ.get(env_name) or os.environ.get(env_name.lower())
         if key and key.strip():
             return key.strip().strip("\"'")
     for candidate in (repo_root / ".env", repo_root.parent / ".env", Path.cwd() / ".env"):
         if candidate.exists():
             vals = _parse_dotenv_file(candidate)
-            for env_name in ("NACE_API_KEY", "DREX_API_KEY"):
-                if vals.get(env_name):
-                    return vals[env_name]
+            upper = {k.upper(): v for k, v in vals.items()}
+            for env_name in aliases:
+                if upper.get(env_name):
+                    return upper[env_name]
     return None
 
 
@@ -256,7 +259,12 @@ class DrexClient:
 
     # -- models ----------------------------------------------------------
     def list_models(self, timeout_s: float = 10.0) -> list[dict]:
-        """GET /v1/models. Cached 1h. Returns [] when unreachable."""
+        """GET /v1/models. Cached 1h. Returns [] when unreachable.
+
+        Real shape (2026-10): {"models": [{"name": "drex-v1.0", ...}]}.
+        Also accepts {"data": [...]} and bare [...] for forward-compat.
+        Normalises each entry to {"id": <name>, ...} so callers use .get("id").
+        """
         if self._models_cache is not None and (time.monotonic() - self._models_fetched_at) < 3600:
             return self._models_cache
         url = f"{self._base_url}{MODELS_PATH}"
@@ -266,11 +274,21 @@ class DrexClient:
                 data = json.loads(resp.read().decode("utf-8"))
         except Exception:
             return self._models_cache or []
-        models = data.get("data") if isinstance(data, dict) else None
-        if models is None and isinstance(data, list):
+        models: object = None
+        if isinstance(data, dict):
+            models = data.get("models", data.get("data"))
+        elif isinstance(data, list):
             models = data
         if not isinstance(models, list):
             models = []
+        norm: list[dict] = []
+        for m in models:
+            if isinstance(m, dict):
+                d = dict(m)
+                if "id" not in d and d.get("name"):
+                    d["id"] = d["name"]
+                norm.append(d)
+        models = norm
         self._models_cache = models
         self._models_fetched_at = time.monotonic()
         # refresh prices from description if present ("$0.06 per ...")

@@ -1,6 +1,7 @@
 // Package main implements the Claude Code hook shim.
-// It forwards stdin hook JSON to the brain daemon over a Unix socket
-// and maps the response to Claude Code stdout / exit codes.
+// It forwards stdin hook JSON to the brain daemon over TCP loopback
+// (Windows default) or a Unix socket (POSIX default) and maps the
+// response to Claude Code stdout / exit codes.
 //
 // Fail-open: any dial/read failure or timeout (>50ms default) exits 0
 // with empty stdout so Claude Code is never blocked by a dead brain.
@@ -13,18 +14,25 @@ import (
 	"io"
 	"net"
 	"os"
+	"runtime"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const (
 	defaultSocket     = "/tmp/claude_brain.sock"
+	defaultTCP        = "127.0.0.1:7772"
 	defaultTimeout    = 50 * time.Millisecond
 	exitAllow         = 0
 	exitBlock         = 2
 	envSocket         = "CLAUDE_BRAIN_SOCKET"
 	envSocketAlt      = "BRAIN_SOCKET"
+	envTCP            = "CLAUDE_BRAIN_TCP"
+	envTCPAlt         = "BRAIN_TCP"
 	envTimeoutMS      = "CLAUDE_BRAIN_TIMEOUT_MS"
+	flagSocket        = "socket"
+	flagTCP           = "tcp"
 )
 
 // brainResponse is the JSON line returned by brain/guard socket_server.
@@ -46,6 +54,76 @@ func socketPath() string {
 	return defaultSocket
 }
 
+// tcpAddr resolves the TCP hook address from env, "" when unset.
+func tcpAddr() string {
+	if p := os.Getenv(envTCP); p != "" {
+		return normaliseTCP(p)
+	}
+	if p := os.Getenv(envTCPAlt); p != "" {
+		return normaliseTCP(p)
+	}
+	return ""
+}
+
+// defaultEndpoint returns network,address: TCP on Windows (or when the socket
+// looks like host:port), Unix socket otherwise.
+func defaultEndpoint(sock, tcp string) (network, addr string) {
+	if tcp != "" {
+		return "tcp", normaliseTCP(tcp)
+	}
+	if isTCPAddr(sock) {
+		return "tcp", normaliseTCP(sock)
+	}
+	if sock == "" || sock == defaultSocket {
+		if runtime.GOOS == "windows" {
+			return "tcp", defaultTCP
+		}
+		if sock == "" {
+			return "unix", defaultSocket
+		}
+	}
+	return "unix", sock
+}
+
+func normaliseTCP(a string) string {
+	a = strings.TrimSpace(strings.Trim(a, "\"'"))
+	a = strings.TrimPrefix(a, "tcp://")
+	a = strings.TrimPrefix(a, "TCP://")
+	return a
+}
+
+func isTCPAddr(v string) bool {
+	v = strings.TrimSpace(v)
+	if strings.HasPrefix(strings.ToLower(v), "tcp://") {
+		return true
+	}
+	if strings.HasPrefix(v, "/") || strings.HasPrefix(v, `\\`) {
+		return false
+	}
+	// Windows drive path C:\... is a file, not TCP.
+	if len(v) >= 3 && v[1] == ':' && isAlpha(v[0]) && (v[2] == '\\' || v[2] == '/') {
+		return false
+	}
+	i := strings.LastIndex(v, ":")
+	if i < 0 {
+		return false
+	}
+	port := v[i+1:]
+	if port == "" {
+		return false
+	}
+	for _, c := range port {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
+}
+
+func isAlpha(c byte) bool {
+	return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
+}
+
 // dialTimeout returns the total IPC budget (dial + write + read).
 func dialTimeout() time.Duration {
 	if ms := os.Getenv(envTimeoutMS); ms != "" {
@@ -58,6 +136,15 @@ func dialTimeout() time.Duration {
 
 // run is the testable entry: read stdin → query brain → write stdout → exit code.
 func run(in io.Reader, out io.Writer, sock string, to time.Duration) int {
+	return runEndpoint(in, out, "unix", sock, to)
+}
+
+// runTCP is the testable TCP entry.
+func runTCP(in io.Reader, out io.Writer, addr string, to time.Duration) int {
+	return runEndpoint(in, out, "tcp", normaliseTCP(addr), to)
+}
+
+func runEndpoint(in io.Reader, out io.Writer, network, addr string, to time.Duration) int {
 	payload, err := io.ReadAll(in)
 	if err != nil {
 		return exitAllow
@@ -67,7 +154,7 @@ func run(in io.Reader, out io.Writer, sock string, to time.Duration) int {
 		return exitAllow
 	}
 
-	resp, ok := queryBrain(sock, payload, to)
+	resp, ok := queryBrainEndpoint(network, addr, payload, to)
 	if !ok {
 		// Daemon down / slow / malformed → fail-open.
 		return exitAllow
@@ -92,10 +179,14 @@ func run(in io.Reader, out io.Writer, sock string, to time.Duration) int {
 // queryBrain sends a newline-terminated JSON payload and reads one JSON line back.
 // Returns ok=false on any error or timeout (caller fail-opens).
 func queryBrain(sock string, payload []byte, to time.Duration) (brainResponse, bool) {
+	return queryBrainEndpoint("unix", sock, payload, to)
+}
+
+func queryBrainEndpoint(network, addr string, payload []byte, to time.Duration) (brainResponse, bool) {
 	deadline := time.Now().Add(to)
 
 	d := net.Dialer{Timeout: to}
-	conn, err := d.Dial("unix", sock)
+	conn, err := d.Dial(network, addr)
 	if err != nil {
 		return brainResponse{}, false
 	}

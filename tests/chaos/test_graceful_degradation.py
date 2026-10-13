@@ -24,7 +24,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HOOKSHIM_DIR = REPO_ROOT / "hookshim"
-HOOKSHIM_BIN = HOOKSHIM_DIR / "hookshim"
+HOOKSHIM_BIN = HOOKSHIM_DIR / ("hookshim.exe" if sys.platform == "win32" else "hookshim")
 GATEWAY_DIR = REPO_ROOT / "gateway"
 GO_PROBE = Path(__file__).resolve().parent / "goprobe" / "cooldown_probe_test.go"
 
@@ -71,11 +71,12 @@ def run_go_gateway_probe(probe_src: Path, test_name: str, tmp_path: Path) -> sub
 
 @pytest.fixture(scope="session")
 def hookshim_binary() -> Path:
-    """Build the hookshim Go binary if it is not already present."""
+    """Build the hookshim Go binary if it is not already present (.exe on Windows)."""
     if not HOOKSHIM_BIN.exists():
         _require_go()
+        out = HOOKSHIM_BIN.name
         subprocess.run(
-            ["go", "build", "-o", "hookshim", "."],
+            ["go", "build", "-o", out, "."],
             cwd=HOOKSHIM_DIR, check=True, capture_output=True, text=True, timeout=300,
         )
     assert HOOKSHIM_BIN.exists(), "hookshim binary was not built"
