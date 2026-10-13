@@ -1,0 +1,94 @@
+{
+  "providers": [
+    {
+      "id": "groq",
+      "name": "Groq",
+      "base_url": "https://api.groq.com/openai/v1",
+      "auth_env_var": "GROQ_API_KEY",
+      "type": "keyed",
+      "declared_models": ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"],
+      "notes": "Fast inference, OpenAI-compatible"
+    },
+    {
+      "id": "cerebras",
+      "name": "Cerebras",
+      "base_url": "https://api.cerebras.ai/v1",
+      "auth_env_var": "CEREBRAS_API_KEY",
+      "type": "keyed",
+      "declared_models": ["llama3.1-70b", "llama3.1-8b"],
+      "notes": "Ultra-fast inference"
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral AI",
+      "base_url": "https://api.mistral.ai/v1",
+      "auth_env_var": "MISTRAL_API_KEY",
+      "type": "keyed",
+      "declared_models": ["ministral-8b-latest", "mistral-small-latest"],
+      "notes": "European provider"
+    },
+    {
+      "id": "cohere",
+      "name": "Cohere",
+      "base_url": "https://api.cohere.ai/v2",
+      "auth_env_var": "COHERE_API_KEY",
+      "type": "keyed",
+      "declared_models": ["command-r-plus-08-2024", "command-a-03-2025"],
+      "notes": "OpenAI-compatible v2 API"
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "base_url": "https://openrouter.ai/api/v1",
+      "auth_env_var": "OPENROUTER_API_KEY",
+      "type": "keyed",
+      "declared_models": ["openai/gpt-oss-20b", "qwen/qwen3-30b-a3b", "google/gemma-3-12b-it"],
+      "notes": "Aggregator, no /models endpoint"
+    },
+    {
+      "id": "gemini",
+      "name": "Google Gemini",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "auth_env_var": "GEMINI_API_KEY",
+      "type": "keyed",
+      "declared_models": ["gemini-2.5-flash"],
+      "notes": "OpenAI-compatible endpoint, models/ prefix"
+    },
+    {
+      "id": "pollinations",
+      "name": "Pollinations",
+      "base_url": "https://text.pollinations.ai/openai",
+      "auth_env_var": "POLLINATIONS_API_KEY",
+      "type": "keyed",
+      "declared_models": ["openai-fast"],
+      "notes": "Free tier available"
+    },
+    {
+      "id": "aihorde",
+      "name": "AI Horde",
+      "base_url": "https://aihorde.net/api/v1",
+      "auth_env_var": "AI_HORDE_ANON_KEY",
+      "type": "free",
+      "declared_models": ["*"],
+      "notes": "Anonymous access, no /models endpoint"
+    },
+    {
+      "id": "anyapi",
+      "name": "AnyAPI",
+      "base_url": "https://api.anyapi.ai/v1",
+      "auth_env_var": "ANYAPI_API_KEY",
+      "type": "keyed",
+      "declared_models": ["*"],
+      "notes": "Aggregator"
+    },
+    {
+      "id": "xai",
+      "name": "xAI",
+      "base_url": "https://api.x.ai/v1",
+      "auth_env_var": "XAI_API_KEY",
+      "type": "keyed",
+      "declared_models": ["grok-3", "grok-3-mini"],
+      "notes": "Grok models"
+    }
+  ]
+}

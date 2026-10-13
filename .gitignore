@@ -8,30 +8,35 @@
 *.log
 *.tmp
 .cache/
+logs/
+off/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Language build artifacts
+dist/
+bin/
+node_modules/
+
+# Go binaries (built locally by bootstrap/Makefile, never committed)
+*.exe
+*.exe~
+*~
+hookshim/hookshim
+watchdog/watchdog
+gateway/gateway
+*.log.err
+
+# Debug attic (one-off investigation scripts, never tracked)
+scripts/attic/
 
 # OS / Editor
 .DS_Store
 .idea/
 .vscode/
-
-# Language build artifacts
-__pycache__/
-*.pyc
-dist/
-bin/
-node_modules/
-
-.venv/
-venv/
-*.db
-*.sock
-hookshim/hookshim
-watchdog/watchdog
-gateway/gateway
-hookshim/hookshim.exe
-watchdog/watchdog.exe
-gateway/gateway.exe
-*.log.err
-logs/
-gateway/provider.exe
-gateway-provider.exe

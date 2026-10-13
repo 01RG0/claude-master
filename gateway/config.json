@@ -56,8 +56,8 @@
       "base_url": "https://api.cohere.ai/v2",
       "privacy_policy": "zero_retention",
       "models": [
-        "command-r-plus",
-        "command-r"
+        "command-r-plus-08-2024",
+        "command-a-03-2025"
       ],
       "key_pools": [
         {
@@ -259,7 +259,7 @@
       "base_url": "https://text.pollinations.ai/openai",
       "privacy_policy": "public_data_only",
       "models": [
-        "openai"
+        "openai-fast"
       ],
       "key_pools": [
         {

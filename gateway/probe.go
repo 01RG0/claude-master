@@ -259,3 +259,68 @@ func bytesCount(b []byte, s string) int {
 	}
 	return n
 }
+
+// ValidateModels checks that every declared model id exists on the provider's
+// live /models list. Returns the ids that are missing (empty = all present).
+// Providers with no list endpoint, or whose list endpoint is unreachable
+// (403 Cloudflare-blocked from this network), return nil — candidate probing
+// is the only way to know and that costs a real call per model.
+func ValidateModels(client *http.Client, base, modelsPath, key string, want []string) []string {
+	if modelsPath == "" || modelsPath == "none" {
+		return nil
+	}
+	st, body := getJSON(client, strings.TrimRight(base, "/")+modelsPath, key, 15*time.Second)
+	if st != 200 {
+		return nil // can't verify without a working list endpoint
+	}
+	var list struct {
+		Data []struct {
+			ID string `json:"id"`
+		} `json:"data"`
+		Models []struct {
+			Name string `json:"name"`
+			ID   string `json:"id"`
+		} `json:"models"`
+	}
+	if err := json.Unmarshal(body, &list); err != nil {
+		return nil
+	}
+	have := map[string]bool{}
+	// OpenAI shape: {"data":[{"id":"..."}]}
+	for _, m := range list.Data {
+		if m.ID != "" {
+			have[modelsKey(m.ID)] = true
+		}
+	}
+	// Cohere shape: {"models":[{"name":"..."}]}
+	for _, m := range list.Models {
+		if m.Name != "" {
+			have[modelsKey(m.Name)] = true
+		}
+		if m.ID != "" {
+			have[modelsKey(m.ID)] = true
+		}
+	}
+	var missing []string
+	for _, w := range want {
+		w = strings.TrimSpace(w)
+		if w == "" || w == "*" {
+			continue // wildcard: any model is acceptable
+		}
+		if !have[modelsKey(w)] {
+			missing = append(missing, w)
+		}
+	}
+	return missing
+}
+
+// modelsKey normalizes a model id for comparison. Gemini prefixes every id
+// with "models/" (e.g. "models/gemini-2.5-flash"), so a bare "gemini-2.5-flash"
+// in config must still match.
+func modelsKey(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	if i := strings.LastIndex(s, "/"); i >= 0 {
+		s = s[i+1:]
+	}
+	return s
+}

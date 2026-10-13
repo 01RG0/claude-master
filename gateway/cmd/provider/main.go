@@ -269,10 +269,23 @@ func validate(args []string) {
 	cfgPath := configPath(fs, args)
 	cfg := loadConfig(cfgPath)
 	bad := 0
+	client := &http.Client{Timeout: 30 * time.Second}
 	for _, p := range cfg.Providers {
 		for _, e := range gateway.ValidateAdapter(gateway.EffectiveAdapter(p)) {
 			fmt.Printf("%s: %s\n", p.Name, e)
 			bad++
+		}
+		// Live check: every declared model must exist on the provider's
+		// /models list (when one exists). This is how retired IDs like
+		// Cohere's command-r-plus (removed 2025-09-15) surface instead of
+		// silently 404-ing at request time.
+		if key := firstKey(p); key != "" {
+			adapter := gateway.EffectiveAdapter(p)
+			missing := gateway.ValidateModels(client, p.BaseURL, adapter.ModelsPath, key, p.Models)
+			for _, m := range missing {
+				fmt.Printf("%s: model %q not found on provider /models list\n", p.Name, m)
+				bad++
+			}
 		}
 	}
 	if bad == 0 {
