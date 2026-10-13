@@ -167,7 +167,20 @@ def select_scenarios(names, tier):
     return chosen
 
 
-def make_profile(base, name, model):
+def port_in_use(port, host="127.0.0.1", timeout=1.0):
+    import socket
+    s = socket.socket()
+    s.settimeout(timeout)
+    try:
+        s.connect((host, port))
+        return True
+    except OSError:
+        return False
+    finally:
+        s.close()
+
+
+def make_profile(base, name, model, gateway_port=8080):
     """Throwaway CLAUDE_CONFIG_DIR per run.
 
     Without this the installed CLI merges the user's real ~/.claude settings
@@ -181,7 +194,7 @@ def make_profile(base, name, model):
     os.makedirs(prof, exist_ok=True)
     _write(os.path.join(prof, "settings.json"), json.dumps({
         "env": {
-            "ANTHROPIC_BASE_URL": "http://localhost:8080",
+            "ANTHROPIC_BASE_URL": f"http://localhost:{gateway_port}",
             "ANTHROPIC_API_KEY": "dummy",
             "ANTHROPIC_MODEL": (model or "sonnet"),
         }
@@ -189,14 +202,14 @@ def make_profile(base, name, model):
     return prof
 
 
-def run_claude(sid, taskdir, prompt, model=None, timeout=600, profile=None):
+def run_claude(sid, taskdir, prompt, model=None, timeout=600, profile=None, gateway_port=8080):
     cmd = ["claude", "-p", prompt, "--allowedTools", "Write", "Edit", "Read",
            "Bash", "Glob", "Grep", "Task", "Skill", "--add-dir", taskdir]
     if model:
         cmd += ["--model", model]
     # Pin the model and isolate the profile: never inherit an ambient
     # ANTHROPIC_MODEL or the user's real ~/.claude settings.
-    env = dict(os.environ, ANTHROPIC_BASE_URL="http://localhost:8080",
+    env = dict(os.environ, ANTHROPIC_BASE_URL=f"http://localhost:{gateway_port}",
                ANTHROPIC_API_KEY="dummy", ANTHROPIC_MODEL=(model or "sonnet"))
     env.pop("ANTHROPIC_AUTH_TOKEN", None)
     if profile:
@@ -249,7 +262,7 @@ def build_fixtures(base):
     return fix
 
 
-def prep_workspace(base, fix, name, tcp, shim):
+def prep_workspace(base, fix, name, tcp, shim, gw_port=8080):
     d = os.path.join(base, name)
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(os.path.join(d, ".claude"), exist_ok=True)
@@ -261,6 +274,7 @@ def prep_workspace(base, fix, name, tcp, shim):
             "PostToolUse": [{"matcher": ".*", "hooks": [{"type": "command", "command": hook_cmd}]}],
         },
     }
+    settings["env"]["ANTHROPIC_BASE_URL"] = f"http://localhost:{gw_port}"
     _write(os.path.join(d, ".claude", "settings.json"), json.dumps(settings))
     for sub in ("skills", "commands"):
         src = os.path.join(fix, ".claude", sub)
@@ -288,6 +302,14 @@ def main():
     shutil.rmtree(BASE_TASK, ignore_errors=True)
     os.makedirs(BASE_TASK, exist_ok=True)
     fix = build_fixtures(BASE_TASK)
+
+    # Pre-flight: a foreign listener on the gateway port would answer our
+    # health checks while our own gateway silently fails to bind, so every
+    # measurement would be taken through someone else's process. Refuse to
+    # run instead (observed: a second gateway on 8080 served a whole run).
+    if port_in_use(args.gateway_port):
+        sys.exit(f"gateway port {args.gateway_port} is already in use - stop that process "
+                 f"(cm stop) or pass --gateway-port; refusing to measure through it")
 
     tmp = tempfile.gettempdir()
     db = os.path.join(tmp, "claude_matrix_brain.db")
@@ -326,9 +348,12 @@ def main():
         gw = subprocess.Popen(
             [os.path.join(REPO_ROOT, "gateway", "gateway.exe"), "--config",
              os.path.join(REPO_ROOT, "gateway", "config.json"),
+             "--listen", f"127.0.0.1:{args.gateway_port}",
              "--log-requests", os.path.join(logdir, "traffic")],
             cwd=REPO_ROOT, env=env, stdout=glog, stderr=subprocess.STDOUT)
         assert wait_health(f"http://localhost:{args.gateway_port}/health"), "gateway down"
+        if gw.poll() is not None:
+            sys.exit(f"our gateway exited immediately (rc={gw.returncode}) - see {logdir}/gateway.log")
 
         for scn in scenarios:
             for rep in range(1, args.repeat + 1):
@@ -340,7 +365,7 @@ def main():
                     print(f"{scn['id']} rep{rep}: (max-runs reached)", flush=True)
                     continue
                 name = f"{scn['id']}-r{rep}"
-                d = prep_workspace(BASE_TASK, fix, name, tcp, shim)
+                d = prep_workspace(BASE_TASK, fix, name, tcp, shim, args.gateway_port)
                 try:
                     scn["setup"](d)
                 except Exception as exc:  # fixture bug, not a model result
@@ -349,10 +374,10 @@ def main():
                                          "detail": f"fixture setup: {exc}"})
                     save_results(args.json_out, data)
                     continue
-                profile = make_profile(BASE_TASK, name, args.model)
+                profile = make_profile(BASE_TASK, name, args.model, args.gateway_port)
                 rc, out, dt = run_claude(scn["id"], d, scn["prompt"],
                                          model=args.model, timeout=args.timeout,
-                                         profile=profile)
+                                         profile=profile, gateway_port=args.gateway_port)
                 runs_this_session += 1
                 if rc == -1:
                     verdict, cls = False, "timeout"

@@ -389,7 +389,14 @@ if keyRec != nil {
 				s.noteLatency(model, 0, false)
 				st, _, _ := mapUpstreamStatus(resp.StatusCode, redactForLog(string(b)))
 				if st == 401 || st == 404 || st == 400 {
-					log.Printf("gateway: provider=%s model=%s HTTP %d (no retry on key)", p.Name, model, resp.StatusCode)
+					// Include a bounded, redacted upstream reason: without it a 400
+					// chain across providers is undiagnosable ("all providers
+					// exhausted" tells the operator nothing actionable).
+					reason := redactForLog(strings.TrimSpace(string(b)))
+					if len(reason) > 240 {
+						reason = reason[:240]
+					}
+					log.Printf("gateway: provider=%s model=%s HTTP %d (no retry on key) reason=%s", p.Name, model, resp.StatusCode, reason)
 				}
 				lastErr = fmt.Errorf("provider %s: HTTP %d", p.Name, resp.StatusCode)
 				break // non-429 error → try next provider
@@ -845,6 +852,14 @@ func (s *Server) logRequest(door, requested string, ar *AnthropicRequest, extra 
 		"tools":     len(ar.Tools),
 		"blocks":    messageBlockTypes(ar),
 		"max_tokens": ar.MaxTokens,
+	}
+	// Body fingerprint (first 12 hex of the content hash, never the content):
+	// lets operators measure duplicate/auxiliary traffic and trace a request
+	// across logs without storing prompts.
+	if s.respCache != nil {
+		if k := s.respCache.Key(ar); len(k) >= 12 {
+			rec["sha"] = k[:12]
+		}
 	}
 	if extra != nil {
 		for k, v := range extra {
