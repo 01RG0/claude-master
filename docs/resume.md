@@ -46,3 +46,6 @@ fail-open so e2e can run.
   that emits an `ar` archive named .exe → WinError 216).
 - Never measure on a port that already has a listener; harness refuses.
 - `gateway/config.json` is live state — treat concurrent admin tests as hostile.
+- e2e (parallel): S2x3 0/3 PASS (auto-mode classifier billing warning; 400s pooled content-too-long/unknown-model; max_tokens clamped active; brain fallback hardened). Artifacts: off/e2e/s2x3-parallel.json.
+
+- e2e: pin/ban persisted via routing_state + admin; bad providers disabled.
