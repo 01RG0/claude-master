@@ -27,6 +27,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)   # tools/cm -> repo root
+$cmScriptHint = Join-Path $Root "tools\cm\completions.ps1"
 $LogDir = Join-Path ([System.IO.Path]::GetTempPath()) "claude-master-logs"
 $ProviderExe = Join-Path $Root "provider.exe"
 
@@ -60,6 +61,9 @@ function Invoke-Setup {
   & powershell -ExecutionPolicy Bypass -File (Join-Path $Root "scripts\bootstrap.ps1") @Rest
   if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne $null) { Fail "setup failed (exit $LASTEXITCODE)"; exit 1 }
   Ok "setup complete. Next: cm start, then point Claude Code at http://localhost:8080 (see cm doctor)"
+  Info ""
+  Info "  optional: tab-completion for cm - add this line to your ${PROFILE}:"
+  Info "    . $cmScriptHint"
 }
 
 # ---------------------------------------------------------------------------
