@@ -514,3 +514,42 @@ Evaluating safety of running 'git status' in a developer workspace.
     - Instructions: *Is this a routine safe developer action?*
     - **Probability (True)**: `0.9643`
 ---
+
+---
+
+## ADR-007: `cm` as the single entry command (PowerShell, not Go)
+
+- **Date**: 2026-10-13
+- **Status**: accepted
+- **Context**: The mission requires one entry command (`cm`) driving
+  bootstrap, lifecycle, status, diagnosis, and provider management on
+  Windows. Options: (a) new Go CLI binary, (b) PowerShell script +
+  cmd shim, (c) Python CLI.
+- **Decision**: PowerShell script `tools/cm/cm.ps1` with a `cm.cmd`
+  shim. The lifecycle scripts (`bootstrap.ps1`, `start.ps1`) are already
+  PowerShell; delegation keeps one source of truth per behavior and
+  needs no build step or extra runtime.
+- **Consequences**: PS 5.1 compatibility constraints apply (no
+  assignment-from-`if`, argument-mode property access needs parens, and
+  no non-ASCII characters in BOM-less `.ps1` files). Go remains the
+  choice if `cm` grows into high-frequency or complex logic later.
+- **Verified**: real runs — `cm start` boots all components, `cm status`
+  reports UP for gateway/brain/hooks, `cm doctor` green, `cm provider
+  list` prints 17 providers.
+
+## ADR-008: Decision logs live in runtime log dir, never in docs/
+
+- **Date**: 2026-10-13
+- **Status**: accepted
+- **Context**: Both `brain/judge/client.py` and `scripts/drex_client.py`
+  appended runtime decision records to `docs/decisions.md`, dirtying the
+  working tree on every Drex-evaluated git command (observed live
+  2026-10-13) and polluting the ADR document.
+- **Decision**: JSONL stays primary in the runtime log dir
+  (`CLAUDE_DECISIONS_LOG_DIR` / tempdir); the markdown mirror
+  (`decisions.md`) now also lives there. `docs/decisions.md` is
+  versioned ADRs only. `scripts/drex_client.py` writes under `off/`.
+- **Consequences**: docs trees must be stable, reviewable
+  artifacts; per-machine runtime output belongs in ignored dirs.
+  Queryability improves: one append-only JSONL per machine.
+- **Verified**: 162 pytest pass, including 32 judge/drex/decision tests.
