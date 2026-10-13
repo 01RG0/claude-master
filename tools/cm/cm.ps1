@@ -495,17 +495,64 @@ function Invoke-Bench {
 }
 
 # ---------------------------------------------------------------------------
+# cm e2e report - pass rates across every stored e2e artifact (off/e2e/*.json)
+function Invoke-E2eReport {
+  $dir = Join-Path (Get-OffDir) "e2e"
+  if (-not (Test-Path $dir)) { Info "no e2e artifacts in $dir yet (run: cm e2e matrix)"; return }
+  $files = Get-ChildItem $dir -Filter *.json -ErrorAction SilentlyContinue
+  if (-not $files) { Info "no e2e artifacts in $dir yet (run: cm e2e matrix)"; return }
+
+  $rows = @{}
+  foreach ($f in $files) {
+    try { $d = Get-Content $f.FullName -Raw | ConvertFrom-Json } catch { continue }
+    $model = "default"
+    if ($d.meta -and $d.meta.model) { $model = [string]$d.meta.model }
+    foreach ($r in $d.runs) {
+      $key = "{0}|{1}" -f $r.scenario, $model
+      if (-not $rows.ContainsKey($key)) {
+        $rows[$key] = [ordered]@{ scenario = $r.scenario; model = $model; n = 0; pass = 0; class = @{} }
+      }
+      $rows[$key].n++
+      if ($r.passed) { $rows[$key].pass++ }
+      $c = [string]$r.class
+      if ($c) {
+        if ($rows[$key].class.ContainsKey($c)) { $rows[$key].class[$c]++ } else { $rows[$key].class[$c] = 1 }
+      }
+    }
+  }
+  Info "e2e results (all stored artifacts in off/e2e)"
+  Info ("  {0,-24} {1,-10} {2,5} {3,6} {4,7}  {5}" -f "scenario", "model", "runs", "pass", "rate", "classes")
+  $tot = 0; $totPass = 0
+  foreach ($k in ($rows.Keys | Sort-Object)) {
+    $row = $rows[$k]
+    $rate = 0.0
+    if ($row.n -gt 0) { $rate = $row.pass / $row.n }
+    $tot += $row.n; $totPass += $row.pass
+    $cls = ($row.class.Keys | ForEach-Object { "{0}:{1}" -f $_, $row.class[$_] }) -join ","
+    Info ("  {0,-24} {1,-10} {2,5} {3,6} {4,7:N2}  {5}" -f $row.scenario, $row.model, $row.n, $row.pass, $rate, $cls)
+  }
+  if ($tot -gt 0) {
+    Info ""
+    Info ("  total: {0}/{1} verified pass ({2:N2})" -f $totPass, $tot, ($totPass / $tot))
+  }
+}
+
+# ---------------------------------------------------------------------------
 # cm e2e - the REAL Claude Code scenario matrix
 # Usage: cm e2e [matrix|live]  (matrix = 10 scenarios; live = single live run)
 function Invoke-E2E {
-  $which = if ($Rest.Count -gt 0) { $Rest[0] } else { "matrix" }
+  $which = "matrix"
+  if ($Rest.Count -gt 0) { $which = $Rest[0] }
+  if ($which -eq "report") { Invoke-E2eReport; return }
   switch ($which) {
     "matrix" { $script = "e2e_claude_matrix.py" }
     "live"   { $script = "e2e_claude_live.py" }
-    default  { Fail "unknown e2e target '$which' (matrix|live)"; exit 2 }
+    default  { Fail "unknown e2e target '$which' (matrix|live|report)"; exit 2 }
   }
   Info "==> cm e2e $which ($script) - real claude binary through the gateway"
-  python (Join-Path $Root "scripts\$script")
+  $rest = @()
+  if ($Rest.Count -gt 1) { $rest = $Rest[1..($Rest.Count - 1)] }
+  python (Join-Path $Root "scripts\$script") @rest
   exit $LASTEXITCODE
 }
 
