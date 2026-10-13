@@ -1124,8 +1124,100 @@
     },
     "cerebras": {
       "models": [
-        "gpt-oss-120b",
-        "qwen-3.8-27b"
+        "llama3.1-70b",
+        "llama3.1-8b"
+      ],
+      "rows": [
+        {
+          "model": "llama3.1-70b",
+          "chat": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 3015.9186
+          },
+          "streaming": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 273.7144
+          },
+          "tools_single": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 203.2899
+          },
+          "tools_parallel": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 271.2484
+          },
+          "tools_streamed_args": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 194.8192
+          },
+          "vision": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "json_mode": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "ttft_ms": 273.7144,
+          "probed_at": "2026-10-13T20:22:37Z"
+        },
+        {
+          "model": "llama3.1-8b",
+          "chat": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 198.12179999999998
+          },
+          "streaming": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 179.2685
+          },
+          "tools_single": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 185.8955
+          },
+          "tools_parallel": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 194.969
+          },
+          "tools_streamed_args": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404",
+            "latency_ms": 196.9959
+          },
+          "vision": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "json_mode": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 404"
+          },
+          "ttft_ms": 179.2685,
+          "probed_at": "2026-10-13T20:22:42Z"
+        }
       ]
     },
     "codecraft": {
@@ -1226,17 +1318,17 @@
     },
     "groq": {
       "models": [
-        "meta-llama/llama-prompt-guard-2-22m",
-        "whisper-large-v3",
-        "canopylabs/orpheus-v1-english",
-        "meta-llama/llama-prompt-guard-2-86m",
-        "qwen/qwen3.8-27b",
-        "openai/gpt-oss-120b",
-        "canopylabs/orpheus-arabic-saudi",
-        "openai/gpt-oss-20b",
         "openai/gpt-oss-safeguard-20b",
         "allam-2-7b",
-        "whisper-large-v3-turbo"
+        "qwen/qwen3.8-27b",
+        "whisper-large-v3-turbo",
+        "whisper-large-v3",
+        "meta-llama/llama-prompt-guard-2-86m",
+        "canopylabs/orpheus-arabic-saudi",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
+        "canopylabs/orpheus-v1-english",
+        "meta-llama/llama-prompt-guard-2-22m"
       ]
     },
     "mistral": {
@@ -1294,143 +1386,6 @@
         "openai/gpt-oss-20b",
         "qwen/qwen3-30b-a3b",
         "google/gemma-3-12b-it"
-      ],
-      "rows": [
-        {
-          "model": "openai/gpt-oss-20b",
-          "chat": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 1347.3576999999998
-          },
-          "streaming": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 1163.1009999999999
-          },
-          "tools_single": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 1482.1232
-          },
-          "tools_parallel": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 552.0649
-          },
-          "tools_streamed_args": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 2364.7313
-          },
-          "vision": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "json_mode": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200"
-          },
-          "ttft_ms": 1163.1009999999999,
-          "probed_at": "2026-10-13T20:18:25Z"
-        },
-        {
-          "model": "qwen/qwen3-30b-a3b",
-          "chat": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 522.7965999999999
-          },
-          "streaming": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 269.7942
-          },
-          "tools_single": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 294.416
-          },
-          "tools_parallel": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 540.6035999999999
-          },
-          "tools_streamed_args": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 400.8852
-          },
-          "vision": {
-            "supported": false,
-            "source": "measured",
-            "detail": "http 404"
-          },
-          "json_mode": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200"
-          },
-          "ttft_ms": 269.7942,
-          "probed_at": "2026-10-13T20:18:39Z"
-        },
-        {
-          "model": "google/gemma-3-12b-it",
-          "chat": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 278.52110000000005
-          },
-          "streaming": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 253.4138
-          },
-          "tools_single": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 271.189
-          },
-          "tools_parallel": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 271.4279
-          },
-          "tools_streamed_args": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200",
-            "latency_ms": 467.40549999999996
-          },
-          "vision": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200"
-          },
-          "json_mode": {
-            "supported": true,
-            "source": "measured",
-            "detail": "http 200"
-          },
-          "ttft_ms": 253.4138,
-          "probed_at": "2026-10-13T20:18:46Z"
-        }
       ]
     },
     "pollinations": {

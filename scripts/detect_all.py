@@ -368,7 +368,7 @@ def generate_report(results: List[DetectionResult], fuzz: List[Dict], holdout: L
     lines.append(f"| (c) SIMULATED only | {path_c} | {path_c/total*100:.1f}% |")
     lines.append(f"| BLOCKED | {blocked} | {blocked/total*100:.1f}% |")
     lines.append(f"| **Total** | **{total}** | **100%** |")
-    lines.append(f"\n**Coverage (a+b): {coverage_ab:.1f}%** {'✅ PASS' if coverage_ab >= 95 else '❌ FAIL (< 95%)'}")
+    lines.append(f"\n**Coverage (a+b): {coverage_ab:.1f}%** {'PASS' if coverage_ab >= 95 else 'FAIL (< 95%)'}")
 
     lines.append(f"\n## Per-Entry Scorecard")
     lines.append(f"\n| ID | Type | Path | Dialect | Auth | Models | Capabilities | Latency | Errors |")
