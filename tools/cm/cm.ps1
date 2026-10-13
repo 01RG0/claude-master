@@ -336,6 +336,73 @@ function Invoke-Model {
 }
 
 # ---------------------------------------------------------------------------
+# cm alerts - threshold checks over real runtime data, deduped in off/alerts.json
+$AlertSigFile = ""
+function Get-AlertStateFile { (Join-Path (Get-OffDir) "alerts.json") }
+
+function Invoke-Alerts {
+  $alerts = @()
+  $today = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
+
+  # 1. components down (reuse status health logic)
+  $gw = Invoke-HttpHealth "http://localhost:8080/health" 1
+  if (-not $gw.up) { $alerts += @{ sev = "warn"; sig = "gateway-down"; msg = "gateway is not reachable at http://localhost:8080/health"; fix = "cm start" } }
+  $brain = Invoke-HttpHealth "http://127.0.0.1:7700/health" 1
+  if (-not $brain.up) { $alerts += @{ sev = "warn"; sig = "brain-down"; msg = "brain daemon is not reachable at http://127.0.0.1:7700/health"; fix = "cm start" } }
+
+  # 2. gateway error lines (today class of problems, from the real log)
+  $gwLog = Join-Path $LogDir "gateway.log"
+  if (Test-Path $gwLog) {
+    $errLines = @(Select-String -Path $gwLog -Pattern "error|429|exhausted" -ErrorAction SilentlyContinue).Count
+    if ($errLines -ge 20) { $alerts += @{ sev = "warn"; sig = "gateway-errors-$today"; msg = "$errLines error/429/exhaustion lines in gateway.log"; fix = "cm logs gateway, then check provider key health: cm doctor" } }
+  }
+
+  # 3. last test result
+  $testFile = Join-Path (Get-OffDir) "last-test.json"
+  if (Test-Path $testFile) {
+    try {
+      $t = Get-Content $testFile -Raw | ConvertFrom-Json
+      if ($t.overall -ne "pass") { $alerts += @{ sev = "fail"; sig = "tests-red-" + $t.ts; msg = "last cm test failed at $($t.ts)"; fix = "cm test and read the failing suite output" } }
+    } catch { }
+  }
+
+  # 4. off/ disk growth (retention)
+  $offDir = Get-OffDir
+  if (Test-Path $offDir) {
+    $bytes = 0
+    Get-ChildItem $offDir -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $bytes += $_.Length }
+    $mb = [math]::Round($bytes / 1MB, 1)
+    if ($mb -gt 200) { $alerts += @{ sev = "warn"; sig = "off-size-$today"; msg = "off/ holds ${mb}MB of runtime files (retention: trim old *.jsonl)"; fix = "delete off/*.jsonl older than needed" } }
+  }
+
+  # dedupe: only surface signatures not seen in the current session output
+  # PS 5.1 has no ConvertFrom-Json -AsHashtable; build the table by hand.
+  $state = @{}
+  $stateFile = Get-AlertStateFile
+  if (Test-Path $stateFile) {
+    try {
+      $saved = Get-Content $stateFile -Raw | ConvertFrom-Json
+      foreach ($prop in $saved.PSObject.Properties) { $state[$prop.Name] = [string]$prop.Value }
+    } catch { }
+  }
+  Info "alerts"
+  if ($alerts.Count -eq 0) { Ok "none - all thresholds quiet"; return }
+  foreach ($a in $alerts) {
+    $seen = $state.ContainsKey($a.sig)
+    $mark = "NEW "
+    if ($seen) { $mark = "seen" }
+    Info ("  [{0}] {1,-7} {2}" -f $a.sev.ToUpper(), $mark, $a.msg)
+    Info ("        fix: {0}" -f $a.fix)
+    if (-not $seen) { $state[$a.sig] = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") }
+  }
+  try {
+    $dir = Get-OffDir
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir | Out-Null }
+    $state | ConvertTo-Json | Set-Content $stateFile -Encoding ascii
+  } catch { }
+}
+
+# ---------------------------------------------------------------------------
 # cm logs
 function Invoke-Logs {
   if (-not (Test-Path $LogDir)) { Info "no log dir yet at $LogDir (nothing has run)"; return }
@@ -471,9 +538,10 @@ switch ($cmd) {
   "explain"   { Invoke-Explain }
   "key"       { Invoke-Key }
   "model"     { Invoke-Model }
+  "alerts"    { Invoke-Alerts }
   "help"      { Get-Help $MyInvocation.MyCommand.ScriptBlock -Name cm -Detailed | Out-String }
   default {
-    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|key|model|report|test|bench|e2e|explain|help)"
+    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|key|model|report|test|bench|e2e|explain|alerts|help)"
     exit 2
   }
 }
