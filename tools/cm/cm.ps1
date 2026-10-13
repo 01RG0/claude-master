@@ -300,6 +300,42 @@ function Invoke-Explain {
 }
 
 # ---------------------------------------------------------------------------
+# cm key - masked pool inspection (read-only; no secrets printed)
+# Usage: cm key [list]
+function Invoke-Key {
+  $sub = "list"
+  if ($Rest.Count -gt 0) { $sub = $Rest[0].ToLower() }
+  if ($sub -ne "list") { Fail "unknown key action '$sub' (list)"; exit 2 }
+  $cfg = Get-Content (Join-Path $Root "gateway\config.json") -Raw | ConvertFrom-Json
+  Info "key pools (masked, from gateway/config.json):"
+  foreach ($p in $cfg.Providers) {
+    $pools = @($p.key_pools)
+    if ($pools.Count -eq 0) { Info ("  {0,-12}: no pools configured" -f $p.Name); continue }
+    foreach ($pool in $pools) {
+      $src = ""
+      if ($pool.env_var) { $src = "env:$($pool.env_var)" }
+      Info ("  {0,-12}: account {1,-10} {2,-24} priority:{3}" -f $p.Name, $pool.account_label, $src, $pool.priority)
+    }
+  }
+}
+
+# ---------------------------------------------------------------------------
+# cm model - delegates to provider.exe (add/list/probe/pin/ban via provider)
+# Usage: cm model list|pin|ban [args...]
+function Invoke-Model {
+  if (-not (Test-Path $ProviderExe)) { Fail "provider.exe not built yet (fix: cm setup)"; exit 1 }
+  $args = "list"
+  if ($Rest.Count -gt 0) { $args = $Rest[0] }
+  switch ($args.ToLower()) {
+    "list" { & $ProviderExe list @($Rest | Select-Object -Skip 1) }
+    "pin"  { & $ProviderExe pin @($Rest | Select-Object -Skip 1) }
+    "ban"  { & $ProviderExe ban @($Rest | Select-Object -Skip 1) }
+    default { Fail "unknown model action '$args' (list|pin|ban)"; exit 2 }
+  }
+  if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
+
+# ---------------------------------------------------------------------------
 # cm logs
 function Invoke-Logs {
   if (-not (Test-Path $LogDir)) { Info "no log dir yet at $LogDir (nothing has run)"; return }
@@ -433,9 +469,11 @@ switch ($cmd) {
   "bench"     { Invoke-Bench }
   "e2e"       { Invoke-E2E }
   "explain"   { Invoke-Explain }
+  "key"       { Invoke-Key }
+  "model"     { Invoke-Model }
   "help"      { Get-Help $MyInvocation.MyCommand.ScriptBlock -Name cm -Detailed | Out-String }
   default {
-    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|report|test|bench|e2e|explain|help)"
+    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|key|model|report|test|bench|e2e|explain|help)"
     exit 2
   }
 }
