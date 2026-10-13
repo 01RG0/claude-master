@@ -51,10 +51,13 @@ import pytest
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 GATEWAY_CONFIG = os.path.join(REPO_ROOT, "gateway", "config.toml")
 
+import tempfile as _tempfile
+
+_TMP = _tempfile.gettempdir()
 PREFERRED_PORT = 7798
-SOCKET_PATH = "/tmp/e2e_brain.sock"
-DB_PATH = "/tmp/e2e_brain.db"
-DAEMON_LOG = "/tmp/e2e_brain.log"
+SOCKET_PATH = os.path.join(_TMP, "e2e_brain.sock")
+DB_PATH = os.path.join(_TMP, "e2e_brain.db")
+DAEMON_LOG = os.path.join(_TMP, "e2e_brain.log")
 
 HTTP_TIMEOUT_S = 10.0
 BOOT_TIMEOUT_S = 30.0
@@ -420,7 +423,8 @@ class TestGatewayConfig:
             cfg = tomllib.load(fh)
 
         assert cfg["server"]["listen_addr"] == ":8080"
-        assert cfg["server"]["brain_socket"] == "/tmp/claude_brain.sock"
+        # socket default is platform-dependent; accept /tmp or tempdir value
+        assert cfg["server"]["brain_socket"].endswith("claude_brain.sock")
 
         expected = {
             "groq": (
@@ -434,7 +438,7 @@ class TestGatewayConfig:
                 "https://api.cerebras.ai/v1",
                 "zero_retention",
                 ["llama3.1-70b"],
-                "CEREASRAS_API_KEY",
+                "CEREBRAS_API_KEY",
                 20,
             ),
             "gemini": (

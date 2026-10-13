@@ -22,6 +22,7 @@ from collections import deque
 from typing import Any
 
 from brain.store.graph import GraphStore
+from brain.paths import default_db_path, default_socket_path
 from brain.guard.stuck_detector import StuckDetector, StuckResult
 from brain.guard.context_builder import ContextBuilder
 from brain.learning.hebbian import HebbianUpdater
@@ -81,7 +82,7 @@ class BrainServer:
         }
         window = self._sessions.setdefault(session_id, deque(maxlen=20))
         window.append(evt)
-        stuck: StuckResult = self.stuck.check() if False else self._check_window(window)
+        stuck: StuckResult = self._check_window(window)
 
         if stuck.is_stuck:
             return {
@@ -117,12 +118,24 @@ class BrainServer:
 
     def _build_context(self, command: str) -> str:
         """Retrieve relevant lessons and format them as prompt context."""
+        lessons: list[str] = []
         try:
+            # Prefer the lessons table (and its FTS index) over brain_nodes tags.
             rows = self.store.conn.execute(
-                "SELECT content FROM brain_nodes WHERE tags LIKE ? LIMIT 5",
-                ("%lesson%",),
+                "SELECT rule_text FROM lessons ORDER BY confidence DESC LIMIT 5"
             ).fetchall()
-            lessons = [r["content"] for r in rows if r["content"]]
+            lessons = [r["rule_text"] for r in rows if r["rule_text"]]
+            if command:
+                try:
+                    fts = self.store.conn.execute(
+                        "SELECT rule_text FROM lessons_fts WHERE lessons_fts MATCH ? LIMIT 5",
+                        (command,),
+                    ).fetchall()
+                    for r in fts:
+                        if r["rule_text"] and r["rule_text"] not in lessons:
+                            lessons.append(r["rule_text"])
+                except Exception:
+                    pass
         except Exception:
             lessons = []
         return self.context.build(
@@ -141,6 +154,34 @@ class BrainServer:
             post_activation=1.0,
             reward=1.0 if success else -1.0,
         )
+        try:
+            import time as _time
+
+            now = int(_time.time() * 1000)
+            row = self.store.conn.execute(
+                "SELECT successes, failures, total_latency_ms FROM model_stats WHERE model_id = ?",
+                (model_id,),
+            ).fetchone()
+            if row:
+                self.store.conn.execute(
+                    "UPDATE model_stats SET successes = successes + ?, failures = failures + ?, "
+                    "total_latency_ms = total_latency_ms + ?, last_used_at = ?, updated_at = ? "
+                    "WHERE model_id = ?",
+                    (1 if success else 0, 0 if success else 1, float(latency_ms or 0.0),
+                     now, now, model_id),
+                )
+            else:
+                self.store.conn.execute(
+                    "INSERT INTO model_stats (model_id, provider, successes, failures, "
+                    "total_latency_ms, total_tokens, last_used_at, updated_at) "
+                    "VALUES (?, ?, ?, ?, ?, 0, ?, ?)",
+                    (model_id, model_id.split("/")[0] if "/" in model_id else "unknown",
+                     1 if success else 0, 0 if success else 1,
+                     float(latency_ms or 0.0), now, now),
+                )
+            self.store.conn.commit()
+        except Exception:
+            pass
 
     def run_sleep(self) -> dict[str, Any]:
         """Run the nightly consolidation job."""
@@ -203,8 +244,8 @@ def build_app(server: BrainServer):
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="claude-master brain daemon")
-    parser.add_argument("--db", default="/tmp/claude_brain.db")
-    parser.add_argument("--socket", default="/tmp/claude_brain.sock")
+    parser.add_argument("--db", default=default_db_path())
+    parser.add_argument("--socket", default=default_socket_path())
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=7700)
     args = parser.parse_args(argv)
@@ -255,14 +296,20 @@ def main(argv: list[str] | None = None) -> int:
         threading.Thread(target=_do_shutdown, daemon=True).start()
 
     signal.signal(signal.SIGINT, shutdown)
-    signal.signal(signal.SIGTERM, shutdown)
+    try:
+        signal.signal(signal.SIGTERM, shutdown)
+    except (AttributeError, ValueError, OSError):
+        pass  # SIGTERM unavailable on Windows
 
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     finally:
-        server.store.close()
+        try:
+            server.store.close()
+        except Exception:
+            pass
     return 0
 
 

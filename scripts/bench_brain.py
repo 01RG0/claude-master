@@ -1,14 +1,27 @@
-"""Measure real performance against Section 7 budgets."""
-import time, os, sys, resource
+"""Measure real performance against budgets (cross-platform rewrite)."""
+import os
+import sys
+import tempfile
+import time
 
-sys.path.insert(0, "/home/rootuser/claude-master")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from brain.store.graph import GraphStore
 from brain.learning.hebbian import HebbianUpdater
 from brain.learning.spreading import SpreadingActivation
 
 
 def rss_mb():
-    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    try:
+        import resource
+
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    except ImportError:
+        try:
+            import psutil
+
+            return psutil.Process().memory_info().rss / (1024 * 1024)
+        except ImportError:
+            return -1.0
 
 
 class StoreAdapter:
@@ -42,7 +55,6 @@ class StoreAdapter:
         return {r["target_id"]: float(r["weight"]) for r in rows}
 
     def set_all_outgoing_weights(self, source_id, weights):
-        # Direct UPDATE per edge — avoids delete+reinsert round-trips.
         for tgt, w in weights.items():
             existing = self.db.conn.execute(
                 "SELECT id FROM brain_edges WHERE source_id=? AND target_id=? AND invalid_at IS NULL",
@@ -63,7 +75,12 @@ class StoreAdapter:
 
 
 def bench():
-    db = GraphStore("/tmp/bench.db")
+    bench_db = os.path.join(tempfile.gettempdir(), "bench_claude_brain.db")
+    try:
+        os.remove(bench_db)
+    except OSError:
+        pass
+    db = GraphStore(bench_db)
     db.upsert_node("n1", "concept", "a", "")
     db.upsert_node("n2", "concept", "b", "")
     db.upsert_node("n3", "concept", "c", "")
@@ -71,7 +88,9 @@ def bench():
     db.add_edge("n2", "n3", "depends_on", weight=0.7)
     db.add_edge("n1", "n3", "depends_on", weight=0.3)
 
-    print(f"=== Brain daemon RSS: {rss_mb():.1f} MB (budget < 150 MB) ===")
+    rss = rss_mb()
+    rss_str = f"{rss:.1f} MB" if rss >= 0 else "n/a (no resource/psutil)"
+    print(f"=== Brain daemon RSS: {rss_str} (budget < 150 MB) ===")
 
     store = StoreAdapter(db)
     updater = HebbianUpdater()
@@ -98,16 +117,37 @@ def bench():
     for _ in range(300):
         t = time.perf_counter()
         db.conn.execute(
-            "SELECT content FROM brain_nodes WHERE tags LIKE ? LIMIT 5",
-            ("%lesson%",),
+            "SELECT rule_text FROM lessons LIMIT 5",
         ).fetchall()
         times.append((time.perf_counter() - t) * 1000)
     times.sort()
-    print(f"Prompt injection query: p50={times[len(times)//2]:.2f}ms "
+    print(f"Prompt injection query (lessons): p50={times[len(times)//2]:.2f}ms "
           f"p95={times[int(len(times)*.95)]:.2f}ms (budget < 10 ms)")
 
+    # Hook path end-to-end (in-process, no socket): stuck + gate + context
+    from brain.server import BrainServer
+
+    srv = BrainServer(bench_db, None, "127.0.0.1", 0)
+    payload = {"hook_event_name": "PreToolUse", "tool_name": "Bash",
+               "session_id": "bench", "input": {"command": "git status"}}
+    hook_times = []
+    for _ in range(200):
+        t = time.perf_counter()
+        srv.handle_hook(dict(payload))
+        hook_times.append((time.perf_counter() - t) * 1000)
+    hook_times.sort()
+    print(f"Hook handle_hook: p50={hook_times[len(hook_times)//2]:.2f}ms "
+          f"p95={hook_times[int(len(hook_times)*.95)]:.2f}ms (budget < 10 ms)")
+
     db.close()
-    os.remove("/tmp/bench.db")
+    try:
+        srv.store.close()
+    except Exception:
+        pass
+    try:
+        os.remove(bench_db)
+    except OSError:
+        pass
 
 
 if __name__ == "__main__":

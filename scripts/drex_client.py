@@ -24,29 +24,36 @@ def find_repo_root() -> Path:
     return Path.cwd()
 
 def get_api_key() -> str:
-    key = os.environ.get("DREX_API_KEY")
-    if key:
-        return key.strip("\"'")
+    for name in ("NACE_API_KEY", "DREX_API_KEY"):
+        key = os.environ.get(name)
+        if key:
+            return key.strip("\"'")
     
     root = find_repo_root()
     env_file = root / ".env"
     if env_file.exists():
         with open(env_file, "r", encoding="utf-8") as f:
             for line in f:
-                line = line.strip()
-                if line.startswith("DREX_API_KEY="):
-                    return line.split("=", 1)[1].strip().strip("\"'")
+                s = line.strip()
+                if s.startswith("export "):
+                    s = s[len("export "):].strip()
+                for name in ("NACE_API_KEY=", "DREX_API_KEY="):
+                    if s.startswith(name):
+                        return s.split("=", 1)[1].strip().strip("\"'")
     
     # Check parent directory fallback
     parent_env = root.parent / ".env"
     if parent_env.exists():
         with open(parent_env, "r", encoding="utf-8") as f:
             for line in f:
-                line = line.strip()
-                if line.startswith("DREX_API_KEY="):
-                    return line.split("=", 1)[1].strip().strip("\"'")
+                s = line.strip()
+                if s.startswith("export "):
+                    s = s[len("export "):].strip()
+                for name in ("NACE_API_KEY=", "DREX_API_KEY="):
+                    if s.startswith(name):
+                        return s.split("=", 1)[1].strip().strip("\"'")
 
-    raise RuntimeError("DREX_API_KEY not found in environment or .env files")
+    raise RuntimeError("NACE_API_KEY (or DREX_API_KEY) not found in environment or .env files")
 
 def log_decision_to_file(state: str, questions: dict, response: dict, latency_ms: float):
     root = find_repo_root()
@@ -82,14 +89,12 @@ def log_decision_to_file(state: str, questions: dict, response: dict, latency_ms
     with open(decisions_file, "a", encoding="utf-8") as f:
         f.write("\n".join(entry))
 
-def drex_evaluate(state: str, questions: dict, model: str = "drex-v1.5", timeout: float = 10.0) -> dict:
+def drex_evaluate(state: str, questions: dict, model: str | None = None, timeout: float = 60.0) -> dict:
     key = get_api_key()
-    url = "https://drex.nace.ai/v1/systemone"
-    payload = {
-        "model": model,
-        "state": state,
-        "questions": questions
-    }
+    url = "https://console.nace.ai/v1/systemone"
+    payload: dict = {"state": state, "questions": questions}
+    if model:
+        payload["model"] = model
     req = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),

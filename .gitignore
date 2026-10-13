@@ -2,6 +2,7 @@
 .env
 *.env
 .env.*
+!.env.example
 
 # Logs & temp
 *.log
@@ -19,3 +20,11 @@ __pycache__/
 dist/
 bin/
 node_modules/
+
+.venv/
+venv/
+*.db
+*.sock
+hookshim/hookshim
+watchdog/watchdog
+gateway/gateway

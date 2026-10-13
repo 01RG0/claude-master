@@ -1,3 +1,82 @@
+# Architecture Decision Records (rewrite, 2026-10-13)
+
+## ADR-001: Keep Python (brain) + Go (gateway/shim/dog) + TypeScript (studio); no Rust
+
+- Status: accepted. Context: mission suggests Rust-or-Go for hot paths, Python
+  only where it wins. Options: (a) keep split, (b) Rust hot paths, (c) all-Python.
+- Numbers (Windows, `python scripts/bench_brain.py`, this host):
+  RSS 21.4 MB (<150), Hebbian p50 1.54ms p95 1.77ms (<5),
+  spreading p50 0.02ms, lessons query p50 0.00ms, `handle_hook` p50 0.03ms
+  p95 0.05ms (<10). Prior Linux snapshot: shim cold-start p50 2.74ms,
+  IPC 605us, watchdog restart 10.7ms.
+- Decision: no budget breach, so no new language. Rust would add toolchain +
+  FFI + build complexity for unmeasured gain. Python keeps sqlite-vec/networkx
+  ecosystem; Go keeps stdlib-only static binaries; TS keeps Sigma.js.
+- Consequence: fewer processes/languages preferred — accepted as-is (3 langs).
+
+## ADR-002: Drex transport — fix host, dynamic model, docs-compliant retries
+
+- Status: accepted. Context: code posted to `https://drex.nace.ai` (wrong;
+  docs: `https://console.nace.ai/v1/systemone`), hardcoded `drex-v1.5`.
+- Decision: base `https://console.nace.ai`; `GET /v1/models` at startup with
+  1h cache; explicit pin wins, else `drex-v2.0`→`drex-latest`→`drex-v1.5`→omit
+  (server defaults to v2.0). Retry 408/429/500/529 + network with
+  `retry-after-ms` honor else capped exp-backoff+jitter (500ms·2^attempt≤5s);
+  never retry 401/402/422. Per-attempt timeout default 60s (docs: model waits
+  up to 55s); fast-gate callers pass 0.15s + `max_retries=0` and rely on cache
+  + fail-open. Circuit breaker: 5 consecutive failures → 60s open.
+  Cost: input-tokens × model price (v1.0 $0.04 / v1.5 $0.05 / v2.0 $0.06),
+  success-only; `DREX_BUDGET_USD` cap → degraded mode.
+- Consequence: hook path never blocks on Drex (cache/fast-fail); background
+  paths get full reliability. Deviation from docs-60s on hot path is
+  intentional and logged here.
+
+## ADR-003: Decision Taker interface (`brain/judge/decision_taker.py`)
+
+- Status: accepted. Context: six consumers need one calibrated entry point.
+- Decision: `DecisionTaker` facade over `DrexClient` with typed helpers
+  (`decide_provider/guard/judge/store/sleep/watchdog`), initial thresholds
+  guard-block 0.85 / ask 0.55 / judge 0.6 / store score≥1.0 / sleep 0.6 /
+  provider-conf 0.55, deterministic fallbacks (single-candidate, restart
+  budget ≥5 → escalate, budget-exhausted → rule). Every decision returns
+  `{action, value, confidence, source, reason, raw}`; every call appends JSONL
+  (`decisions.jsonl`) + markdown (`docs/decisions.md`); secrets never logged.
+- Consequence: thresholds are initial — calibrate from `decisions.jsonl`,
+  see `docs/test-report.md`.
+
+## ADR-004: Cross-platform paths, not /tmp
+
+- Status: accepted. Context: `/tmp` + `start_unix_server` fatal on Windows.
+- Decision: `brain/paths.py` centralises defaults (env wins, else
+  `tempfile.gettempdir()`); `ensure_parent()` before open; socket server
+  raises a clear error on Win32 (use HTTP `/hook`); tests use tempdir;
+  `bench_brain.py` drops `resource` import (fallback `psutil`).
+- Consequence: fresh Windows clone runs `python -m pytest -q` green (minus
+  ELF/node cases, documented).
+
+## ADR-005: Gateway — JSON is source of truth; add binary + modules
+
+- Status: accepted. Context: `config.go` parses JSON only, README says TOML;
+  no `main` package; `hookshim/`+`watchdog/` lack `go.mod`; `CEREASRAS` typo.
+- Decision: keep JSON (`config.json`, 16 providers) as runtime truth; fix
+  TOML typo and document TOML as human-readable mirror; add
+  `gateway/cmd/gateway/main.go` (`--config` flag); add minimal `go.mod`s;
+  untrack `.venv/`, add `.env.example`, `scripts/secret_scan.py`, CI.
+- Consequence: `cd gateway && go run ./cmd/gateway --config config.json`
+  works where Go exists; `make test-go` scoping unchanged.
+
+## ADR-006: Evidence rules — no fake greens
+
+- Status: accepted. Context: mission forbids stub-to-green.
+- Decision: live Drex/provider tests skip without keys (honest skip, not
+  pass); fault-injection (401/429/timeout/down) uses mocks; Windows-only
+  failures (ELF shim, node strip) reported as FAIL with cause, not hidden;
+  all numbers below are copy-pasted command output.
+
+---
+
+## Drex decision log (append-only; pre-rewrite records preserved below)
+
 
 ### Decision Record: `req_8e9e975d125d7e7221f7345e8d50733f`
 - **Timestamp**: `2026-09-30 23:11:17Z`

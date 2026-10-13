@@ -42,9 +42,16 @@ class BrainSocketServer:
 
     def __init__(
         self,
-        socket_path: str = "/tmp/claude_brain.sock",
+        socket_path: str | None = None,
         brain_api_url: str = "http://localhost:7700",
     ) -> None:
+        if socket_path is None:
+            try:
+                from brain.paths import default_socket_path
+
+                socket_path = default_socket_path()
+            except Exception:
+                socket_path = "/tmp/claude_brain.sock"
         self.socket_path = socket_path
         self.brain_api_url = brain_api_url.rstrip("/")
         self._server: Optional[asyncio.AbstractServer] = None
@@ -55,6 +62,16 @@ class BrainSocketServer:
 
     async def start(self) -> None:
         """Create the Unix domain socket and start listening."""
+        import sys
+
+        if sys.platform == "win32":
+            raise RuntimeError(
+                "Unix domain sockets are not supported on Windows; "
+                "run hooks via HTTP POST to /hook instead."
+            )
+        parent = os.path.dirname(os.path.abspath(self.socket_path))
+        if parent and not os.path.exists(parent):
+            os.makedirs(parent, exist_ok=True)
         # Remove stale socket file if it exists
         if os.path.exists(self.socket_path):
             os.unlink(self.socket_path)

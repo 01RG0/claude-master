@@ -19,7 +19,7 @@ key_pools = [{ account_label = "personal", env_var = "GROQ_API_KEY", priority = 
 base_url = "https://api.cerebras.ai/v1"
 privacy_policy = "zero_retention"
 models = ["llama3.1-70b"]
-key_pools = [{ account_label = "personal", env_var = "CEREASRAS_API_KEY", priority = 20 }]
+key_pools = [{ account_label = "personal", env_var = "CEREBRAS_API_KEY", priority = 20 }]
 
 [providers.gemini]
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
