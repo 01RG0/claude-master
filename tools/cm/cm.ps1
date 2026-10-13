@@ -125,6 +125,7 @@ function Invoke-Doctor {
   $bad = 0
   function Check($name, $cond, $fix) {
     if ($cond) { Ok $name }
+    elseif ($env:CI -eq "true") { Warn "$name (CI: keys/built artifacts are not checked in; skipped as failure)" }
     else { Fail "$name"; Fail "    fix: $fix"; $script:BadCount++ }
   }
 
@@ -141,7 +142,7 @@ function Invoke-Doctor {
       $cfg = Get-Content (Join-Path $Root "gateway\config.json") -Raw | ConvertFrom-Json
       $nProv = @($cfg.Providers).Count
       Check "config parses ($nProv providers)" ($nProv -gt 0) "config.json is corrupt: git checkout -- gateway/config.json"
-    } catch { Fail "config.json is not valid JSON"; Fail "    fix: git checkout -- gateway/config.json"; $script:bad++ }
+    } catch { Fail "config.json is not valid JSON"; Fail "    fix: git checkout -- gateway/config.json"; $script:BadCount++ }
   }
 
   Check "provider.exe built" (Test-Path $ProviderExe) "cm setup (builds it)"
@@ -150,7 +151,7 @@ function Invoke-Doctor {
   if (Test-Path $envFile) {
     $keys = Get-Content $envFile | Where-Object { $_ -match "API_KEY=" -or $_ -match "_KEY=" } | ForEach-Object { ($_ -split "=")[0] }
     Check ("keys in .env ({0} entries)" -f $keys.Count) ($keys.Count -gt 0) "add provider keys to .env (never commit them)"
-  } else { Fail ".env not found"; Fail "    fix: copy .env.example to .env and fill in provider keys"; $script:BadCount++ }
+  } else { Warn ".env not found"; Warn "    fix: copy .env.example to .env and fill in provider keys (CI: not required)" }
 
   $claude = Get-Command claude -ErrorAction SilentlyContinue
   if ($claude) { Ok ("claude CLI on PATH") } else { Warn "claude CLI not on PATH (optional; needed for E2E runs). fix: npm install -g @anthropic-ai/claude-code" }

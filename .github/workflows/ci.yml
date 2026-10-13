@@ -20,9 +20,9 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.27"
-      - run: cd gateway && go test ./...
-      - run: cd hookshim && go test ./...
-      - run: cd watchdog && go test ./...
+      - run: cd gateway && go vet ./... && go test ./...
+      - run: cd hookshim && go vet ./... && go test ./...
+      - run: cd watchdog && go vet ./... && go test ./...
   studio:
     runs-on: ubuntu-latest
     steps:
@@ -31,3 +31,42 @@ jobs:
         with:
           node-version: 20
       - run: cd studio && npm install --no-fund --no-audit && npm run typecheck && npm test
+  windows:
+    # PowerShell-first platform must pass the same gates, including a parse
+    # check of every .ps1 (PS 5.1 is strict: no unicode in BOM-less files,
+    # no $x = if (...), argument-mode needs ($hash.key) parens).
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.27"
+      - run: python scripts/bootstrap.py
+      - run: python scripts/secret_scan.py
+      - run: python -m pytest -q
+      - run: cd gateway && go test ./... && cd ..\hookshim && go test ./... && cd ..\watchdog && go test ./...
+        shell: pwsh
+      - name: Parse-check every PowerShell script (PS 5.1 = powershell.exe)
+        shell: powershell
+        run: |
+          $bad = 0
+          Get-ChildItem -Recurse -Include *.ps1,*.psm1 -Path tools,scripts,.github -ErrorAction SilentlyContinue |
+            ForEach-Object {
+              $tokens = $null; $errors = $null
+              [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors) > $null
+              if ($errors -and $errors.Count -gt 0) {
+                Write-Host "PARSE FAIL: $($_.FullName)"
+                $errors | ForEach-Object { Write-Host "  $($_.Message) (line $($_.Extent.StartLineNumber))" }
+                $bad++
+              }
+            }
+          if ($bad -gt 0) { exit 1 }
+          Write-Host "All PowerShell scripts parse clean under PS 5.1"
+      - name: cm doctor (offline checks)
+        shell: powershell
+        env:
+          CI: "true"
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File tools/cm/cm.ps1 doctor
