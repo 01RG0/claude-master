@@ -32,3 +32,6 @@ hookshim/hookshim.exe
 watchdog/watchdog.exe
 gateway/gateway.exe
 *.log.err
+logs/
+gateway/provider.exe
+gateway-provider.exe

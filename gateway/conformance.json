@@ -1,0 +1,86 @@
+{
+  "open-mistral-7b": {
+    "chat": {
+      "ok": true,
+      "ms": 764.0,
+      "note": "http=200 Got it! Let me know how I can help\u2014wheth"
+    },
+    "stream": {
+      "ok": false,
+      "ms": 0,
+      "note": "HTTPError"
+    },
+    "single-tool": {
+      "ok": false,
+      "ms": 2.0,
+      "note": "[]"
+    },
+    "parallel-tools": {
+      "ok": true,
+      "ms": 523.0,
+      "note": "calls=2"
+    },
+    "tool-error-recovery": {
+      "ok": true,
+      "ms": 403.0,
+      "note": "http=200"
+    },
+    "multiturn": {
+      "ok": true,
+      "ms": 657.0,
+      "note": "http=200"
+    },
+    "vision": {
+      "ok": true,
+      "ms": 4900.0,
+      "note": "http=200"
+    },
+    "schema-edge": {
+      "ok": true,
+      "ms": 372.0,
+      "note": "http=200"
+    }
+  },
+  "openai": {
+    "chat": {
+      "ok": true,
+      "ms": 245.0,
+      "note": "http=200 Ok."
+    },
+    "stream": {
+      "ok": true,
+      "ms": 162.0,
+      "note": "events=23 ['message_start', 'content_block_start', 'content_block_delta', 'content_block_delta', 'content_block_delta', 'content_block_delta']"
+    },
+    "single-tool": {
+      "ok": true,
+      "ms": 113.0,
+      "note": "['tool_use']"
+    },
+    "parallel-tools": {
+      "ok": true,
+      "ms": 107.0,
+      "note": "calls=1"
+    },
+    "tool-error-recovery": {
+      "ok": true,
+      "ms": 166.0,
+      "note": "http=200"
+    },
+    "multiturn": {
+      "ok": true,
+      "ms": 171.0,
+      "note": "http=200"
+    },
+    "vision": {
+      "ok": false,
+      "ms": 130.0,
+      "note": "http=529"
+    },
+    "schema-edge": {
+      "ok": true,
+      "ms": 147.0,
+      "note": "http=200"
+    }
+  }
+}

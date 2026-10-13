@@ -86,8 +86,20 @@ class DecisionTaker:
         }
     }
 
-    def decide_guard(self, tool_name: str, category: str) -> Decision:
-        """Allow/block/ask for a tool call. State is redacted (no raw commands)."""
+    def decide_guard(self, tool_name: str, category: str, use_drex: bool = False) -> Decision:
+        """Allow/block/ask for a tool call. State is redacted (no raw commands).
+
+        use_drex defaults False: 2026-10-13 labeled eval (40 commands) scored
+        Drex 0.60 vs deterministic rules 0.70 — redaction hides destructiveness,
+        so the production guard is rule-only. Pass use_drex=True to experiment.
+        """
+        if use_drex:
+            return self._decide_guard_drex(tool_name, category)
+        if category == "routine":
+            return Decision("act", "allow", None, "rule", "not a risky category")
+        return Decision("act", "block", 1.0, "rule", f"risky category: {category}")
+
+    def _decide_guard_drex(self, tool_name: str, category: str) -> Decision:
         state = f"Tool: {tool_name}, Category: {category}"
         if self._over_budget(self.fast):
             return Decision("act", "allow", None, "rule", "drex budget exhausted; fail-open allow")

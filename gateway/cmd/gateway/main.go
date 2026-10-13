@@ -24,11 +24,19 @@ import (
 
 func main() {
 	configPath := flag.String("config", "gateway/config.json", "path to JSON gateway config")
+	logReqs := flag.String("log-requests", "", "directory for redacted request logs (overrides config)")
+	listen := flag.String("listen", "", "listen addr override (default from config)")
 	flag.Parse()
 
 	cfg, err := gateway.LoadConfig(*configPath)
 	if err != nil {
 		log.Fatalf("gateway: %v", err)
+	}
+	if *logReqs != "" {
+		cfg.Logging = &gateway.LoggingConfig{RequestsDir: *logReqs, MaxBody: 4096}
+	}
+	if *listen != "" {
+		cfg.ListenAddr = *listen
 	}
 	srv := gateway.NewServer(cfg)
 

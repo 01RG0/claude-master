@@ -57,10 +57,14 @@ class BrainServer:
         self.sleep = SleepConsolidator(self.store)
         # Guard Drex budget: 1.0s covers measured p99 (783ms, 2026-10-13);
         # down/black-hole fails open without blocking the agent for 60s.
+        # NOTE: gate itself is rule-only (use_drex=False): 2026-10-13 eval on
+        # 40 labeled commands scored Drex 0.60 vs rules 0.70 — Drex stays
+        # enabled for judge/route/store/sleep, disabled for guard blocking.
         self.drex = DrexClient(timeout_s=1.0, max_retries=0)
-        self.gating = GatingPolicy(self.drex)
+        self.gating = GatingPolicy(self.drex, use_drex=False)
         # Per-session event windows for stuck detection
         self._sessions: dict[str, deque[dict]] = {}
+        self.hooks_handled = 0
 
     # ------------------------------------------------------------------
     # Hook endpoint (called by socket_server)
@@ -88,6 +92,7 @@ class BrainServer:
         }
         window = self._sessions.setdefault(session_id, deque(maxlen=20))
         window.append(evt)
+        self.hooks_handled += 1
         stuck: StuckResult = self._check_window(window)
 
         if stuck.is_stuck:
@@ -100,6 +105,7 @@ class BrainServer:
         # 2. Drex gating for risky command classes
         gate = self.gating.gate(command_summary=command, tool_name=tool)
         if not gate.allow:
+            self._remember(session_id, event, tool, command, None)
             return {
                 "allow": False,
                 "block_reason": gate.reason or "blocked by judge",
@@ -108,11 +114,45 @@ class BrainServer:
 
         # 3. Inject working-memory context
         ctx = self._build_context(command)
+        self._remember(session_id, event, tool, command, ctx)
         return {
             "allow": True,
             "block_reason": "",
             "additional_context": ctx,
         }
+
+    def _remember(
+        self,
+        session_id: str,
+        event: str,
+        tool: str,
+        command: str,
+        ctx: str | None,
+    ) -> None:
+        """Persist one episodic row + touch the tool node (best effort).
+
+        Every hook — Pre and Post — leaves a trace: the brain provably learns
+        from every action. Failures here must never break the hook path.
+        """
+        try:
+            import time as _time
+
+            now = int(_time.time() * 1000)
+            etype = "pre_tool" if event == "PreToolUse" else (
+                "post_tool" if event == "PostToolUse" else "hook")
+            payload = json.dumps({"tool": tool, "command": (command or "")[:500],
+                                  "context_chars": len(ctx or "")})
+            self.store.conn.execute(
+                "INSERT INTO episodic_events (session_id, event_type, tool_name, "
+                "action_payload, outcome_reward, created_at) "
+                "VALUES (?, ?, ?, ?, NULL, ?)",
+                (session_id, etype, tool or "", payload, now),
+            )
+            if tool:
+                self.store.upsert_node(f"tool:{tool}", "concept", tool, "")
+            self.store.conn.commit()
+        except Exception:
+            pass
 
     def _check_window(self, window: deque[dict]) -> StuckResult:
         """Run the stuck detector over a session window."""
@@ -236,9 +276,15 @@ def build_app(server: BrainServer):
                     n = server.store.conn.execute(
                         "SELECT COUNT(*) AS c FROM brain_nodes"
                     ).fetchone()["c"]
+                    ep = server.store.conn.execute(
+                        "SELECT COUNT(*) AS c FROM episodic_events"
+                    ).fetchone()["c"]
                 except Exception:
                     n = -1
-                self._json({"status": "ok", "db": server.db_path, "nodes": n})
+                    ep = -1
+                self._json({"status": "ok", "db": server.db_path, "nodes": n,
+                            "episodic_events": ep, "sessions": len(server._sessions),
+                            "hooks_handled": server.hooks_handled})
             else:
                 self._json({"error": "not found"}, 404)
 

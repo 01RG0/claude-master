@@ -75,7 +75,54 @@
 
 ---
 
-## Drex decision log (append-only; pre-rewrite records preserved below)
+## # ADR-007+ -- universal gateway (2026-10-13; ADR-001..006 above)
+
+## ADR-007: Canonical Anthropic form + declarative adapters (no per-provider code)
+- Drivers: ANY current/future HTTP model API must work via config alone; features
+  a provider lacks are emulated, never silently broken.
+- Decision: canonical AnthropicRequest/blocks; AdapterSpec(endpoint,auth,stream,
+  tool/vision limits) per provider; ValidateAdapter + provider CLI; sanitize
+  notes logged. Cohere-v2/Bedrock/Vertex need dedicated dialects later (specced,
+  unbuilt -- no keys to test).
+- Numbers: 17 providers registered, all specs validate; mistral+pollinations live.
+
+## ADR-008: input_json_delta streaming + attempt-context fix
+- A legacy unit test caught us: integrated streams lost all but the first delta.
+  Root cause: doUpstream defer cancel() killed resp.Body mid-stream (Go gotcha).
+  Fix: cancelBody releases context on Close. Same fix cut live T3 7.1s to 0.7s.
+- Translators: stateful StreamTranslator (tool blocks incremental); legacy
+  single-chunk helper kept for tests only.
+
+## ADR-009: Drex guard disabled by measurement (0.60 < 0.70)
+- 100-event labeled eval: guard Drex acc 0.600 vs rules 0.700; judge 1.000.
+  Mechanism: redacted Tool/Category state hides destructiveness. Guard is now
+  rule-only (risky category to block); Drex stays for judge/route/store/sleep.
+  Fast-gate 1.0s from 220-call p99=783ms (150ms guess would fail-open ~100%).
+
+## ADR-010: Windows hook budget revised with platform baseline
+- Bare loopback connect+close p50=10.05ms (Defender-inspected) dominates; spawn
+  adds ~3.5ms, IPC ~1ms, so spawn p50 is 13.5-15.3ms. The 10ms spawn budget is
+  NOT reachable here; tests assert p50<30ms Windows / <10ms POSIX. Path to 10ms:
+  keep-alive hook host (specced, unbuilt). Daemon logic 0.03ms, not language.
+
+## ADR-011: ADR-001 update -- no Go/Rust rewrite (numbers)
+- In-memory hebbian: Go 37ns vs Python 500ns (14x). Python+SQLite: 1.56ms --
+  99.97% is commit I/O. Batching commits (not a rewrite) is the lever, and all
+  budgets already pass (RSS 22MB, hebbian p95 1.9ms). Keep Python brain + Go
+  gateway. Rust not installed/needed.
+
+## ADR-012: DPAPI keystore via x/sys (network was available)
+- Runtime keys persist DPAPI-encrypted on Windows (round-trip tested);
+  non-Windows falls back to memory+env with a loud warning. go.mod gains
+  golang.org/x/sys (only new dependency; gateway stays cgo-free).
+
+## ADR-013: Per-attempt 25s timeout (failover speed)
+- One hanging provider (groq Cloudflare stalls) consumed the full 60-120s
+  budget and starved failover (61s conformance stalls). Attempts now bounded
+  at 25s; worst case degrades gracefully across mirrors/providers.
+
+---
+Drex decision log (append-only; pre-rewrite records preserved below)
 
 
 ### Decision Record: `req_8e9e975d125d7e7221f7345e8d50733f`
@@ -354,6 +401,32 @@ Evaluating safety of running 'git status' in a developer workspace.
 ### Decision Record: `req_c7f339d096c457a98544f2d62dce3693`
 - **Timestamp**: `2026-10-13 03:05:10Z`
 - **Model**: `drex-v2.0` | **Latency**: `622.6ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9643`
+---
+
+### Decision Record: `req_0c7feefdb9cc8789ddb57532512cc2ff`
+- **Timestamp**: `2026-10-13 04:18:51Z`
+- **Model**: `drex-v2.0` | **Latency**: `623.1ms`
+- **State Evaluation Context**:
+```text
+Evaluating safety of running 'git status' in a developer workspace.
+```
+- **Questions & Calibrated Answers**:
+  - **`safe_check`** (noul):
+    - Instructions: *Is this a routine safe developer action?*
+    - **Probability (True)**: `0.9643`
+---
+
+### Decision Record: `req_e037fe0d849a873730fa9dc7ea177343`
+- **Timestamp**: `2026-10-13 04:21:05Z`
+- **Model**: `drex-v2.0` | **Latency**: `623.9ms`
 - **State Evaluation Context**:
 ```text
 Evaluating safety of running 'git status' in a developer workspace.

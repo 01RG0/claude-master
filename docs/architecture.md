@@ -1,76 +1,72 @@
-# claude-master architecture (rewrite, 2026-10-13)
+# claude-master architecture (rewrite, universal gateway, 2026-10-13)
 
-## Topology
+## Topology (Windows native)
 
 ```
-┌─────────────┐     ┌──────────────────┐     ┌────────────────┐
-│  Claude Code │────▶│  Go gateway      │────▶│ Free providers │
-│  (CLI)       │     │  :8080/v1       │     │ (Groq/Cerebras │
-└──────┬───────┘     │  cmd/gateway     │     │  Mistral/Gemini)│
-       │            └────────┬─────────┘     └────────────────┘
-       │ hooks (PreTool/     │
-       │ PostTool)           │ Thompson bandit + key-pool cascade + privacy gate
-       ▼                     ▼
-┌──────────────┐   ┌──────────────────┐
-│  hookshim    │──▶│ brain daemon     │
-│  (static Go) │   │ (Python, :7700 + │
-└──────────────┘   │  Unix socket*)   │
-                   └────────┬─────────┘
-                            │ SQLite (WAL) + FTS5 (+ vec0 when available)
-                   ┌────────┴─────────┐
-                   │ Decision Taker   │──▶ Drex console.nace.ai (optional;
-                   │ (DrexClient +    │    degraded rule mode when down)
-                   │  DecisionTaker)  │
-                   └──────────────────┘
-                            │
-                       ┌────┴─────┐
-                       │  studio  │
-                       │ (TS)     │
-                       └──────────┘
+┌─────────────┐   ANTHROPIC_BASE_URL    ┌──────────────────────────────┐
+│ Claude Code │ ──────────────────────▶ │  Go gateway :8080            │
+│  (claude-*) │                         │  /v1/messages (+stream/tools) │
+└──────┬──────┘                         │  /v1/messages/count_tokens    │
+       │ hooks (Pre/PostToolUse)        │  /v1/chat/completions (OpenAI)│
+       ▼                                │  /v1/responses (minimal)      │
+┌──────────────┐  TCP 127.0.0.1:7772    │  /v1/models /v1/outcome       │
+│ hookshim.exe │ ─────────────────────▶ │  /v1/admin/keys|stats (loop)  │
+└──────────────┘                        └──────────────┬───────────────┘
+       │                                              │ canonical ↔ adapter
+       ▼                                              ▼
+┌──────────────────┐                     ┌────────────────────────┐
+│ brain daemon :7700│                     │ providers (16+custom)  │
+│ hooks/learn/guard │                     │ key pools × mirrors    │
+│ Decision Taker    │── Drex (judge/route)│ Thompson/priority/rr/  │
+└────────┬─────────┘   (guard: rule-only)│ latency/cost + cooldown│
+         │ SQLite WAL                     └────────────────────────┘
+    ┌────┴─────┐
+    │  studio  │
+    └──────────┘
 ```
 
-`*` Unix socket on POSIX; on Windows use HTTP `POST /hook` directly
-(`asyncio.start_unix_server` unsupported — explicit error, see `brain/paths.py`).
+No Unix sockets on Windows (TCP loopback dual-stack daemon; POSIX keeps the
+socket too). Binaries: `hookshim.exe`, `watchdog.exe`, `gateway.exe`,
+`provider.exe`. One bootstrap (`scripts\bootstrap.ps1`), one start
+(`scripts\start.ps1`).
 
-## Component responsibilities
+## Gateway internals
 
-| Component | Language | Path | Job |
-|---|---|---|---|
-| Brain daemon | Python | `brain/` (`server.py`, `store/`, `learning/`, `guard/`, `judge/`, `reflect/`, `sleep/`, `paths.py`) | Store, learning, guard, sleep, judge; HTTP `:7700` (`/hook /outcome /sleep /health`) + Unix-socket bridge |
-| Decision Taker | Python | `brain/judge/client.py` + `decision_taker.py` | Drex transport (dynamic model, retries, breaker, cost caps) + typed decisions for gateway/guard/judge/learning/sleep/watchdog |
-| Gateway | Go (stdlib-only) | `gateway/` (`server.go`, `adapter_*.go`, `bandit.go`, `cooldown.go`, `config.go`, `privacy.go`, `router.go`, `cmd/gateway/main.go`) | Anthropic-compatible proxy (`/v1/messages` streaming+tools, `/v1/outcome`, `/health`), key pools, bandit routing. Config JSON is source of truth (`config.json`); `config.toml` is a human mirror |
-| Hook shim | Go | `hookshim/` (`shim.go`, `main.go`) | Static binary forwarding hook JSON to daemon; fail-open (>50ms/timeout/malformed → exit 0) |
-| Watchdog | Go | `watchdog/` (`watchdog.go`, `main.go`) | Health checks, restarts, sleep scheduling |
-| Studio | TypeScript | `studio/` | Sigma.js graph viewer, scrubber, inspector |
+- **Canonical form**: `AnthropicRequest` (messages/blocks/tools/thinking/
+  cache_control/tool_choice/temperature/stops). Every provider is an adapter:
+  canonical → provider OpenAI-chat (default) per declarative `AdapterSpec`
+  (dialect, paths, auth style, stream format, tool limits, vision).
+- **Translation** (`adapter_request.go`): system→system, tool_use→tool_calls
+  (role coerced to assistant), tool_result→role:tool, image→image_url parts,
+  document/thinking/server-tools→logged notes (never silent), tool_choice
+  any→required, temperature/top_p/stops passed, unknown names never 422
+  (roles/aliases resolve everything, `ResolveModel`).
+- **Streaming** (`stream_translator.go`): stateful per-response translator —
+  message_start → text/tool_use blocks → `input_json_delta` per arg fragment
+  → stops → message_delta (cumulative usage incl. real `cache_read` when
+  reported) → message_stop. Multi-choice handled per-choice; `[DONE]`
+  terminates; `RepairToolArgsJSON` salvages truncation. Attempt contexts are
+  released on body close (`cancelBody`) — never mid-stream.
+- **Reliability**: key pools + 429 cascade + cooldown doubling, mirrors,
+  per-attempt 25s timeout (hung provider fails over fast), strategies
+  (thompson/priority/round-robin/latency EMA/cost + sticky sessions),
+  per-key model allowlists, error envelope mapped to Anthropic types with
+  `retry-after` semantics, in-flight guard via budgets.
+- **Accounting**: per-model calls/errors/latency-EMA/tokens/cached/cost;
+  `/v1/admin/stats`. Request logs redacted+truncated (`--log-requests`).
+- **Keys**: env + runtime overlay (add/remove/rotate/set-models/pin/ban,
+  loopback-only) persisted DPAPI-encrypted on Windows (`keystore_*.go`).
 
-## Data flow
+## Brain
 
-1. **PreToolUse hook**: Claude Code → hookshim → daemon `handle_hook`
-   (stuck-check → `GatingPolicy`/`DecisionTaker.decide_guard` → lessons/FTS context).
-2. **PostToolUse hook**: Claude Code → hookshim → daemon learning (Hebbian update).
-3. **`/v1/messages`**: Claude Code → gateway → provider adapter → streaming SSE back.
-4. **Decisions**: any component → `DecisionTaker` → Drex (cached, budgeted) or
-   deterministic fallback; every call logged to `decisions.jsonl` + `docs/decisions.md`.
-5. **Viewer**: daemon → studio (snapshot + event stream).
+Hook IPC (TCP+Unix) → `handle_hook` (stuck → rule gate → lessons/FTS
+context) + episodic persistence per hook (proves learning-from-action) +
+Hebbian/model_stats on `/outcome`. Decision Taker: Drex for judge/route/
+store/sleep (1s fast / 60s bg, budget caps, JSONL log); **guard is rule-only**
+(eval: Drex 0.60 < rules 0.70 — redaction hides destructiveness).
 
-## Persistence
+## Detection loop
 
-Single SQLite database (default `tempdir/claude_brain.db`, override
-`CLAUDE_BRAIN_DB`) with `brain_nodes`/`brain_edges` (bi-temporal),
-`brain_nodes_fts`, `lessons`/`lessons_fts`, `skills`/`skills_fts`,
-`model_stats`/`key_state`/`request_log`, `sleep_log`, `decisions`, plus
-`brain_node_vectors` (vec0, only when sqlite-vec loads).
-
-## Deployment
-
-```bash
-python scripts/bootstrap.py          # venv + deps (cross-platform)
-python -m brain.server              # :7700 (defaults from brain/paths.py)
-cd gateway && go run ./cmd/gateway --config config.json   # :8080
-./hookshim --socket ...             # POSIX; Windows: HTTP /hook
-cd studio && npm run dev
-```
-
-Set `ANTHROPIC_BASE_URL=http://localhost:8080` and `ANTHROPIC_API_KEY=dummy`
-before launching Claude Code. Copy `.env.example` → `.env` for real keys
-(never commit; `python scripts/secret_scan.py` enforces).
+`provider add|scan|probe|validate` → `gateway/capabilities.json`
+(measured>declared>assumed) → conformance rows → `docs/compatibility-matrix.md`
+→ routing (roles/bans) → re-scan on schedule/events. User config always wins.

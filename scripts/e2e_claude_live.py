@@ -49,14 +49,25 @@ def main():
             pass
     tcp, bport = "127.0.0.1:7783", 7788
     shim = os.path.join(REPO_ROOT, "hookshim", "hookshim.exe")
-    # project settings: hooks fire hookshim.exe for every tool + prompt
+    logdir = os.path.join(tmp, "claude-live-logs")
+    os.makedirs(logdir, exist_ok=True)
+    blog = open(os.path.join(logdir, "brain.log"), "w")
+    glog = open(os.path.join(logdir, "gateway.log"), "w")
+    # project settings: hooks fire hookshim.exe for every tool + prompt.
+    # NOTE: ~/.claude/settings.json on this host pins ANTHROPIC_BASE_URL to a
+    # LiteLLM router; project env overrides user env, so pin ours here.
     settings = {
+        "env": {
+            "ANTHROPIC_BASE_URL": "http://localhost:8080",
+            "ANTHROPIC_API_KEY": "dummy",
+            "ANTHROPIC_MODEL": "sonnet",
+        },
         "hooks": {
-            "PreToolUse": [{"hooks": [{"type": "command",
-                                       "command": f'"{shim}"'}]}],
-            "PostToolUse": [{"hooks": [{"type": "command",
-                                        "command": f'"{shim}"'}]}],
-        }
+            "PreToolUse": [{"matcher": ".*", "hooks": [{"type": "command",
+                                                        "command": f'"{shim}"'}]}],
+            "PostToolUse": [{"matcher": ".*", "hooks": [{"type": "command",
+                                                         "command": f'"{shim}"'}]}],
+        },
     }
     claude_dir = os.path.join(TASKDIR, ".claude")
     os.makedirs(claude_dir, exist_ok=True)
@@ -69,14 +80,15 @@ def main():
     brain = subprocess.Popen(
         [sys.executable, "-m", "brain.server", "--db", db, "--tcp", tcp,
          "--port", str(bport)], cwd=REPO_ROOT, env=env,
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        stdout=blog, stderr=subprocess.STDOUT)
     gw = None
     try:
         assert wait_health(f"http://127.0.0.1:{bport}/health"), "brain down"
         gw = subprocess.Popen(
             [os.path.join(REPO_ROOT, "gateway", "gateway.exe"), "--config",
-             os.path.join(REPO_ROOT, "gateway", "config.json")],
-            cwd=REPO_ROOT, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+             os.path.join(REPO_ROOT, "gateway", "config.json"),
+             "--log-requests", os.path.join(logdir, "traffic")],
+            cwd=REPO_ROOT, env=env, stdout=glog, stderr=subprocess.STDOUT)
         assert wait_health("http://localhost:8080/health"), "gateway down"
 
         tasks = [

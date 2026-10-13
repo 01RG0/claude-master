@@ -88,8 +88,12 @@ class GatingPolicy:
         }
     }
 
-    def __init__(self, client: DrexClient) -> None:
+    def __init__(self, client: DrexClient, use_drex: bool = True) -> None:
+        # use_drex=False: deterministic rule-only gate (production default since
+        # 2026-10-13 eval: Drex 0.60 < rules 0.70 on 40 labeled guard commands —
+        # redacted state hides destructiveness; see docs/test-report.md).
         self._client = client
+        self._use_drex = use_drex
 
     # ------------------------------------------------------------------
     # Heuristic helpers
@@ -149,8 +153,13 @@ class GatingPolicy:
                 reason="No risky pattern detected.",
             )
 
-        # Slow path: call Drex with redacted descriptor
-        # Determine category from risky pattern names for the descriptor
+        # Slow path: risky command class.
+        if not self._use_drex:
+            return GatingResult(
+                allow=False,
+                source="rule_blocked",
+                reason=f"Risky pattern ({category}); Drex guard disabled by eval, deterministic block.",
+            )
         category = self._classify_category(command_summary)
         drex_state = f"Tool: {tool_name}, Category: {category}"
 

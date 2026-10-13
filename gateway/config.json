@@ -271,6 +271,24 @@
     "strategy": "thompson_sampling",
     "cooldown_base_s": 60,
     "cooldown_max_s": 3600,
-    "github_models_fallback_only": true
+    "github_models_fallback_only": true,
+    "selection": "thompson_sampling"
+  },
+  "model_aliases": {
+    "opus": "open-mistral-7b",
+    "sonnet": "open-mistral-7b",
+    "haiku": "open-mistral-7b",
+    "fable": "open-mistral-7b",
+    "default": "open-mistral-7b"
+  },
+  "roles": {
+    "main": "open-mistral-7b",
+    "fast": "open-mistral-7b",
+    "subagent": "open-mistral-7b",
+    "summarizer": "open-mistral-7b"
+  },
+  "logging": {
+    "requests_dir": "logs/claude-traffic",
+    "max_body_bytes": 4096
   }
 }

@@ -22,7 +22,15 @@ type StreamChoice struct {
 type StreamDelta struct {
 	Role      string           `json:"role,omitempty"`
 	Content   string           `json:"content,omitempty"`
-	ToolCalls []OpenAIToolCall `json:"tool_calls,omitempty"`
+	ToolCalls []ToolCallDelta  `json:"tool_calls,omitempty"`
+}
+
+// ToolCallDelta is one upstream tool-call fragment (index preserved).
+type ToolCallDelta struct {
+	Index    int              `json:"index"`
+	ID       string           `json:"id,omitempty"`
+	Type     string           `json:"type,omitempty"`
+	Function OpenAIToolFunction `json:"function,omitempty"`
 }
 
 // AnthropicSSEEvent is a single SSE line pair (event + data).

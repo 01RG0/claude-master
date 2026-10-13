@@ -1,62 +1,68 @@
-# Test report (rewrite, 2026-10-13, Windows)
+# Test report (rewrite, universal gateway, 2026-10-13, Windows)
 
-Command (copy-pasted):
+## Full suite (real output)
 
 ```
 python -m pytest -q --tb=no
-4 failed, 142 passed, 15 skipped in 34.33s
+161 passed in 67.72s        # zero failures, zero skips (Go on PATH, Drex key present)
 ```
 
-Baseline (pre-rewrite, same host): `5 failed, 123 passed, 14 skipped, 9 errors`.
-Rewrite delta: **+19 passed, 9 errors fixed, 1 failure fixed, 0 new failures.**
+```
+cd gateway && go test ./...      # ok (11s) — incl. 10 new universal tests
+cd hookshim && go test ./...     # ok — TCP tests pass, Unix tests skip on Windows
+cd watchdog && go test ./...     # ok — restart 73ms (see benchmarks)
+cd tests/hookshim && go test .   # ok — cold-start p50 13.5ms < 30ms Win budget
+cd studio && npm test            # 17 passed (5 files)
+```
 
-## Passes
+## Live E2E (real APIs, no mocks on happy path)
 
-- `tests/brain` (incl. new `test_decision_taker.py`, 11 tests): Drex cache,
-  gating (safe/not-risky/fail-open/block/approve, no raw-command leak),
-  DecisionTaker degraded paths (guard/watchdog/provider/store), Drex transport
-  (no hardcoded host, dotenv parsing, 401-no-retry, 1MiB guard), store/learning/
-  reflect/sleep suites. Live Drex test skipped (no key — honest skip).
-- `tests/e2e` (all 15, incl. previously-erroring `daemon` fixture): cross-platform
-  tempdir fix resolved all 9 `FileNotFoundError: /tmp/...` errors. In-process
-  hook/stuck/outcome + gateway config + `go build` (skipped, no toolchain).
-- `tests/chaos` + `tests/security`: secret-scan, privacy, fail-open, DB locks,
-  malformed hooks pass. `python scripts/secret_scan.py` → `secret_scan: clean`
-  (after untracking `.venv/` and allowing test fixtures).
+- `scripts/e2e_gateway_live.py`: **6/6 PASS** (chat/stream/tool-use/multiturn/
+  long-stream/outcome; outputs pasted in benchmarks).
+- `scripts/e2e_claude_live.py` (real `claude -p` × 3 through gateway):
+  **3/3 rc=0** — haiku write (~7–70s), edit+ls (~11–13s), pwd+echo (~8–13s).
+  Hooks fired: `hooks_handled=10, sessions=3, episodic_events=10, nodes=2`.
+  Traffic: 21 requests, all `claude-sonnet-5-5` → `open-mistral-7b`,
+  stream, 128k max_tokens, 26 tools, tool_use/tool_result round-trips.
+- `scripts/conformance.py`: mistral 6–7/8 native PASS per run (free-tier 429
+  flaps 1–2 scenarios per run; best-observed all 8 PASS — see matrix);
+  pollinations 7/8 (vision 400-fail, routed around).
+- `provider scan`: 17 providers fingerprinted (openai-chat throughout;
+  /models found on 9 with keys, none without). `probe`: mistral row all-true;
+  pollinations row documents 402-nonstream/stream-200 split.
+- `scripts/load_test.py`: 29/50 ok, 21×529 quota (see benchmarks).
+- Admin rotation live: add→stats→remove→ban all ok (hashes only).
+- DPAPI keystore: round-trip PASS (blob≠plaintext, decrypts).
 
-## Failures (all pre-existing, Windows-only, NOT hidden)
+## Drex vs rules (scripts/eval_drex.py, 100 labeled events)
 
-| Test | Cause | Evidence |
-|---|---|---|
-| `test_daemon_down_shim_allows_and_stays_silent` | prebuilt `hookshim` is ELF; Windows `WinError 193` | same as baseline |
-| `test_daemon_down_shim_never_hangs_on_unreadable_socket` | same ELF cause | same as baseline |
-| `test_daemon_down_shim_allows_on_empty_and_garbage_stdin` | same ELF cause | same as baseline |
-| `test_studio_mask_secret_runs_under_node` | `node` type-stripping of `.mts` driver fails on this host | same as baseline |
+```
+GUARD drex: acc=0.600 (tp=4 tn=20 fp=0 fn=16) cal_err=0.417 lat p50=0 p95=703
+GUARD rule: acc=0.700 (tp=8 tn=20 fp=0 fn=12) lat p50=0.007ms
+JUDGE drex: acc=1.000 (30/30)
+ROUTE drex: valid=30/30
+```
 
-These pass on Linux (Go + node available). No mock was added to force them green.
+**Drex disabled for guard blocking** (0.60 < 0.70; redaction hides
+destructiveness — mechanism documented). Drex stays on for judge (1.0),
+route, store, sleep. Guard thresholds: N/A (rule block on risky categories).
 
-## Coverage gaps (honest)
+## Fault injection (mocks only here)
 
-- **Real provider APIs (Groq/Cerebras/Mistral/Gemini): no keys provided.**
-  No `.env` in this env; integration tests requiring keys skip by design.
-  Gateway provider failover is covered by fault-injection (429/timeout/
-  malformed/down) unit tests only. Provide keys → run
-  `python -m pytest tests/ -k live` with `DREX_BUDGET_USD` cap.
-- **Real Drex:** `test_drex_live_call` skipped (no `NACE_API_KEY`). Decision
-  Taker evaluation vs rule baseline: harness + labeled-question shapes exist
-  (`decide_guard/judge/store/sleep/provider/watchdog` + `decisions.jsonl`
-  logging), but accuracy/calibration numbers require a keyed run. Fault paths
-  (401-no-retry, timeout fail-open, circuit-open, 1MiB guard, budget cap) are
-  unit-tested with mocks. Thresholds (0.85/0.55/0.6/…) are initial — calibrate
-  from `decisions.jsonl` after a keyed soak; see ADR-003.
-- **Go/TS:** `go` and `studio/node_modules` absent → `make test-go`/`test-ts`
-  not runnable here. CI (`.github/workflows/ci.yml`) runs all three on Ubuntu.
-- **E2E Claude Code run:** not performed (no keys, no gateway binary on this
-  host). Path is wired (`ANTHROPIC_BASE_URL` → gateway → providers; hooks →
-  `hookshim` → daemon `/hook`); verify with keys per `docs/runbook.md`.
+- Daemon down → shim fail-open exit 0 (3 tests, .exe on Windows).
+- Drex down → gate fail-open (all risky classes).
+- All keys 429 → PickKey empty, fast fail, cooldown doubling bounded.
+- Malformed hooks (500-flood, odd types, non-string commands) → allow, capped.
+- Truncated tool args → RepairToolArgsJSON unit-tested.
+- Hung provider → 25s attempt timeout → failover (found live via groq hangs).
 
-## Budgets
+## Honest gaps
 
-See `docs/benchmarks.md` (all Python budgets PASS on real measurement).
-Go/TS budgets carry forward the prior Linux snapshot, marked UNKNOWN here —
-not claimed as re-measured.
+- Cohere v2 path (405), Bedrock/Vertex/Azure auth, native prompt-cache
+  passthrough, thinking→reasoning mapping, server web_search, gateway
+  response cache: not built — documented in compatibility-matrix with
+  measured behavior; requests never silently break (logged notes/errors).
+- Pollinations non-stream 402 + mistral free-tier 429s: quota-bound flakiness,
+  retried honestly, never hidden.
+- Groq/Cerebras 403-1010 from this network; gemini retired model IDs.
+- Linux CI: `.github/workflows/ci.yml` runs pytest+go+studio on Ubuntu.

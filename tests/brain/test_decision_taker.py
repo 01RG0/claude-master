@@ -13,8 +13,16 @@ class TestDecisionTakerDegraded:
         from brain.judge.decision_taker import DecisionTaker
 
         dt = DecisionTaker(client=_client_fail_open())
-        d = dt.decide_guard("Bash", "file_deletion")
+        d = dt.decide_guard("Bash", "file_deletion", use_drex=True)
         assert d.action == "act" and d.value == "allow" and d.source == "fail_open"
+
+    def test_guard_rule_only_by_default(self):
+        from brain.judge.decision_taker import DecisionTaker
+
+        dt = DecisionTaker(client=_client_fail_open())
+        assert dt.decide_guard("Bash", "routine").value == "allow"
+        d = dt.decide_guard("Bash", "file_deletion")
+        assert d.value == "block" and d.source == "rule"
 
     def test_watchdog_restart_budget_escalates(self):
         from brain.judge.decision_taker import DecisionTaker
@@ -46,7 +54,7 @@ class TestDecisionTakerDegraded:
         c.total_cost_usd = 0.0
         c.evaluate.return_value = {"answers": {"risk": {"noul": 0.95}}, "model": "drex-v2.0"}
         dt = DecisionTaker(client=c)
-        d = dt.decide_guard("Bash", "file_deletion")
+        d = dt.decide_guard("Bash", "file_deletion", use_drex=True)
         assert d.value == "block" and d.source == "drex"
 
     def test_guard_asks_in_band(self):
@@ -58,7 +66,7 @@ class TestDecisionTakerDegraded:
         c.total_cost_usd = 0.0
         c.evaluate.return_value = {"answers": {"risk": {"noul": 0.6}}, "model": "drex-v2.0"}
         dt = DecisionTaker(client=c)
-        d = dt.decide_guard("Bash", "network_pipe")
+        d = dt.decide_guard("Bash", "network_pipe", use_drex=True)
         assert d.action == "escalate" and d.value == "ask-user"
 
 

@@ -321,9 +321,9 @@ func TestTranslateRequestWithTools(t *testing.T) {
 			InputSchema: json.RawMessage(`{"type":"object"}`),
 		}},
 	}
-	or, err := TranslateRequest(ar, "llama")
-	if err != nil {
-		t.Fatal(err)
+	or, notes := TranslateRequest(ar, "llama")
+	if or == nil {
+		t.Fatalf("translation failed: %v", notes)
 	}
 	if or.Model != "llama" || len(or.Tools) != 1 {
 		t.Fatalf("unexpected: %+v", or)
