@@ -95,6 +95,81 @@ function Invoke-Stop {
 }
 
 # ---------------------------------------------------------------------------
+# metrics helpers (real data, parsed from runtime JSONL/log outputs)
+function Get-OffDir { (Join-Path $Root "off") }
+
+function Get-StatusMetrics {
+  $today = (Get-Date).ToUniversalTime().ToString("yyyy-MM-dd")
+  $offDir = Get-OffDir
+
+  $metrics = [ordered]@{
+    trafficToday = 0
+    lastTrafficAt = ""
+    topModels = ""
+    decisionsToday = 0
+    lastDecisionId = ""
+    gatewayErrorLines = 0
+    lastTest = ""
+  }
+
+  # traffic: off/*.jsonl records carry a "ts" field
+  $counts = @{}
+  $newest = ""
+  if (Test-Path $offDir) {
+    foreach ($file in Get-ChildItem $offDir -Filter *.jsonl -ErrorAction SilentlyContinue) {
+      foreach ($line in Get-Content $file.FullName -ErrorAction SilentlyContinue) {
+        try {
+          $rec = $line | ConvertFrom-Json
+          $ts = [string]$rec.ts
+          if (-not $ts) { continue }
+          if ($ts.StartsWith($today)) { $metrics.trafficToday++ }
+          if ($ts -gt $newest) { $newest = $ts }
+          if ($ts.StartsWith($today) -and $rec.mapped) {
+            $m = [string]$rec.mapped
+            if ($counts.ContainsKey($m)) { $counts[$m]++ } else { $counts[$m] = 1 }
+          }
+        } catch { }
+      }
+    }
+  }
+  $metrics.lastTrafficAt = $newest
+  $top3 = @($counts.GetEnumerator() | Sort-Object Value -Descending | Select-Object -First 3)
+  $metrics.topModels = ($top3 | ForEach-Object { "{0} ({1})" -f $_.Key, $_.Value }) -join ", "
+
+  # Drex decisions (runtime log dir)
+  $decisionLog = Join-Path $LogDir "decisions.jsonl"
+  if (Test-Path $decisionLog) {
+    $lastId = ""
+    foreach ($line in Get-Content $decisionLog -ErrorAction SilentlyContinue) {
+      try {
+        $rec = $line | ConvertFrom-Json
+        if (([string]$rec.ts).StartsWith($today)) {
+          $metrics.decisionsToday++
+          $lastId = [string]$rec.request_id
+        }
+      } catch { }
+    }
+    $metrics.lastDecisionId = $lastId
+  }
+
+  # gateway errors (log tail; case-insensitive match)
+  $gwLog = Join-Path $LogDir "gateway.log"
+  if (Test-Path $gwLog) {
+    $metrics.gatewayErrorLines = @(Select-String -Path $gwLog -Pattern "error|429|exhausted" -SimpleMatch:$false -ErrorAction SilentlyContinue).Count
+  }
+
+  # last test outcome (written by cm test)
+  $testFile = Join-Path (Get-OffDir) "last-test.json"
+  if (Test-Path $testFile) {
+    try { $t = Get-Content $testFile -Raw | ConvertFrom-Json
+      $metrics.lastTest = "{0} {1} ({2})" -f $t.overall, $t.at, $t.suites
+    } catch { }
+  }
+
+  return $metrics
+}
+
+# ---------------------------------------------------------------------------
 # cm status - one screen of truth
 function Invoke-Status {
   $gw = Invoke-HttpHealth "http://localhost:8080/health"
@@ -116,6 +191,15 @@ function Invoke-Status {
   if (-not (($gw.up) -or ($brain.up))) {
     Warn "nothing is running - try: cm start"
   }
+
+  $m = Get-StatusMetrics
+  Info ""
+  Info "metrics (today, real data):"
+  Info ("  requests today:  {0}   last: {1}" -f $m.trafficToday, $m.lastTrafficAt)
+  if ($m.topModels) { Info ("  top models:      {0}" -f $m.topModels) }
+  Info ("  Drex decisions:  {0} today" -f $m.decisionsToday)
+  if ($m.lastDecisionId) { Info ("  last decision:   {0}  (cm explain runs once explain lands)" -f $m.lastDecisionId) }
+  if ($m.lastTest) { Info ("  last test:       {0}" -f $m.lastTest) }
 }
 
 # ---------------------------------------------------------------------------
@@ -162,6 +246,57 @@ function Invoke-Doctor {
   Info ""
   if ($script:BadCount -eq 0) { Ok "doctor: all required checks green" }
   else { Fail "doctor: $script:BadCount required check(s) failed (see fix lines above)"; exit 1 }
+}
+
+# ---------------------------------------------------------------------------
+# cm explain <request-id> - print a real decision record + surrounding traffic
+function Invoke-Explain {
+  $reqId = ""
+  if ($Rest.Count -gt 0) { $reqId = $Rest[0] }
+  else { $reqId = (Get-StatusMetrics).lastDecisionId }
+  if (-not $reqId) { Fail "usage: cm explain <request-id>"; exit 2 }
+
+  $decisionLog = Join-Path $LogDir "decisions.jsonl"
+  if (-not (Test-Path $decisionLog)) { Fail "no decisions.jsonl in $LogDir (brain never ran)"; exit 1 }
+
+  $hit = $null
+  foreach ($line in Get-Content $decisionLog -ErrorAction SilentlyContinue) {
+    try {
+      $rec = $line | ConvertFrom-Json
+      if ([string]$rec.request_id -eq $reqId) { $hit = $rec }
+    } catch { }
+  }
+  if (-not $hit) { Fail "request id not found in decisions.jsonl: $reqId"; Fail "    fix: the Drex log covers only evaluated decisions; check off/*.jsonl for raw traffic"; exit 1 }
+
+  Info "Drex decision for $reqId"
+  Info ("  at:              {0}  ({1}, {2}ms)" -f $hit.ts, $hit.model, $hit.latency_ms)
+  Info ("  state:           {0}" -f $hit.state)
+  foreach ($q in $hit.questions.PSObject.Properties) {
+    $ans = $hit.answers.PSObject.Properties[$q.Name]
+    if ($ans) { Info ("  answer {0}: {1}" -f $q.Name, ($ans.Value | ConvertTo-Json -Compress)) }
+    else { Info ("  question {0}: {1}" -f $q.Name, ($q.Value | ConvertTo-Json -Compress)) }
+  }
+  Info ("  usage:           {0}" -f ($hit.usage | ConvertTo-Json -Compress))
+
+  # surrounding gateway traffic (same UTC second to +10 seconds window)
+  Info ""
+  Info "gateway traffic around this decision:"
+  $base = [string]$hit.ts
+  $baseSec = $base.Substring(0, 18)
+  $offDir = Get-OffDir
+  if (Test-Path $offDir) {
+    foreach ($file in Get-ChildItem $offDir -Filter *.jsonl -ErrorAction SilentlyContinue) {
+      foreach ($line in Get-Content $file.FullName -ErrorAction SilentlyContinue) {
+        try {
+          $rec = $line | ConvertFrom-Json
+          $ts = [string]$rec.ts
+          if ($ts -ge $baseSec -and $ts -le ($baseSec.Substring(0, 17) + ([string]([int]([char[]]$baseSec[16]) + 1)))) {
+            Info ("  {0}  {1} -> {2} ({3} msgs, {4} tools)" -f $ts, $rec.requested, $rec.mapped, $rec.messages, $rec.tools)
+          }
+        } catch { }
+      }
+    }
+  }
 }
 
 # ---------------------------------------------------------------------------
@@ -228,6 +363,15 @@ function Invoke-Test {
     Pop-Location
   }
   Info ""
+  $overall = "fail"
+  if ($fail -eq 0) { $overall = "pass" }
+  try {
+    $offDir = Get-OffDir
+    if (-not (Test-Path $offDir)) { New-Item -ItemType Directory -Path $offDir | Out-Null }
+    @{ ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+       overall = $overall;
+       suites = "pytest go x3 vitest" } | ConvertTo-Json -Compress | Set-Content (Join-Path $offDir "last-test.json") -Encoding ascii
+  } catch { }
   if ($fail -eq 0) { Ok "cm test: all suites green" } else { Fail "cm test: $fail suite(s) failed"; exit 1 }
 }
 
@@ -288,9 +432,10 @@ switch ($cmd) {
   "test"      { Invoke-Test }
   "bench"     { Invoke-Bench }
   "e2e"       { Invoke-E2E }
+  "explain"   { Invoke-Explain }
   "help"      { Get-Help $MyInvocation.MyCommand.ScriptBlock -Name cm -Detailed | Out-String }
   default {
-    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|report|test|bench|e2e|help)"
+    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|report|test|bench|e2e|explain|help)"
     exit 2
   }
 }
