@@ -232,7 +232,8 @@ export interface HyperparameterItem {
   description: string;
   provenance: string;
   source?: string;
-  last_calibrated_at?: number;
+  calibration_status?: string;
+  last_calibrated_at?: number | null;
 }
 
 export interface ExplorationCandidate {

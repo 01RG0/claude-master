@@ -27,79 +27,6 @@ import type {
   TestCaseResult,
 } from "./types.js";
 
-export const DEFAULT_HYPERPARAMETERS: Record<string, HyperparameterItem> = {
-  drex_confidence_threshold: {
-    name: "drex_confidence_threshold",
-    value: 0.55,
-    type: "float",
-    range: [0.0, 1.0],
-    description: "Minimum confidence required to accept a Drex decision over deterministic scoring",
-    provenance: "Calibrated against labeled evaluation benchmark (Phase 2)",
-    source: "benchmarks/drex_calibration",
-    last_calibrated_at: 1728864000.0,
-  },
-  borderline_margin: {
-    name: "borderline_margin",
-    value: 0.08,
-    type: "float",
-    range: [0.0, 0.50],
-    description: "Utility score difference below which top candidates trigger Drex adjudication",
-    provenance: "Empirical sensitivity analysis on routing utility distributions",
-    source: "benchmarks/routing_sensitivity",
-    last_calibrated_at: 1728864000.0,
-  },
-  drift_error_spike_threshold: {
-    name: "drift_error_spike_threshold",
-    value: 0.25,
-    type: "float",
-    range: [0.0, 1.0],
-    description: "Recent error rate threshold triggering automated route drift demotion",
-    provenance: "Empirical stability window on production failure cascades",
-    source: "benchmarks/drift_detector",
-    last_calibrated_at: 1728864000.0,
-  },
-  demotion_penalty_factor: {
-    name: "demotion_penalty_factor",
-    value: 0.20,
-    type: "float",
-    range: [0.0, 1.0],
-    description: "Utility multiplier applied to demoted routes (80% score reduction)",
-    provenance: "Risk ceiling: prevents failing models from winning viable candidate selection",
-    source: "benchmarks/demotion_policy",
-    last_calibrated_at: 1728864000.0,
-  },
-  time_decay_half_life_seconds: {
-    name: "time_decay_half_life_seconds",
-    value: 86400.0,
-    type: "float",
-    range: [3600.0, 604800.0],
-    description: "Half-life in seconds for exponential time decay of historical observations",
-    provenance: "Observation relevance window matching 24-hour diurnal provider traffic cycles",
-    source: "benchmarks/time_decay_analysis",
-    last_calibrated_at: 1728864000.0,
-  },
-  bandit_undersampled_n: {
-    name: "bandit_undersampled_n",
-    value: 10,
-    type: "int",
-    range: [1, 100],
-    description: "Sample count threshold below which a route is classified as under-sampled",
-    provenance: "Statistical power threshold for Beta distribution variance stabilization",
-    source: "benchmarks/bandit_power_analysis",
-    last_calibrated_at: 1728864000.0,
-  },
-  ema_smoothing_gamma: {
-    name: "ema_smoothing_gamma",
-    value: 0.20,
-    type: "float",
-    range: [0.01, 1.0],
-    description: "Exponential moving average smoothing factor for quality, latency, and cost",
-    provenance: "Noise rejection smoothing window balancing responsiveness and variance",
-    source: "benchmarks/ema_tuning",
-    last_calibrated_at: 1728864000.0,
-  },
-};
-
 export class ApiClient {
   private baseUrl: string;
 
@@ -160,6 +87,9 @@ export class ApiClient {
     } catch {
       // Dynamic fallback based on capabilities contract
     }
+    // Offline state stays empty; placeholder providers/credentials are unsafe.
+    return [];
+    /* Legacy synthetic provider fixture removed.
     return [
       {
         name: "groq",
@@ -242,7 +172,7 @@ export class ApiClient {
           },
         ],
       },
-    ];
+    ]; */
   }
 
   // System Hyperparameters & Calibration
@@ -254,9 +184,9 @@ export class ApiClient {
         return data.hyperparameters || data;
       }
     } catch {
-      // Fallback to calibrated defaults
+      // No network result means no measured or configured values are available.
     }
-    return DEFAULT_HYPERPARAMETERS;
+    return {};
   }
 
   async saveHyperparameters(params: Record<string, any>): Promise<{ ok: boolean }> {
@@ -282,6 +212,7 @@ export class ApiClient {
     } catch {
       // Fallback
     }
+    return []; /* Synthetic benchmark rows had unsupported scores and provenance.
     return [
       {
         id: "llama-3.3-70b-versatile",
@@ -523,7 +454,7 @@ export class ApiClient {
           english: { task_type: "english", score: 77.7, sample_size_n: 3, passed_count: 2, ci_95_low: 20.8, ci_95_high: 93.8, measured_ttft_ms: 1110, tokens_per_sec: 51, provenance: "measured", p_value: 0.14, is_significant: false, run_id: "run_4a8f#english", artifact_url: "data/evals/results.json" },
         },
       },
-    ];
+    ]; */
   }
 
   // Routing and Roles

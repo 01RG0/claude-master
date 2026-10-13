@@ -148,7 +148,7 @@ class QualityEstimate:
         beta <- 1.0 + (beta - 1.0) * decay
         effective_n <- effective_n * decay
         """
-        effective_hl = half_life_seconds if half_life_seconds is not None else float(get_hyperparameter("time_decay_half_life_seconds", default=86400.0))
+        effective_hl = half_life_seconds if half_life_seconds is not None else float(get_hyperparameter("time_decay_half_life_seconds"))
         if elapsed_seconds <= 0 or effective_hl <= 0:
             return
 
@@ -221,25 +221,25 @@ class DriftDetector:
     def error_spike_threshold(self) -> float:
         if self._error_spike_threshold is not None:
             return self._error_spike_threshold
-        return float(get_hyperparameter("drift_error_spike_threshold", default=0.25))
+        return float(get_hyperparameter("drift_error_spike_threshold"))
 
     @property
     def tool_accuracy_drop_threshold(self) -> float:
         if self._tool_accuracy_drop_threshold is not None:
             return self._tool_accuracy_drop_threshold
-        return float(get_hyperparameter("drift_tool_accuracy_drop_threshold", default=0.25))
+        return float(get_hyperparameter("drift_tool_accuracy_drop_threshold"))
 
     @property
     def quality_drop_threshold(self) -> float:
         if self._quality_drop_threshold is not None:
             return self._quality_drop_threshold
-        return float(get_hyperparameter("drift_quality_drop_threshold", default=0.30))
+        return float(get_hyperparameter("drift_quality_drop_threshold"))
 
     @property
     def demotion_penalty(self) -> float:
         if self._demotion_penalty is not None:
             return self._demotion_penalty
-        return float(get_hyperparameter("demotion_penalty", default=0.20))
+        return float(get_hyperparameter("demotion_penalty"))
 
     def check_drift(self, estimate: QualityEstimate) -> Optional[DriftEvent]:
         """Examine recent outcomes against baseline to detect regression."""
@@ -327,8 +327,8 @@ class DriftDetector:
         recent_avg_q = sum(o.get("quality_score", 0.0) for o in recent) / len(recent)
 
         # Recovery condition: low error rate and good quality
-        max_err = float(get_hyperparameter("recovery_error_rate_threshold", default=0.10))
-        min_q = float(get_hyperparameter("recovery_quality_threshold", default=0.70))
+        max_err = float(get_hyperparameter("recovery_error_rate_threshold"))
+        min_q = float(get_hyperparameter("recovery_quality_threshold"))
         return recent_err_rate <= max_err and recent_avg_q >= min_q
 
 
@@ -651,7 +651,7 @@ class OnlineLearningRouter:
     def half_life_seconds(self) -> float:
         if self._half_life_seconds is not None:
             return self._half_life_seconds
-        return float(get_hyperparameter("time_decay_half_life_seconds", default=86400.0))
+        return float(get_hyperparameter("time_decay_half_life_seconds"))
 
     def _init_db_schema(self) -> None:
         if not self.conn:
@@ -858,7 +858,7 @@ class OnlineLearningRouter:
             est.failures += 1
 
         # 4. Exponential moving average update
-        gamma = float(get_hyperparameter("ema_gamma", default=0.20))
+        gamma = float(get_hyperparameter("ema_gamma"))
         est.ema_quality = (1.0 - gamma) * est.ema_quality + gamma * q_score
         if outcome.latency > 0:
             est.ema_latency_ms = (1.0 - gamma) * est.ema_latency_ms + gamma * outcome.latency

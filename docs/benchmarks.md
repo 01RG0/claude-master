@@ -163,3 +163,4 @@ Reproduce:
 python scripts/e2e_claude_matrix.py --scenario S2-runtests --repeat 3 \
   --gateway-port 18080 --json-out off/e2e/s2x3.json
 ```
+- S2-runtests (3x, clean): 0/3 PASS (classifier billing non-gateway warning on this run; 400s dominated by pooled content-too-long/unknown-model with clamp active). See off/e2e/s2x3-parallel.json.

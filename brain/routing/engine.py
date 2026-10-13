@@ -95,6 +95,8 @@ class RouteDecision:
     is_cold_start: bool = False
     pricing: Dict[str, float] = field(default_factory=dict)
     measured_latency_ms: float = 0.0
+    estimated_cost_usd: float = 0.0
+    confidence: float = 0.0
     explanation: str = ""
 
 
@@ -305,6 +307,7 @@ class DynamicRouter:
                 model_id="fallback", provider="none", route_id="none/fallback"
             )
             dec = self._make_decision(req, fallback_c, [], task, "no_candidates", req.profile_name, rejections, [])
+            self._record_trace(req, dec, task, [], rejections, None, t0)
             return dec
 
         # Sort descending by utility
@@ -428,6 +431,8 @@ class DynamicRouter:
             is_cold_start=False,
             pricing=candidate.pricing,
             measured_latency_ms=candidate.measured_ttft_ms,
+            estimated_cost_usd=scored[0].estimated_cost_usd if scored else 0.0,
+            confidence=scored[0].confidence if scored else 0.0,
             explanation="",
         )
 

@@ -13,6 +13,8 @@ import {
 
 export class RoutingScreen {
   private container: HTMLElement;
+  private hyperparameters: Record<string, any> = {};
+  private hyperparametersLoaded = false;
   private simPrompt = "Fix memory leak in hookhost child process lifecycle and add unit test";
   private simTask = "coding";
   private simTokens = 1200;
@@ -26,6 +28,13 @@ export class RoutingScreen {
   }
 
   render(): void {
+    if (!this.hyperparametersLoaded) {
+      this.hyperparametersLoaded = true;
+      void api.fetchHyperparameters().then((items) => {
+        this.hyperparameters = items;
+        this.render();
+      });
+    }
     const state = store.getState();
     const lang = state.lang;
     const roles = state.routingRoles;
@@ -63,6 +72,25 @@ export class RoutingScreen {
         <button type="button" class="btn-primary" id="btn-save-routing">
           💾 ${t("save", lang)} Routing Matrix
         </button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3>Routing policy values and provenance</h3>
+            <span class="muted text-sm">Uncalibrated values are labeled NOT MEASURED.</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Parameter</th><th>Current value</th><th>Status</th><th>Source</th><th>Provenance</th></tr></thead>
+            <tbody>${Object.entries(this.hyperparameters).map(([name, item]) => `
+              <tr><td>${escapeHtml(name)}</td><td>${escapeHtml(String(item.value ?? "NOT MEASURED"))}</td>
+              <td>${escapeHtml(item.calibration_status || "NOT MEASURED")}</td>
+              <td>${escapeHtml(item.source || "NOT MEASURED")}</td><td>${escapeHtml(item.provenance || "NOT MEASURED")}</td></tr>
+            `).join("") || `<tr><td colspan="5">NOT MEASURED</td></tr>`}</tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Section 1: Requirement Profile Editors for Roles -->

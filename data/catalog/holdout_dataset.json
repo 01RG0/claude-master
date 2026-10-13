@@ -1,6 +1,13 @@
 {
-  "version": "1.0.0",
-  "description": "Dedicated Model Modality & Agentic Classification Holdout Audit Dataset",
+  "version": "1.1.0",
+  "description": "Classifier holdout candidates; legacy labels are not independent ground truth.",
+  "holdout_construction": {
+    "legacy_row_count": 65,
+    "legacy_label_source": "Static generator labels; not independently reviewed.",
+    "leakage_status": "UNSUITABLE_FOR_PERFORMANCE_ESTIMATION",
+    "independent_labeling_required": true,
+    "performance_metrics": "NOT MEASURED"
+  },
   "total_samples": 65,
   "agentic_samples": 30,
   "non_agentic_samples": 35,
@@ -12,7 +19,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "novel_agentic"
+      "category": "novel_agentic",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "deepseek-ai/deepseek-vl2-tiny",
@@ -22,7 +31,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "novel_multimodal"
+      "category": "novel_multimodal",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openrouter/auto",
@@ -31,7 +42,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "meta_router"
+      "category": "meta_router",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "inclusionai/ling-3.0-flash-vl:free",
@@ -41,7 +54,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "novel_multimodal"
+      "category": "novel_multimodal",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "google/gemini-2.5-pro-preview-03-25",
@@ -51,7 +66,9 @@
         "tool_calling",
         "vision"
       ],
-      "category": "novel_agentic"
+      "category": "novel_agentic",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "mistralai/mistral-large-2411",
@@ -60,7 +77,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "qwen/qvq-72b-preview",
@@ -70,7 +89,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "reasoning_multimodal"
+      "category": "reasoning_multimodal",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "meta-llama/llama-3.3-70b-instruct",
@@ -79,7 +100,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "cohere/command-r-plus-08-2024",
@@ -88,7 +111,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "x-ai/grok-3-beta",
@@ -97,7 +122,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "01-ai/yi-lightning",
@@ -106,7 +133,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "zhipu/glm-4-plus",
@@ -115,7 +144,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "internlm/internlm2_5-20b-chat",
@@ -124,7 +155,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "baichuan-inc/baichuan-4",
@@ -133,7 +166,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "minimax/minimax-text-01",
@@ -142,7 +177,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "stepfun/step-2-16k",
@@ -151,7 +188,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "deepseek-ai/deepseek-coder-v2.5",
@@ -160,7 +199,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_coding"
+      "category": "agentic_coding",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "qwen/qwen-2.5-coder-32b-instruct",
@@ -169,7 +210,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_coding"
+      "category": "agentic_coding",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "allenai/olmo-2-13b-instruct",
@@ -178,7 +221,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "tiiuae/falcon-180b-chat",
@@ -187,7 +232,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "amazon/nova-pro-v1",
@@ -197,7 +244,9 @@
         "tool_calling",
         "vision"
       ],
-      "category": "agentic_multimodal"
+      "category": "agentic_multimodal",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "microsoft/phi-4-mini-instruct",
@@ -206,7 +255,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "databricks/dbrx-instruct",
@@ -215,7 +266,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "upstage/solar-pro-preview-instruct",
@@ -224,7 +277,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "snowflake/arctic-instruct",
@@ -233,7 +288,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "deepseek-ai/deepseek-r1-zero",
@@ -242,7 +299,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_reasoning"
+      "category": "agentic_reasoning",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/o3-mini-high",
@@ -251,7 +310,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_reasoning"
+      "category": "agentic_reasoning",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "google/gemma-3-27b-it",
@@ -260,7 +321,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "alibabacloud/qwen-omni-turbo",
@@ -270,7 +333,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_multimodal"
+      "category": "agentic_multimodal",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "anthropic/claude-3-5-haiku-20241022",
@@ -279,7 +344,9 @@
         "text_chat",
         "tool_calling"
       ],
-      "category": "agentic_chat"
+      "category": "agentic_chat",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "amazon/titan-embed-text-v2",
@@ -287,7 +354,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/text-embedding-3-large",
@@ -295,7 +364,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/text-embedding-3-small",
@@ -303,7 +374,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "baai/bge-m3-embeddings",
@@ -311,7 +384,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "cohere/embed-english-v3.0",
@@ -319,7 +394,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "cohere/embed-multilingual-v3.0",
@@ -327,7 +404,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "voyageai/voyage-3-large-embed",
@@ -335,7 +414,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "nomic-ai/nomic-embed-text-v1.5",
@@ -343,7 +424,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "intfloat/e5-mistral-7b-instruct-embedding",
@@ -351,7 +434,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "google/text-embedding-004",
@@ -359,7 +444,9 @@
       "expected_modalities": [
         "embeddings"
       ],
-      "category": "embeddings"
+      "category": "embeddings",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "scale/rerank-v2-turbo",
@@ -367,7 +454,9 @@
       "expected_modalities": [
         "rerank"
       ],
-      "category": "rerank"
+      "category": "rerank",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "cohere/rerank-v3.5",
@@ -375,7 +464,9 @@
       "expected_modalities": [
         "rerank"
       ],
-      "category": "rerank"
+      "category": "rerank",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "baai/bge-reranker-large",
@@ -383,7 +474,9 @@
       "expected_modalities": [
         "rerank"
       ],
-      "category": "rerank"
+      "category": "rerank",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "jinaai/jina-reranker-v2-base-multilingual",
@@ -391,7 +484,9 @@
       "expected_modalities": [
         "rerank"
       ],
-      "category": "rerank"
+      "category": "rerank",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "mixedbread-ai/mxbai-rerank-large-v1",
@@ -399,7 +494,9 @@
       "expected_modalities": [
         "rerank"
       ],
-      "category": "rerank"
+      "category": "rerank",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "meta-llama/llama-guard-4-12b",
@@ -407,7 +504,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "meta-llama/llama-guard-3-8b",
@@ -415,7 +514,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/omni-moderation-latest",
@@ -423,7 +524,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "google/shieldgemma-9b-safety",
@@ -431,7 +534,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "ibm-granite/granite-guardian-3.1-8b",
@@ -439,7 +544,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "meta/prompt-guard-86m",
@@ -447,7 +554,9 @@
       "expected_modalities": [
         "classification_guard"
       ],
-      "category": "guard"
+      "category": "guard",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "black-forest-labs/flux-1-schnell",
@@ -455,7 +564,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "black-forest-labs/flux-1-dev",
@@ -463,7 +574,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "stabilityai/stable-diffusion-3.5-large",
@@ -471,7 +584,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/dall-e-3",
@@ -479,7 +594,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "ideogram/ideogram-v2-turbo-canvas",
@@ -487,7 +604,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "midjourney/midjourney-v6.1",
@@ -495,7 +614,9 @@
       "expected_modalities": [
         "image_generation"
       ],
-      "category": "image_gen"
+      "category": "image_gen",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "elevenlabs/multilingual-v2",
@@ -503,7 +624,9 @@
       "expected_modalities": [
         "audio_tts"
       ],
-      "category": "audio_tts"
+      "category": "audio_tts",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "deepgram/aura-orpheus-en",
@@ -511,7 +634,9 @@
       "expected_modalities": [
         "audio_tts"
       ],
-      "category": "audio_tts"
+      "category": "audio_tts",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "playht/play-3.0-mini-speech",
@@ -519,7 +644,9 @@
       "expected_modalities": [
         "audio_tts"
       ],
-      "category": "audio_tts"
+      "category": "audio_tts",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/tts-1-hd",
@@ -527,7 +654,9 @@
       "expected_modalities": [
         "audio_tts"
       ],
-      "category": "audio_tts"
+      "category": "audio_tts",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "openai/whisper-large-v3-turbo",
@@ -535,7 +664,9 @@
       "expected_modalities": [
         "audio_stt"
       ],
-      "category": "audio_stt"
+      "category": "audio_stt",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "deepgram/nova-2-asr",
@@ -543,7 +674,9 @@
       "expected_modalities": [
         "audio_stt"
       ],
-      "category": "audio_stt"
+      "category": "audio_stt",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "distil-whisper/distil-large-v3-stt",
@@ -551,7 +684,9 @@
       "expected_modalities": [
         "audio_stt"
       ],
-      "category": "audio_stt"
+      "category": "audio_stt",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
     },
     {
       "model_id": "facebook/seamless-m4t-v2-stt",
@@ -559,7 +694,51 @@
       "expected_modalities": [
         "audio_stt"
       ],
-      "category": "audio_stt"
+      "category": "audio_stt",
+      "label_status": "legacy_non_independent",
+      "label_evidence": null
+    }
+  ],
+  "hard_cases": [
+    {
+      "model_id": "unseen-vendor/new-family-27b-tool-preview",
+      "kind": "synthetic_odd_name",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/model-v2.1:free",
+      "kind": "synthetic_pricing_suffix",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/model__INSTRUCT__2027",
+      "kind": "synthetic_delimiter_and_future_version",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/vision-chat-embed-hybrid",
+      "kind": "synthetic_conflicting_modality_tokens",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/guard-chat-72b",
+      "kind": "synthetic_conflicting_guard_and_chat_tokens",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/xyz-9000",
+      "kind": "synthetic_opaque_name",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "newvendor/family_4o-mini-2027-09",
+      "kind": "synthetic_unseen_vendor_and_version",
+      "expected_agentic": null
+    },
+    {
+      "model_id": "vendor/model (reasoning) [beta]",
+      "kind": "synthetic_punctuation",
+      "expected_agentic": null
     }
   ]
 }

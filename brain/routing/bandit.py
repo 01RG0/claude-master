@@ -15,9 +15,9 @@ from brain.routing.hyperparameters import get_hyperparameter
 
 
 class BanditState(BaseModel):
-    epsilon: float = Field(default_factory=lambda: float(get_hyperparameter("bandit_epsilon", default=0.05)))
-    min_samples_threshold: int = Field(default_factory=lambda: int(get_hyperparameter("bandit_min_samples_threshold", default=10)))
-    budget_cap_usd: float = Field(default_factory=lambda: float(get_hyperparameter("bandit_budget_cap_usd", default=0.50)))
+    epsilon: float = Field(default_factory=lambda: float(get_hyperparameter("bandit_epsilon")))
+    min_samples_threshold: int = Field(default_factory=lambda: int(get_hyperparameter("bandit_min_samples_threshold")))
+    budget_cap_usd: float = Field(default_factory=lambda: float(get_hyperparameter("bandit_budget_cap_usd")))
     spent_usd: float = 0.0
     exploration_count: int = 0
     exploitation_count: int = 0
@@ -33,9 +33,9 @@ class BanditRouter:
         budget_cap_usd: Optional[float] = None,
         rng: Optional[random.Random] = None,
     ) -> None:
-        eff_eps = epsilon if epsilon is not None else float(get_hyperparameter("bandit_epsilon", default=0.05))
-        eff_samples = min_samples_threshold if min_samples_threshold is not None else int(get_hyperparameter("bandit_min_samples_threshold", default=10))
-        eff_budget = budget_cap_usd if budget_cap_usd is not None else float(get_hyperparameter("bandit_budget_cap_usd", default=0.50))
+        eff_eps = epsilon if epsilon is not None else float(get_hyperparameter("bandit_epsilon"))
+        eff_samples = min_samples_threshold if min_samples_threshold is not None else int(get_hyperparameter("bandit_min_samples_threshold"))
+        eff_budget = budget_cap_usd if budget_cap_usd is not None else float(get_hyperparameter("bandit_budget_cap_usd"))
 
         self.state = BanditState(
             epsilon=eff_eps,

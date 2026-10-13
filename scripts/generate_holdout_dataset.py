@@ -92,19 +92,44 @@ HOLDOUT_SAMPLES = [
 
 def build_holdout():
     os.makedirs(os.path.dirname(HOLDOUT_PATH), exist_ok=True)
+    # Historical expected labels were created in the same static generator as
+    # the names and then compared with a name heuristic. They are not an
+    # independent gold set. Keep them for auditability, but never treat them as
+    # evaluated ground truth until an external reviewer supplies evidence.
+    samples = [
+        {**sample, "label_status": "legacy_non_independent", "label_evidence": None}
+        for sample in HOLDOUT_SAMPLES
+    ]
     dataset = {
-        "version": "1.0.0",
-        "description": "Dedicated Model Modality & Agentic Classification Holdout Audit Dataset",
-        "total_samples": len(HOLDOUT_SAMPLES),
-        "agentic_samples": sum(1 for s in HOLDOUT_SAMPLES if s["expected_agentic"]),
-        "non_agentic_samples": sum(1 for s in HOLDOUT_SAMPLES if not s["expected_agentic"]),
-        "samples": HOLDOUT_SAMPLES
+        "version": "1.1.0",
+        "description": "Classifier holdout candidates; legacy labels are not independent ground truth.",
+        "holdout_construction": {
+            "legacy_row_count": len(samples),
+            "legacy_label_source": "Static generator labels; not independently reviewed.",
+            "leakage_status": "UNSUITABLE_FOR_PERFORMANCE_ESTIMATION",
+            "independent_labeling_required": True,
+            "performance_metrics": "NOT MEASURED",
+        },
+        "total_samples": len(samples),
+        "agentic_samples": sum(1 for s in samples if s["expected_agentic"]),
+        "non_agentic_samples": sum(1 for s in samples if not s["expected_agentic"]),
+        "samples": samples,
+        "hard_cases": [
+            {"model_id": "unseen-vendor/new-family-27b-tool-preview", "kind": "synthetic_odd_name", "expected_agentic": None},
+            {"model_id": "vendor/model-v2.1:free", "kind": "synthetic_pricing_suffix", "expected_agentic": None},
+            {"model_id": "vendor/model__INSTRUCT__2027", "kind": "synthetic_delimiter_and_future_version", "expected_agentic": None},
+            {"model_id": "vendor/vision-chat-embed-hybrid", "kind": "synthetic_conflicting_modality_tokens", "expected_agentic": None},
+            {"model_id": "vendor/guard-chat-72b", "kind": "synthetic_conflicting_guard_and_chat_tokens", "expected_agentic": None},
+            {"model_id": "vendor/xyz-9000", "kind": "synthetic_opaque_name", "expected_agentic": None},
+            {"model_id": "newvendor/family_4o-mini-2027-09", "kind": "synthetic_unseen_vendor_and_version", "expected_agentic": None},
+            {"model_id": "vendor/model (reasoning) [beta]", "kind": "synthetic_punctuation", "expected_agentic": None},
+        ],
     }
 
     with open(HOLDOUT_PATH, "w", encoding="utf-8") as f:
         json.dump(dataset, f, indent=2)
 
-    print(f"Generated Holdout Dataset with {len(HOLDOUT_SAMPLES)} samples ({dataset['agentic_samples']} agentic, {dataset['non_agentic_samples']} non-agentic).")
+    print(f"Generated {len(samples)} legacy holdout candidates; labels are not independent and metrics are NOT MEASURED.")
     print(f"Saved to: {HOLDOUT_PATH}")
 
 

@@ -8,6 +8,7 @@ transparent decision explanations.
 from __future__ import annotations
 
 import time
+from dataclasses import asdict
 from typing import Any, Dict, List, Optional
 import sqlite3
 
@@ -197,9 +198,9 @@ def simulate_routing(req: RoutingSimulateRequest, conn: Optional[sqlite3.Connect
 
     return RoutingSimulateResponse(
         resolved_role=decision.resolved_profile,
-        selected_provider=decision.selected_provider,
+        selected_provider=decision.provider,
         selected_model=decision.selected_model,
-        selection_reason=decision.reason,
+        selection_reason=decision.explanation or decision.decision_source,
         estimated_cost_usd=decision.estimated_cost_usd,
         fallback_chain=decision.fallback_chain,
         request_id=decision.request_id,
@@ -252,9 +253,9 @@ def explain_routing_decision(request_id: str) -> Optional[RouteExplanationRespon
 
     return RouteExplanationResponse(
         request_id=explanation.request_id,
-        timestamp=explanation.timestamp,
-        decision=explanation.decision.model_dump(),
+        timestamp=time.time(),
+        decision=asdict(explanation.decision),
         all_scored_candidates=[c.model_dump() for c in explanation.all_scored_candidates],
-        filtered_out=explanation.filtered_out,
-        task_understanding=explanation.task_understanding.model_dump(),
+        filtered_out=explanation.rejected_route_ids,
+        task_understanding=explanation.task_context.__dict__,
     )

@@ -74,19 +74,19 @@ class ExpectedUtilityScorer:
     def cache_affinity_bonus(self) -> float:
         if self._cache_affinity_bonus is not None:
             return self._cache_affinity_bonus
-        return float(get_hyperparameter("cache_affinity_bonus", default=0.15))
+        return float(get_hyperparameter("cache_affinity_bonus"))
 
     @property
     def target_max_ttft_ms(self) -> float:
         if self._target_max_ttft_ms is not None:
             return self._target_max_ttft_ms
-        return float(get_hyperparameter("target_max_ttft_ms", default=3000.0))
+        return float(get_hyperparameter("target_max_ttft_ms"))
 
     @property
     def pinned_bonus(self) -> float:
         if self._pinned_bonus is not None:
             return self._pinned_bonus
-        return float(get_hyperparameter("pinned_model_bonus", default=0.25))
+        return float(get_hyperparameter("pinned_model_bonus"))
 
     def estimate_cost(
         self, metrics: CandidateMetrics, prompt_tokens: int = 500, est_completion_tokens: int = 400
@@ -245,15 +245,15 @@ class ModelScorer:
 
     @property
     def DEFAULT_VENDOR_PRIOR(self) -> float:
-        return float(get_hyperparameter("default_vendor_prior", default=0.72))
+        return float(get_hyperparameter("default_vendor_prior"))
 
     @property
     def COLD_START_PSEUDOCOUNT(self) -> float:
-        return float(get_hyperparameter("cold_start_pseudocount", default=4.0))
+        return float(get_hyperparameter("cold_start_pseudocount"))
 
     @property
     def EARLY_STOPPING_CI_WIDTH(self) -> float:
-        return float(get_hyperparameter("early_stopping_ci_width", default=0.18))
+        return float(get_hyperparameter("early_stopping_ci_width"))
 
     def __init__(self, exploration_weight: float = 0.35, exploration_budget_usd: float = 5.0):
         self.exploration_weight = exploration_weight

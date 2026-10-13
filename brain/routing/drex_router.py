@@ -45,19 +45,19 @@ class DrexRouter:
     def borderline_margin(self) -> float:
         if self._borderline_margin is not None:
             return self._borderline_margin
-        return float(get_hyperparameter("borderline_margin", default=0.08))
+        return float(get_hyperparameter("borderline_margin"))
 
     @property
     def confidence_threshold(self) -> float:
         if self._confidence_threshold is not None:
             return self._confidence_threshold
-        return float(get_hyperparameter("drex_confidence_threshold", default=0.55))
+        return float(get_hyperparameter("drex_confidence_threshold"))
 
     @property
     def high_complexity_margin_multiplier(self) -> float:
         if self._high_complexity_margin_multiplier is not None:
             return self._high_complexity_margin_multiplier
-        return float(get_hyperparameter("high_complexity_margin_multiplier", default=1.5))
+        return float(get_hyperparameter("high_complexity_margin_multiplier"))
 
     def is_borderline_decision(
         self,

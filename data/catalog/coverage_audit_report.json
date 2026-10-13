@@ -1,0 +1,15 @@
+{
+  "catalog_path": "data/catalog/models.json",
+  "catalog_model_ids": 1036,
+  "agentic_flagged_by_existing_catalog": 994,
+  "agentic_filter_status": "EXISTING CATALOG FLAGS ONLY; fresh filter run NOT MEASURED",
+  "models_with_capability_probe_evidence": 49,
+  "agentic_models_with_capability_probe_evidence": 40,
+  "models_with_provenanced_quality_score": 0,
+  "quality_coverage": "0/1036",
+  "unmeasured_model_policy": "Quality is NOT MEASURED. Do not display a numeric quality estimate or treat capability probes, catalog metadata, or name heuristics as task quality. A model may be labeled agentic by catalog metadata, but remains unscored for quality.",
+  "limitations": [
+    "Catalog is a snapshot and its agentic flags are not an independently audited filter result.",
+    "Capability probes validate endpoint behavior only; they are not task-quality measurements."
+  ]
+}

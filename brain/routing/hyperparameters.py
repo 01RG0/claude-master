@@ -7,10 +7,9 @@ data/roles/hyperparameters.json with live reloading and audit provenance.
 from __future__ import annotations
 
 import json
-import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class HyperparameterRecord(BaseModel):
@@ -21,7 +20,8 @@ class HyperparameterRecord(BaseModel):
     description: str = ""
     provenance: str = ""
     source: str = ""
-    last_calibrated_at: float = Field(default_factory=time.time)
+    calibration_status: str = "NOT MEASURED"
+    last_calibrated_at: Optional[float] = None
 
 
 def find_repo_root() -> Path:
@@ -36,162 +36,6 @@ def find_repo_root() -> Path:
 def get_hyperparameters_path() -> Path:
     return find_repo_root() / "data" / "roles" / "hyperparameters.json"
 
-
-_DEFAULT_HYPERPARAMETERS: Dict[str, Dict[str, Any]] = {
-    "drex_confidence_threshold": {
-        "value": 0.55,
-        "type": "float",
-        "range": [0.0, 1.0],
-        "description": "Minimum confidence required to accept a Drex decision over deterministic scoring",
-        "provenance": "Calibrated against labeled evaluation benchmark (Phase 2)",
-        "source": "benchmarks/drex_calibration",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "borderline_margin": {
-        "value": 0.08,
-        "type": "float",
-        "range": [0.0, 0.50],
-        "description": "Utility score difference below which top candidates trigger Drex adjudication",
-        "provenance": "Empirical sensitivity analysis on routing utility distributions",
-        "source": "benchmarks/routing_sensitivity",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "high_complexity_margin_multiplier": {
-        "value": 1.5,
-        "type": "float",
-        "range": [1.0, 3.0],
-        "description": "Multiplier on borderline margin for high complexity tasks",
-        "provenance": "Empirical stability window on high-stakes code refactors",
-        "source": "benchmarks/complexity_tuning",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "drift_error_spike_threshold": {
-        "value": 0.25,
-        "type": "float",
-        "range": [0.0, 1.0],
-        "description": "Recent error rate threshold triggering automated route drift demotion",
-        "provenance": "Empirical stability window on production failure cascades",
-        "source": "benchmarks/drift_detector",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "drift_tool_accuracy_drop_threshold": {
-        "value": 0.25,
-        "type": "float",
-        "range": [0.05, 0.50],
-        "description": "Drop in tool calling accuracy relative to baseline triggering demotion",
-        "provenance": "Agentic reliability safety threshold",
-        "source": "benchmarks/tool_drift_detector",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "drift_quality_drop_threshold": {
-        "value": 0.30,
-        "type": "float",
-        "range": [0.05, 0.50],
-        "description": "Drop in overall quality score relative to baseline triggering demotion",
-        "provenance": "Regression tolerance boundary",
-        "source": "benchmarks/quality_drift_detector",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "demotion_penalty": {
-        "value": 0.20,
-        "type": "float",
-        "range": [0.0, 1.0],
-        "description": "Utility multiplier applied to demoted routes (80% score reduction)",
-        "provenance": "Risk ceiling: prevents failing models from winning viable candidate selection",
-        "source": "benchmarks/demotion_policy",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "time_decay_half_life_seconds": {
-        "value": 86400.0,
-        "type": "float",
-        "range": [3600.0, 604800.0],
-        "description": "Half-life in seconds for exponential time decay of historical observations",
-        "provenance": "Observation relevance window matching 24-hour diurnal provider traffic cycles",
-        "source": "benchmarks/time_decay_analysis",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "bandit_min_samples_threshold": {
-        "value": 10,
-        "type": "int",
-        "range": [1, 100],
-        "description": "Sample count threshold below which a route is classified as under-sampled",
-        "provenance": "Statistical power threshold for Beta distribution variance stabilization",
-        "source": "benchmarks/bandit_power_analysis",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "bandit_epsilon": {
-        "value": 0.05,
-        "type": "float",
-        "range": [0.0, 0.50],
-        "description": "Probability of exploratory route selection for under-sampled models",
-        "provenance": "Exploration-exploitation budget trade-off maintaining 95% optimal throughput",
-        "source": "benchmarks/bandit_exploration",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "bandit_budget_cap_usd": {
-        "value": 0.50,
-        "type": "float",
-        "range": [0.0, 50.0],
-        "description": "Maximum cumulative dollar spend permitted for exploration",
-        "provenance": "Daily risk ceiling on exploratory model testing",
-        "source": "governance/budget_limits",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "ema_gamma": {
-        "value": 0.20,
-        "type": "float",
-        "range": [0.01, 1.0],
-        "description": "Exponential moving average smoothing factor for quality, latency, and cost",
-        "provenance": "Noise rejection smoothing window balancing responsiveness and variance",
-        "source": "benchmarks/ema_tuning",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "cache_affinity_bonus": {
-        "value": 0.15,
-        "type": "float",
-        "range": [0.0, 0.50],
-        "description": "Utility bonus granted to currently active canonical model to retain prompt cache",
-        "provenance": "Empirical TTFT savings from KV prompt cache re-use",
-        "source": "benchmarks/prompt_cache_affinity",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "pinned_model_bonus": {
-        "value": 0.25,
-        "type": "float",
-        "range": [0.0, 1.0],
-        "description": "Utility bonus granted to administratively pinned models",
-        "provenance": "Operator intent policy weight override",
-        "source": "governance/pinning_policy",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "target_max_ttft_ms": {
-        "value": 3000.0,
-        "type": "float",
-        "range": [500.0, 10000.0],
-        "description": "Upper bound of acceptable TTFT in milliseconds for linear latency scoring",
-        "provenance": "Human interactive perception threshold for agent responsive feedback",
-        "source": "benchmarks/latency_budgets",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "recovery_error_rate_threshold": {
-        "value": 0.10,
-        "type": "float",
-        "range": [0.0, 0.30],
-        "description": "Maximum error rate during recent window to qualify for demotion recovery",
-        "provenance": "Stability confirmation before restoring full route traffic",
-        "source": "benchmarks/recovery_policy",
-        "last_calibrated_at": 1728864000.0,
-    },
-    "recovery_quality_threshold": {
-        "value": 0.70,
-        "type": "float",
-        "range": [0.50, 1.0],
-        "description": "Minimum quality score during recent window to qualify for demotion recovery",
-        "provenance": "Quality confirmation before restoring full route traffic",
-        "source": "benchmarks/recovery_policy",
-        "last_calibrated_at": 1728864000.0,
-    },
-}
 
 _HP_CACHE: Optional[Dict[str, HyperparameterRecord]] = None
 _HP_CACHE_MTIME: float = 0.0
@@ -213,21 +57,32 @@ def load_hyperparameters(path: Optional[Path] = None, force_reload: bool = False
         except Exception:
             data = {}
 
-    if not data:
-        data = dict(_DEFAULT_HYPERPARAMETERS)
+    # Runtime policy must come from the checked-in configuration (or an
+    # explicitly supplied caller default). Never silently fall back to a
+    # second, code-embedded copy with unverifiable calibration provenance.
 
     result: Dict[str, HyperparameterRecord] = {}
     for name, item in data.items():
         if isinstance(item, dict):
+            calibration_status = item.get("calibration_status", "NOT MEASURED")
             rec = HyperparameterRecord(
                 name=name,
                 value=item.get("value"),
                 type=item.get("type", "float"),
                 range=item.get("range"),
                 description=item.get("description", ""),
-                provenance=item.get("provenance", ""),
-                source=item.get("source", ""),
-                last_calibrated_at=item.get("last_calibrated_at", time.time()),
+                provenance=(
+                    item.get("provenance", "")
+                    if calibration_status != "NOT MEASURED"
+                    else "NOT MEASURED"
+                ),
+                source=(
+                    item.get("source", "")
+                    if calibration_status != "NOT MEASURED"
+                    else "NOT MEASURED"
+                ),
+                calibration_status=calibration_status,
+                last_calibrated_at=item.get("last_calibrated_at"),
             )
             result[name] = rec
 
@@ -254,6 +109,7 @@ def save_hyperparameters(
                 "description": rec.description,
                 "provenance": rec.provenance,
                 "source": rec.source,
+                "calibration_status": rec.calibration_status,
                 "last_calibrated_at": rec.last_calibrated_at,
             }
             for name, rec in params.items()
@@ -264,13 +120,16 @@ def save_hyperparameters(
     _HP_CACHE_MTIME = target_path.stat().st_mtime
 
 
-def get_hyperparameter(name: str, default: Any = None, path: Optional[Path] = None) -> Any:
+_MISSING = object()
+
+
+def get_hyperparameter(name: str, default: Any = _MISSING, path: Optional[Path] = None) -> Any:
     params = load_hyperparameters(path=path)
     if name in params:
         return params[name].value
-    if name in _DEFAULT_HYPERPARAMETERS:
-        return _DEFAULT_HYPERPARAMETERS[name]["value"]
-    return default
+    if default is not _MISSING:
+        return default
+    raise KeyError(f"Routing hyperparameter {name!r} is not configured; add it to data/roles/hyperparameters.json")
 
 
 def set_hyperparameter(
@@ -282,15 +141,19 @@ def set_hyperparameter(
         rec.value = value
         if provenance:
             rec.provenance = provenance
-        rec.last_calibrated_at = time.time()
+        rec.calibration_status = "NOT MEASURED"
+        rec.provenance = provenance or "Runtime configured; calibration NOT MEASURED"
+        rec.last_calibrated_at = None
     else:
         rec = HyperparameterRecord(
             name=name,
             value=value,
             type=type(value).__name__,
             description=f"Runtime defined parameter {name}",
-            provenance=provenance or "Set via runtime configuration",
-            last_calibrated_at=time.time(),
+            provenance=provenance or "Runtime configured; calibration NOT MEASURED",
+            source="runtime configuration",
+            calibration_status="NOT MEASURED",
+            last_calibrated_at=None,
         )
         params[name] = rec
     save_hyperparameters(params, path=path)
