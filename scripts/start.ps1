@@ -35,11 +35,11 @@ $LogDir = Join-Path ([System.IO.Path]::GetTempPath()) "claude-master-logs"
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 
 $procs = @()
-function Start-Child($Exe, $Args, $Name) {
+function Start-Child($Exe, $ProcArgs, $Name) {
   $log = Join-Path $LogDir "$Name.log"
   Write-Host "starting $Name -> $log"
-  Write-Host "  $Exe $($Args -join ' ')"
-  $p = Start-Process -FilePath $Exe -ArgumentList $Args -WorkingDirectory $Root `
+  Write-Host "  $Exe $($ProcArgs -join ' ')"
+  $p = Start-Process -FilePath $Exe -ArgumentList $ProcArgs -WorkingDirectory $Root `
     -RedirectStandardOutput $log -RedirectStandardError "$log.err" `
     -NoNewWindow -PassThru
   $script:procs += [pscustomobject]@{ Name = $Name; Proc = $p; Log = $log }
