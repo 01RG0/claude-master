@@ -200,6 +200,64 @@ function Invoke-Provider {
 }
 
 # ---------------------------------------------------------------------------
+# cm test - full baseline suite (same frozen commands as docs/cleanup-baseline.md)
+function Invoke-Test {
+  $fail = 0
+  Info "==> cm test"
+  Info "-- pytest"
+  python -m pytest -q
+  if ($LASTEXITCODE -ne 0) { Fail "pytest failed"; $fail++ }
+  foreach ($mod in @("gateway", "hookshim", "watchdog")) {
+    Info "-- go test ($mod)"
+    Push-Location (Join-Path $Root $mod)
+    go test -count=1 ./...
+    if ($LASTEXITCODE -ne 0) { Fail "go test $mod failed"; $fail++ }
+    Pop-Location
+  }
+  $pkg = Join-Path $Root "studio\package.json"
+  if (Test-Path $pkg) {
+    Info "-- vitest (studio)"
+    Push-Location (Join-Path $Root "studio")
+    npm test --silent
+    if ($LASTEXITCODE -ne 0) { Fail "studio tests failed"; $fail++ }
+    Pop-Location
+  }
+  Info ""
+  if ($fail -eq 0) { Ok "cm test: all suites green" } else { Fail "cm test: $fail suite(s) failed"; exit 1 }
+}
+
+# ---------------------------------------------------------------------------
+# cm bench - measured budgets: brain | drex | hookhost (default: all)
+function Invoke-Bench {
+  $only = if ($Rest.Count -gt 0) { $Rest[0] } else { "all" }
+  if ($only -ne "all" -and @("brain", "drex", "hookhost") -notcontains $only) {
+    Fail "unknown bench target '$only' (brain|drex|hookhost|all)"; exit 2
+  }
+  $targets = @("brain", "drex", "hookhost")
+  if ($only -ne "all") { $targets = @($only) }
+  foreach ($t in $targets) {
+    Info "==> bench $t"
+    python (Join-Path $Root "scripts\bench_$t.py")
+    if ($LASTEXITCODE -ne 0) { Fail "bench $t failed"; }
+  }
+}
+
+# ---------------------------------------------------------------------------
+# cm e2e - the REAL Claude Code scenario matrix
+# Usage: cm e2e [matrix|live]  (matrix = 10 scenarios; live = single live run)
+function Invoke-E2E {
+  $which = if ($Rest.Count -gt 0) { $Rest[0] } else { "matrix" }
+  switch ($which) {
+    "matrix" { $script = "e2e_claude_matrix.py" }
+    "live"   { $script = "e2e_claude_live.py" }
+    default  { Fail "unknown e2e target '$which' (matrix|live)"; exit 2 }
+  }
+  Info "==> cm e2e $which ($script) - real claude binary through the gateway"
+  python (Join-Path $Root "scripts\$script")
+  exit $LASTEXITCODE
+}
+
+# ---------------------------------------------------------------------------
 # cm report - where the numbers live
 function Invoke-Report {
   Info "reports & numbers (real, measured):"
@@ -222,9 +280,12 @@ switch ($cmd) {
   "config"    { Invoke-Config }
   "provider"  { Invoke-Provider }
   "report"    { Invoke-Report }
+  "test"      { Invoke-Test }
+  "bench"     { Invoke-Bench }
+  "e2e"       { Invoke-E2E }
   "help"      { Get-Help $MyInvocation.MyCommand.ScriptBlock -Name cm -Detailed | Out-String }
   default {
-    Fail "unknown command '$Command' (did you mean: setup|start|stop|restart|status|doctor|logs|config|provider|report|help)"
+    Fail "unknown command '$Command' (setup|start|stop|restart|status|doctor|logs|config|provider|report|test|bench|e2e|help)"
     exit 2
   }
 }
