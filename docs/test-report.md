@@ -4,14 +4,13 @@
 
 ```
 python -m pytest -q --tb=no
-161 passed in 67.72s        # zero failures, zero skips (Go on PATH, Drex key present)
+162 passed in 59.57s        # zero failures, zero skips (Go on PATH, Drex key present)
 ```
 
 ```
-cd gateway && go test ./...      # ok (11s) — incl. 10 new universal tests
+cd gateway && go test ./...      # ok — 11 tests incl. vision downgrade + cache + thinking
 cd hookshim && go test ./...     # ok — TCP tests pass, Unix tests skip on Windows
 cd watchdog && go test ./...     # ok — restart 73ms (see benchmarks)
-cd tests/hookshim && go test .   # ok — cold-start p50 13.5ms < 30ms Win budget
 cd studio && npm test            # 17 passed (5 files)
 ```
 
@@ -24,11 +23,22 @@ cd studio && npm test            # 17 passed (5 files)
   Hooks fired: `hooks_handled=10, sessions=3, episodic_events=10, nodes=2`.
   Traffic: 21 requests, all `claude-sonnet-5-5` → `open-mistral-7b`,
   stream, 128k max_tokens, 26 tools, tool_use/tool_result round-trips.
-- `scripts/conformance.py`: mistral 6–7/8 native PASS per run (free-tier 429
-  flaps 1–2 scenarios per run; best-observed all 8 PASS — see matrix);
+- `scripts/e2e_claude_matrix.py` (real `claude -p` × 10, one process):
+  **10/10 PASS** — S1 multifile, S2 runtests, S3 refactor, S4 debug, S5 skill,
+  S6 subagent, S7 hookallow, S8 hookblock, S9 slash, S10 long stream.
+  Brain: `episodic_events=29, nodes=6, sessions=8, hooks_handled=31`.
+- `scripts/vision_probe.py` (live gemini-2.5-flash): **PASS 200** — image
+  inside a tool_result block reaches the model, which described it
+  ("solid, vibrant red square"). Root cause of the earlier 400: Gemini's
+  OpenAI endpoint rejects `image_url` parts in `tool` messages
+  (`Invalid content part type: image_url`); the adapter spec
+  `tool_images: "text"` downgrades them to a text placeholder so the turn
+  succeeds. Vision in user messages works natively.
+- `scripts/conformance.py`: **ministral-8b-latest 8/8 native PASS** (298–698ms);
+  gemini-2.5-flash chat/stream/tools PASS (vision tool-message shape downgraded);
   pollinations 7/8 (vision 400-fail, routed around).
 - `provider scan`: 17 providers fingerprinted (openai-chat throughout;
-  /models found on 9 with keys, none without). `probe`: mistral row all-true;
+  /models found on 9 with keys, none without). `probe`: ministral row all-true;
   pollinations row documents 402-nonstream/stream-200 split.
 - `scripts/load_test.py`: 29/50 ok, 21×529 quota (see benchmarks).
 - Admin rotation live: add→stats→remove→ban all ok (hashes only).
@@ -66,3 +76,5 @@ route, store, sleep. Guard thresholds: N/A (rule block on risky categories).
   retried honestly, never hidden.
 - Groq/Cerebras 403-1010 from this network; gemini retired model IDs.
 - Linux CI: `.github/workflows/ci.yml` runs pytest+go+studio on Ubuntu.
+- `gateway/server.go:417` context-leak vet warning: pre-existing, fixed this
+  wave (`defer cancel()` on the `NewRequestWithContext` error path).

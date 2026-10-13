@@ -878,121 +878,107 @@
     },
     "gemini": {
       "models": [
-        "models/gemini-2.5-flash",
-        "models/gemini-2.5-pro",
-        "models/gemini-2.5-flash-preview-tts",
-        "models/gemini-2.5-pro-preview-tts",
-        "models/gemma-4-26b-a4b-it",
-        "models/gemma-4-31b-it",
-        "models/gemini-flash-latest",
-        "models/gemini-flash-lite-latest",
-        "models/gemini-pro-latest",
-        "models/gemini-2.5-flash-lite",
-        "models/gemini-2.5-flash-image",
-        "models/gemini-3-flash-preview",
-        "models/gemini-3.1-pro-preview",
-        "models/gemini-3.1-pro-preview-customtools",
-        "models/gemini-3.1-flash-lite-preview",
-        "models/gemini-3.1-flash-lite",
-        "models/gemini-3-pro-image-preview",
-        "models/gemini-3-pro-image",
-        "models/nano-banana-pro-preview",
-        "models/gemini-3.1-flash-image-preview",
-        "models/gemini-3.1-flash-image",
-        "models/gemini-3.1-flash-lite-image",
-        "models/gemini-nano-banana-2.1",
-        "models/gemini-3.5-flash",
-        "models/gemini-3.5-flash-lite",
-        "models/gemini-omni-flash-preview",
-        "models/gemini-omni-1.1-flash",
-        "models/gemini-3.5-transcribe",
-        "models/gemini-3.6-flash",
-        "models/gemini-3.7-flash",
-        "models/gemini-3.8-flash",
-        "models/lyria-3-clip-preview",
-        "models/lyria-3-pro-preview",
-        "models/lyria-3.5",
-        "models/gemini-3.1-flash-tts-preview",
-        "models/gemini-3.8-flash-tts",
-        "models/gemini-3.8-flash-lite-tts",
-        "models/gemini-robotics-er-2-preview",
-        "models/gemini-2.5-computer-use-preview-10-2025",
-        "models/antigravity-preview-05-2026",
-        "models/antigravity-preview-09-2026",
-        "models/antigravity-preview-latest",
-        "models/deep-research-max-preview-04-2026",
-        "models/deep-research-preview-04-2026",
-        "models/deep-research-pro-preview-12-2025",
-        "models/gemini-embedding-001",
-        "models/gemini-embedding-2-preview",
-        "models/gemini-embedding-2",
-        "models/aqa",
-        "models/veo-3.1-generate-preview",
-        "models/veo-3.1-fast-generate-preview",
-        "models/veo-3.1-lite-generate-preview",
-        "models/gemini-3.5-transcribe-live",
-        "models/gemini-2.5-flash-native-audio-latest",
-        "models/gemini-2.5-flash-native-audio-preview-09-2025",
-        "models/gemini-2.5-flash-native-audio-preview-12-2025",
-        "models/gemini-3.1-flash-live-preview",
-        "models/gemini-3.8-live",
-        "models/gemini-3.8-live-extended-thinking",
-        "models/gemini-robotics-er-2-streaming-preview",
-        "models/gemini-3.5-live-translate-preview",
-        "models/lyria-realtime-exp"
+        "gemini-2.5-flash"
+      ],
+      "rows": [
+        {
+          "model": "gemini-2.5-flash",
+          "chat": {
+            "supported": true,
+            "source": "measured",
+            "detail": "http 200",
+            "latency_ms": 652.9017
+          },
+          "streaming": {
+            "supported": true,
+            "source": "measured",
+            "detail": "http 200",
+            "latency_ms": 707.8406
+          },
+          "tools_single": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 200",
+            "latency_ms": 761.3233
+          },
+          "tools_parallel": {
+            "supported": true,
+            "source": "measured",
+            "detail": "http 200",
+            "latency_ms": 700.5586000000001
+          },
+          "tools_streamed_args": {
+            "supported": true,
+            "source": "measured",
+            "detail": "http 200",
+            "latency_ms": 600.6352
+          },
+          "vision": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 429"
+          },
+          "json_mode": {
+            "supported": false,
+            "source": "measured",
+            "detail": "http 429"
+          },
+          "ttft_ms": 707.8406,
+          "probed_at": "2026-10-13T04:50:42Z"
+        }
       ]
     },
     "groq": {
       "models": [
         "qwen/qwen3.8-27b",
-        "openai/gpt-oss-safeguard-20b",
-        "canopylabs/orpheus-arabic-saudi",
-        "openai/gpt-oss-120b",
         "canopylabs/orpheus-v1-english",
-        "whisper-large-v3-turbo",
-        "openai/gpt-oss-20b",
         "whisper-large-v3",
-        "allam-2-7b",
+        "whisper-large-v3-turbo",
+        "meta-llama/llama-prompt-guard-2-22m",
+        "openai/gpt-oss-safeguard-20b",
+        "openai/gpt-oss-20b",
+        "canopylabs/orpheus-arabic-saudi",
         "meta-llama/llama-prompt-guard-2-86m",
-        "meta-llama/llama-prompt-guard-2-22m"
+        "allam-2-7b",
+        "openai/gpt-oss-120b"
       ]
     },
     "mistral": {
       "models": [
-        "open-mistral-7b"
+        "ministral-8b-latest"
       ],
       "rows": [
         {
-          "model": "open-mistral-7b",
+          "model": "ministral-8b-latest",
           "chat": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 343.1753
+            "latency_ms": 397.1885
           },
           "streaming": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 474.6855
+            "latency_ms": 246.9287
           },
           "tools_single": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 350.5971
+            "latency_ms": 814.7466
           },
           "tools_parallel": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 363.33660000000003
+            "latency_ms": 575.9313999999999
           },
           "tools_streamed_args": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 366.0256
+            "latency_ms": 842.1070000000001
           },
           "vision": {
             "supported": true,
@@ -1004,67 +990,66 @@
             "source": "measured",
             "detail": "http 200"
           },
-          "ttft_ms": 474.6855,
-          "probed_at": "2026-10-13T03:26:12Z"
+          "ttft_ms": 246.9287,
+          "probed_at": "2026-10-13T04:50:28Z"
         }
       ]
     },
     "openrouter": {
       "models": [
-        "meta-llama/llama-3.3-70b-instruct:free",
-        "google/gemini-2.0-flash-001"
-      ]
-    },
-    "pollinations": {
-      "models": [
-        "openai"
+        "openai/gpt-oss-20b"
       ],
       "rows": [
         {
-          "model": "openai",
+          "model": "openai/gpt-oss-20b",
           "chat": {
-            "supported": false,
+            "supported": true,
             "source": "measured",
-            "detail": "http 402",
-            "latency_ms": 263.7029
+            "detail": "http 200",
+            "latency_ms": 2712.2081
           },
           "streaming": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 128.7182
+            "latency_ms": 1370.355
           },
           "tools_single": {
-            "supported": false,
+            "supported": true,
             "source": "measured",
-            "detail": "http 402",
-            "latency_ms": 159.2206
+            "detail": "http 200",
+            "latency_ms": 728.7921
           },
           "tools_parallel": {
-            "supported": false,
+            "supported": true,
             "source": "measured",
-            "detail": "http 402",
-            "latency_ms": 130.14890000000003
+            "detail": "http 200",
+            "latency_ms": 933.4049
           },
           "tools_streamed_args": {
             "supported": true,
             "source": "measured",
             "detail": "http 200",
-            "latency_ms": 141.46249999999998
+            "latency_ms": 707.7099
           },
           "vision": {
             "supported": false,
             "source": "measured",
-            "detail": "http 402"
+            "detail": "http 404"
           },
           "json_mode": {
-            "supported": false,
+            "supported": true,
             "source": "measured",
-            "detail": "http 402"
+            "detail": "http 200"
           },
-          "ttft_ms": 128.7182,
-          "probed_at": "2026-10-13T03:27:01Z"
+          "ttft_ms": 1370.355,
+          "probed_at": "2026-10-13T10:39:05Z"
         }
+      ]
+    },
+    "pollinations": {
+      "models": [
+        "openai-fast"
       ]
     },
     "pooled": {

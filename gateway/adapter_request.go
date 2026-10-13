@@ -7,6 +7,7 @@ package gateway
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -132,14 +133,28 @@ type OpenAIToolSchema struct {
 	Parameters  json.RawMessage `json:"parameters,omitempty"`
 }
 
+// thinkingRedactedMarker is the compact placeholder substituted for Anthropic
+// thinking input blocks. The original thinking text and signature are never
+// forwarded upstream; the marker preserves block order in multi-turn chains.
+const thinkingRedactedMarker = "[thinking redacted by gateway]"
+
+// emulatedThinkingSignature marks thinking blocks synthesized from upstream
+// OpenAI-style reasoning_content. It is NOT a real Anthropic signature and
+// must never be treated as one for signature-chained requests.
+const emulatedThinkingSignature = "emulated-from-reasoning"
+
 func strPtr(s string) *string { return &s }
 
 // TranslateRequest converts an AnthropicRequest to an OpenAIRequest.
-// blocksDropped counts content that cannot be represented upstream (thinking
-// signatures, server-side tools) — the caller logs the count, never content.
-func TranslateRequest(ar *AnthropicRequest, upstreamModel string) (*OpenAIRequest, []string) {
+// adapter governs provider-specific downgrades (e.g. tool-message image
+// handling). Pass nil to keep the previous "keep image parts" behaviour.
+func TranslateRequest(ar *AnthropicRequest, upstreamModel string, adapter AdapterSpec) (*OpenAIRequest, []string) {
 	var notes []string
 	var msgs []OpenAIMessage
+	toolImages := adapter.ToolImages
+	if toolImages == "" {
+		toolImages = "parts"
+	}
 
 	if ar.System != nil && len(ar.System) > 0 && string(ar.System) != "null" {
 		text, err := extractSystemText(ar.System)
@@ -149,7 +164,7 @@ func TranslateRequest(ar *AnthropicRequest, upstreamModel string) (*OpenAIReques
 	}
 
 	for _, am := range ar.Messages {
-		converted, dropped, err := translateMessage(am)
+		converted, dropped, err := translateMessage(am, toolImages)
 		if err != nil {
 			return nil, []string{"translating message role=" + am.Role + ": " + err.Error()}
 		}
@@ -233,7 +248,7 @@ func extractSystemText(raw json.RawMessage) (string, error) {
 	return strings.Join(parts, "\n"), nil
 }
 
-func translateMessage(am AnthropicMessage) ([]OpenAIMessage, []string, error) {
+func translateMessage(am AnthropicMessage, toolImages string) ([]OpenAIMessage, []string, error) {
 	role := am.Role
 	var dropped []string
 
@@ -292,7 +307,16 @@ func translateMessage(am AnthropicMessage) ([]OpenAIMessage, []string, error) {
 				textParts = append(textParts, "[document omitted by gateway]")
 			}
 		case "thinking":
+			// Thinking input is never forwarded with content or signatures.
+			// Emit a compact redacted marker in-place so multi-turn thinking
+			// chains preserve order instead of silently vanishing. The
+			// signature string (b.Signature) is never forwarded upstream.
 			dropped = append(dropped, "thinking input block not forwarded upstream (signatures stay client-side)")
+			if len(richParts) > 0 {
+				richParts = append(richParts, OpenAIContentPart{Type: "text", Text: thinkingRedactedMarker})
+			} else {
+				textParts = append(textParts, thinkingRedactedMarker)
+			}
 		case "server_tool_use", "web_search_tool_result":
 			dropped = append(dropped, b.Type+" block not forwarded upstream (server-side tools are gateway-emulated, see docs)")
 		case "tool_use":
@@ -310,12 +334,34 @@ func translateMessage(am AnthropicMessage) ([]OpenAIMessage, []string, error) {
 			})
 		case "tool_result":
 			flush()
-			content := extractToolResultContent(b.Content)
-			out = append(out, OpenAIMessage{
-				Role:       "tool",
-				ToolCallID: b.ToolUseID,
-				Content:    content,
-			})
+			text, imgs := toolResultToParts(b.Content)
+			msg := OpenAIMessage{Role: "tool", ToolCallID: b.ToolUseID}
+			if len(imgs) > 0 && toolImages == "parts" {
+				// Tool results carry images/files; keep them as parts so a
+				// vision-capable upstream actually sees the bytes.
+				parts := make([]OpenAIContentPart, 0, len(imgs)+1)
+				if text != "" {
+					parts = append(parts, OpenAIContentPart{Type: "text", Text: text})
+				}
+				parts = append(parts, imgs...)
+				msg.Content = parts
+			} else if len(imgs) > 0 && toolImages == "text" {
+				// Provider rejects image_url parts in tool messages (Gemini
+				// OpenAI endpoint: "Invalid content part type: image_url").
+				// Downgrade to a text placeholder so the request still goes
+				// through instead of 400-ing the whole turn.
+				if text == "" {
+					text = "[image omitted by adapter]"
+				}
+				dropped = append(dropped, fmt.Sprintf("tool_result image downgraded to text for this provider (%d image(s))", len(imgs)))
+				msg.Content = text
+			} else {
+				if text == "" {
+					text = "[image omitted by adapter]"
+				}
+				msg.Content = text
+			}
+			out = append(out, msg)
 		default:
 			dropped = append(dropped, "unknown block type "+b.Type+" dropped")
 		}
@@ -382,25 +428,48 @@ func flushAssistant(role string, textParts []string, richParts []OpenAIContentPa
 	return m
 }
 
-func extractToolResultContent(raw json.RawMessage) string {
+// toolResultToParts converts a tool_result content value into OpenAI content
+// parts. Claude Code delivers screenshots/files as tool_result blocks whose
+// content array holds {type:"image", source:{...}} — those MUST reach a
+// vision-capable upstream, otherwise the model guesses from the filename.
+func toolResultToParts(raw json.RawMessage) (string, []OpenAIContentPart) {
 	if raw == nil {
-		return ""
+		return "", nil
 	}
 	var s string
 	if err := json.Unmarshal(raw, &s); err == nil {
-		return s
+		return s, nil
 	}
 	var blocks []ContentBlock
-	if err := json.Unmarshal(raw, &blocks); err == nil {
-		var parts []string
-		for _, b := range blocks {
-			if b.Type == "text" {
-				parts = append(parts, b.Text)
-			}
-		}
-		return strings.Join(parts, "\n")
+	if err := json.Unmarshal(raw, &blocks); err != nil {
+		return string(raw), nil
 	}
-	return string(raw)
+	var texts []string
+	var parts []OpenAIContentPart
+	for _, b := range blocks {
+		switch b.Type {
+		case "text":
+			texts = append(texts, b.Text)
+		case "thinking":
+			texts = append(texts, thinkingRedactedMarker)
+		case "image":
+			if part, note := imageBlockToPart(b); part != nil {
+				parts = append(parts, *part)
+			} else if note != "" {
+				log.Printf("gateway: tool_result image dropped: %s", note)
+			} else {
+				log.Printf("gateway: tool_result image dropped: no usable source")
+			}
+		default:
+			log.Printf("gateway: tool_result block type %s dropped", b.Type)
+		}
+	}
+	return strings.Join(texts, "\n"), parts
+}
+
+func extractToolResultContent(raw json.RawMessage) string {
+	s, _ := toolResultToParts(raw)
+	return s
 }
 
 // OpenAIChatResponse is a non-streaming chat.completions response.
@@ -413,10 +482,12 @@ type OpenAIChatResponse struct {
 		FinishReason string `json:"finish_reason"`
 	} `json:"choices"`
 	Usage *struct {
-		PromptTokens     int `json:"prompt_tokens"`
-		CompletionTokens int `json:"completion_tokens"`
-		CachedTokens     int `json:"cached_tokens"`
-		PromptDetails    *struct {
+		PromptTokens         int `json:"prompt_tokens"`
+		CompletionTokens     int `json:"completion_tokens"`
+		CachedTokens         int `json:"cached_tokens"`
+		CacheCreationTokens  int `json:"cache_creation_input_tokens,omitempty"`
+		CacheCreationAlt     int `json:"cache_creation_tokens,omitempty"`
+		PromptDetails        *struct {
 			CachedTokens int `json:"cached_tokens"`
 		} `json:"prompt_tokens_details,omitempty"`
 	} `json:"usage,omitempty"`
@@ -424,10 +495,12 @@ type OpenAIChatResponse struct {
 
 // OpenAIResponseMessage is an assistant message in a chat response.
 type OpenAIResponseMessage struct {
-	Role      string           `json:"role"`
-	Content   interface{}      `json:"content"`
-	Refusal   string           `json:"refusal,omitempty"`
-	ToolCalls []OpenAIToolCall `json:"tool_calls,omitempty"`
+	Role             string           `json:"role"`
+	Content          interface{}      `json:"content"`
+	Refusal          string           `json:"refusal,omitempty"`
+	ToolCalls        []OpenAIToolCall `json:"tool_calls,omitempty"`
+	ReasoningContent string           `json:"reasoning_content,omitempty"`
+	Reasoning        string           `json:"reasoning,omitempty"`
 }
 
 // AnthropicResponse is a non-streaming /v1/messages response.
@@ -442,64 +515,10 @@ type AnthropicResponse struct {
 }
 
 // TranslateResponse maps an OpenAI chat completion to Anthropic messages format.
+// Kept for backward compatibility; delegates to TranslateResponseWithTools
+// (see toolrescue.go) with no tool schemas (Tier-2 rescue without fuzzy).
 func TranslateResponse(or *OpenAIChatResponse, model string) *AnthropicResponse {
-	ar := &AnthropicResponse{
-		ID:         or.ID,
-		Type:       "message",
-		Role:       "assistant",
-		Model:      model,
-		StopReason: "end_turn",
-		Content:    nil,
-	}
-	if len(or.Choices) > 0 {
-		ch := or.Choices[0]
-		switch ch.FinishReason {
-		case "tool_calls":
-			ar.StopReason = "tool_use"
-		case "length":
-			ar.StopReason = "max_tokens"
-		case "content_filter", "refusal":
-			ar.StopReason = "refusal"
-		case "stop_sequence":
-			ar.StopReason = "stop_sequence"
-		}
-		if text := openAIContentText(ch.Message.Content); text != "" {
-			ar.Content = append(ar.Content, ContentBlock{Type: "text", Text: text})
-		}
-		if ch.Message.Refusal != "" {
-			ar.Content = append(ar.Content, ContentBlock{Type: "text", Text: ch.Message.Refusal})
-		}
-		for _, tc := range ch.Message.ToolCalls {
-			args := tc.Function.Arguments
-			if repaired, ok := RepairToolArgsJSON(args); ok {
-				args = repaired
-			}
-			ar.Content = append(ar.Content, ContentBlock{
-				Type:  "tool_use",
-				ID:    tc.ID,
-				Name:  tc.Function.Name,
-				Input: json.RawMessage(args),
-			})
-		}
-	}
-	if ar.Content == nil {
-		ar.Content = []ContentBlock{}
-	}
-	if or.Usage != nil {
-		ar.Usage = map[string]int{
-			"input_tokens":  or.Usage.PromptTokens,
-			"output_tokens": or.Usage.CompletionTokens,
-		}
-		// Honest cache reporting: only when the provider reports it.
-		cached := or.Usage.CachedTokens
-		if or.Usage.PromptDetails != nil && or.Usage.PromptDetails.CachedTokens > cached {
-			cached = or.Usage.PromptDetails.CachedTokens
-		}
-		if cached > 0 {
-			ar.Usage["cache_read_input_tokens"] = cached
-		}
-	}
-	return ar
+	return TranslateResponseWithTools(or, model, nil)
 }
 
 // openAIContentText extracts text from a string or multi-part content value.

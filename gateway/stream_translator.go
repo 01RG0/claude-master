@@ -34,6 +34,9 @@ type StreamTranslator struct {
 	textStarted   bool
 	textStopped   bool
 	textIndex     int
+	thinkingStarted bool
+	thinkingStopped bool
+	thinkingIndex   int
 	nextIndex     int
 	tools         map[int]*toolStreamState // upstream tool index → state
 	finished      bool
@@ -81,9 +84,67 @@ func (t *StreamTranslator) Translate(chunk *StreamChunk) []AnthropicSSEEvent {
 			}})
 		}
 		d := choice.Delta
-		// Text delta → ensure text block 0 open.
+		// Reasoning deltas (OpenAI-style reasoning_content) → Anthropic
+		// thinking block. The block opens on first reasoning, streams as
+		// thinking_delta, and closes with an emulated signature_delta
+		// (never a real Anthropic signature) before text/tools/finish.
+		reasoning := d.ReasoningContent
+		if reasoning == "" {
+			reasoning = d.Reasoning
+		}
+		if reasoning != "" {
+			if !t.thinkingStarted {
+				t.thinkingStarted = true
+				t.thinkingIndex = t.nextIndex
+				t.nextIndex++
+				emit(AnthropicSSEEvent{"content_block_start", map[string]interface{}{
+					"type": "content_block_start", "index": t.thinkingIndex,
+					"content_block": map[string]interface{}{"type": "thinking", "thinking": "", "signature": ""},
+				}})
+			} else if t.thinkingStopped {
+				// Reasoning resumed after a close (e.g. interleaved text):
+				// open a fresh thinking block to preserve deltas.
+				t.thinkingStopped = false
+				t.thinkingStarted = true
+				t.thinkingIndex = t.nextIndex
+				t.nextIndex++
+				emit(AnthropicSSEEvent{"content_block_start", map[string]interface{}{
+					"type": "content_block_start", "index": t.thinkingIndex,
+					"content_block": map[string]interface{}{"type": "thinking", "thinking": "", "signature": ""},
+				}})
+			}
+			emit(AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
+				"type": "content_block_delta", "index": t.thinkingIndex,
+				"delta": map[string]interface{}{"type": "thinking_delta", "thinking": reasoning},
+			}})
+		}
+		// Text delta → ensure text block open. Close an open thinking block
+		// first so Anthropic order (thinking → text) holds when reasoning
+		// streams before content.
 		if d.Content != "" {
+			if t.thinkingStarted && !t.thinkingStopped {
+				t.thinkingStopped = true
+				emit(AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
+					"type": "content_block_delta", "index": t.thinkingIndex,
+					"delta": map[string]interface{}{"type": "signature_delta", "signature": emulatedThinkingSignature},
+				}})
+				emit(AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
+					"type": "content_block_stop", "index": t.thinkingIndex,
+				}})
+			}
 			if !t.textStarted {
+				t.textStarted = true
+				t.textStopped = false
+				t.textIndex = t.nextIndex
+				t.nextIndex++
+				emit(AnthropicSSEEvent{"content_block_start", map[string]interface{}{
+					"type": "content_block_start", "index": t.textIndex,
+					"content_block": map[string]interface{}{"type": "text", "text": ""},
+				}})
+			} else if t.textStopped && reasoning == "" {
+				// Text resumed after a stop (e.g. second text span):
+				// reopen a fresh text block.
+				t.textStopped = false
 				t.textStarted = true
 				t.textIndex = t.nextIndex
 				t.nextIndex++
@@ -113,7 +174,18 @@ func (t *StreamTranslator) Translate(chunk *StreamChunk) []AnthropicSSEEvent {
 			}
 			if !st.started && st.name != "" {
 				st.started = true
-				// Close text block before the first tool block (Anthropic order).
+				// Close thinking/text blocks before the first tool block
+				// (Anthropic order: thinking → text → tools).
+				if t.thinkingStarted && !t.thinkingStopped {
+					t.thinkingStopped = true
+					emit(AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
+						"type": "content_block_delta", "index": t.thinkingIndex,
+						"delta": map[string]interface{}{"type": "signature_delta", "signature": emulatedThinkingSignature},
+					}})
+					emit(AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
+						"type": "content_block_stop", "index": t.thinkingIndex,
+					}})
+				}
 				if t.textStarted && !t.textStopped {
 					t.textStopped = true
 					emit(AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
@@ -146,7 +218,9 @@ func (t *StreamTranslator) Translate(chunk *StreamChunk) []AnthropicSSEEvent {
 
 // Finish emits block stops + message_delta + message_stop. usage may carry
 // prompt/completion/cached token counts (0 when unknown — never faked).
-func (t *StreamTranslator) Finish(promptTokens, completionTokens, cachedTokens int) []AnthropicSSEEvent {
+// The optional fourth argument preserves cache creation tokens
+// (cache_creation_input_tokens) when the provider reports them.
+func (t *StreamTranslator) Finish(promptTokens, completionTokens, cachedTokens int, cacheCreation ...int) []AnthropicSSEEvent {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	if t.finished {
@@ -163,7 +237,20 @@ func (t *StreamTranslator) Finish(promptTokens, completionTokens, cachedTokens i
 			},
 		}})
 	}
+	if t.thinkingStarted && !t.thinkingStopped {
+		t.thinkingStopped = true
+		events = append(events,
+			AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
+				"type": "content_block_delta", "index": t.thinkingIndex,
+				"delta": map[string]interface{}{"type": "signature_delta", "signature": emulatedThinkingSignature},
+			}},
+			AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
+				"type": "content_block_stop", "index": t.thinkingIndex,
+			}},
+		)
+	}
 	if t.textStarted && !t.textStopped {
+		t.textStopped = true
 		events = append(events, AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
 			"type": "content_block_stop", "index": t.textIndex,
 		}})
@@ -199,6 +286,13 @@ func (t *StreamTranslator) Finish(promptTokens, completionTokens, cachedTokens i
 	}
 	if cachedTokens > 0 {
 		usage["cache_read_input_tokens"] = cachedTokens
+	}
+	creationTokens := 0
+	if len(cacheCreation) > 0 {
+		creationTokens = cacheCreation[0]
+	}
+	if creationTokens > 0 {
+		usage["cache_creation_input_tokens"] = creationTokens
 	}
 	events = append(events,
 		AnthropicSSEEvent{"message_delta", map[string]interface{}{

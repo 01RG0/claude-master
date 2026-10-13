@@ -27,6 +27,13 @@ type AdapterSpec struct {
 	MaxToolName   int               `json:"max_tool_name,omitempty"`  // 0 = no limit enforced
 	StripKeywords []string          `json:"strip_keywords,omitempty"` // JSON-schema keys to drop (logged)
 	Vision        bool              `json:"vision,omitempty"`
+	// ToolImages says what to do with image parts that arrive inside a
+	// tool_result block. The OpenAI wire shape allows image_url parts in
+	// user/assistant messages, but Gemini's OpenAI endpoint rejects them in
+	// tool messages ("Invalid content part type: image_url"), so providers
+	// that 400 on that shape must downgrade here rather than fail the whole
+	// request. Values: "parts" (default — keep), "text" (placeholder), "drop".
+	ToolImages     string            `json:"tool_images,omitempty"`
 }
 
 // EffectiveAdapter returns the provider's spec with documented defaults.
@@ -49,6 +56,9 @@ func EffectiveAdapter(p Provider) AdapterSpec {
 	}
 	if a.ToolSupport == "" {
 		a.ToolSupport = "native"
+	}
+	if a.ToolImages == "" {
+		a.ToolImages = "parts"
 	}
 	return a
 }

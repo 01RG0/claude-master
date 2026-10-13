@@ -154,13 +154,13 @@ class GatingPolicy:
             )
 
         # Slow path: risky command class.
+        category = self._classify_category(command_summary)
         if not self._use_drex:
             return GatingResult(
                 allow=False,
                 source="rule_blocked",
                 reason=f"Risky pattern ({category}); Drex guard disabled by eval, deterministic block.",
             )
-        category = self._classify_category(command_summary)
         drex_state = f"Tool: {tool_name}, Category: {category}"
 
         response = self._client.evaluate(drex_state, self._DREX_QUESTIONS)

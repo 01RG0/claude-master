@@ -158,7 +158,7 @@ func TestImageBlockToOpenAIParts(t *testing.T) {
 		Messages: []AnthropicMessage{{Role: "user", Content: json.RawMessage(
 			`[{"type":"text","text":"see"},{"type":"image","source":{"type":"base64","media_type":"image/png","data":"AAAA"}}]`)}},
 	}
-	or, _ := TranslateRequest(ar, "m")
+	or, _ := TranslateRequest(ar, "m", AdapterSpec{})
 	if len(or.Messages) != 1 {
 		t.Fatalf("messages=%d", len(or.Messages))
 	}
@@ -174,7 +174,7 @@ func TestRoleCoercedForToolCalls(t *testing.T) {
 		Messages: []AnthropicMessage{{Role: "user", Content: json.RawMessage(
 			`[{"type":"tool_use","id":"t1","name":"b","input":{}}]`)}},
 	}
-	or, _ := TranslateRequest(ar, "m")
+	or, _ := TranslateRequest(ar, "m", AdapterSpec{})
 	if or.Messages[0].Role != "assistant" {
 		t.Fatalf("role=%q, OpenAI rejects user+tool_calls", or.Messages[0].Role)
 	}

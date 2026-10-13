@@ -321,7 +321,7 @@ func TestTranslateRequestWithTools(t *testing.T) {
 			InputSchema: json.RawMessage(`{"type":"object"}`),
 		}},
 	}
-	or, notes := TranslateRequest(ar, "llama")
+	or, notes := TranslateRequest(ar, "llama", AdapterSpec{})
 	if or == nil {
 		t.Fatalf("translation failed: %v", notes)
 	}

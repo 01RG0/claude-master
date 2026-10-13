@@ -3,7 +3,7 @@
 Machine: AMD Ryzen 5 4500, Python 3.12.10, Go 1.27, Node 24.20, Defender on.
 Copy-pasted command outputs. No UNKNOWNs remain; estimates are labeled.
 
-## Hook path (scripts/bench_hook_win.py + tests/hookshim)
+## Hook path (scripts/bench_hookhost.py + tests/hookshim)
 
 ```
 hookshim.exe spawn+TCP (Defender on): min=13.89ms p50=15.26ms p95=16.99ms p99=22.35ms max=22.35ms (n=100)
@@ -19,12 +19,19 @@ hookshim cold-start (fail-open, n=50): min=12.00ms p50=13.50ms p95=14.01ms max=1
 bare TCP connect+close (either port): min=0.17ms p50=10.05ms p95=10.75ms p99=11.01ms (n=200)
 ```
 
+Keep-alive hook host (hookshim/host.go, persistent daemon, no per-call connect+spawn):
+
+```
+hookhost keep-alive p50=2.77ms p95=3.23ms p99=5.01ms vs spawn 14.10ms (n=200)
+```
+
 | Metric | Budget | Measured | Status |
 |---|---|---|---|
 | spawn hook path | p50<30ms (Win) / <10ms (POSIX) | p50 13.5–15.3ms, p95 14–17ms, max 178ms (AV spike) | PASS (Win budget) |
 | <10ms original budget (spawn) | <10ms | p50 13.5ms | **NOT MET — revised** |
 | persistent TCP | <10ms future | p50 ~11ms (one-shot connect each call) | NOT YET (needs keep-alive host) |
 | in-process handle_hook | <10ms | p50 0.03ms | PASS |
+| keep-alive hook host | <10ms | p50 2.77ms p95 3.23ms p99 5.01ms | **MET** |
 
 Verdict: the <10ms spawn budget is unreachable on this Windows host —
 ~10ms is the platform bare-connect baseline (Defender-inspected loopback),

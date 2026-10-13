@@ -1,5 +1,5 @@
 import { maskSecret, assertNoSecretStorage, maskProviderKeys }
-  from "/home/rootuser/claude-master/studio/src/ui/secrets.ts";
+  from "file:///D:/pRoG/claude-master/studio/src/ui/secrets.ts";
 const secret = "sk-" + "k".repeat(40);
 const masked = maskSecret(secret);
 let threw = false;

@@ -9,6 +9,19 @@ type StreamChunk struct {
 	Object  string         `json:"object"`
 	Model   string         `json:"model"`
 	Choices []StreamChoice `json:"choices"`
+	Usage   *StreamUsage   `json:"usage,omitempty"`
+}
+
+// StreamUsage carries token counts when a provider attaches usage to a chunk.
+type StreamUsage struct {
+	PromptTokens          int `json:"prompt_tokens,omitempty"`
+	CompletionTokens      int `json:"completion_tokens,omitempty"`
+	CachedTokens          int `json:"cached_tokens,omitempty"`
+	CacheCreationTokens   int `json:"cache_creation_input_tokens,omitempty"`
+	CacheCreationAlt      int `json:"cache_creation_tokens,omitempty"`
+	PromptTokensDetails   *struct {
+		CachedTokens int `json:"cached_tokens,omitempty"`
+	} `json:"prompt_tokens_details,omitempty"`
 }
 
 // StreamChoice is one choice in a streaming chunk.
@@ -20,9 +33,11 @@ type StreamChoice struct {
 
 // StreamDelta holds the incremental content in a streaming choice.
 type StreamDelta struct {
-	Role      string           `json:"role,omitempty"`
-	Content   string           `json:"content,omitempty"`
-	ToolCalls []ToolCallDelta  `json:"tool_calls,omitempty"`
+	Role             string           `json:"role,omitempty"`
+	Content          string           `json:"content,omitempty"`
+	ReasoningContent string           `json:"reasoning_content,omitempty"`
+	Reasoning        string           `json:"reasoning,omitempty"`
+	ToolCalls        []ToolCallDelta  `json:"tool_calls,omitempty"`
 }
 
 // ToolCallDelta is one upstream tool-call fragment (index preserved).

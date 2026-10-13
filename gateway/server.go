@@ -58,6 +58,7 @@ type Server struct {
 	rr         uint64
 	logDir     string
 	logMaxBody int
+	respCache  *ResponseCache // exact-match replay cache (never logs content/keys)
 }
 
 // NewServer creates a Server from the provided configuration.
@@ -78,6 +79,7 @@ func NewServer(cfg *Config) *Server {
 		keyModels:  make(map[string][]string),
 		pinned:     make(map[string]bool),
 		stats:      make(map[string]*ModelStat),
+		respCache:  NewResponseCache(),
 	}
 	if cfg.Logging != nil {
 		s.logDir = cfg.Logging.RequestsDir
@@ -184,6 +186,11 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 	requested := ar.Model
 	ar.Model = ResolveModel(requested, s.cfg.ModelAliases, s.cfg.Roles, s.allCandidateModels())
 
+	// Honest prompt-caching: auto-inject ephemeral breakpoints only when the
+	// client sent none. Log the count only — never content or keys.
+	cacheBreakpoints := EnsureCacheBreakpoints(&ar)
+	log.Printf("gateway: cache_breakpoints injected=%d", cacheBreakpoints)
+
 	privClass := EffectivePrivacyClass(&ar)
 	primary, ghFallback := EligibleProviders(s.cfg, privClass)
 	providers := append(append([]Provider{}, primary...), ghFallback...)
@@ -199,6 +206,21 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.logRequest("anthropic", requested, &ar, nil)
+
+	// Exact-match replay cache: serve stored non-streaming responses without
+	// contacting upstream. Usage is replayed byte-for-byte (passthrough);
+	// no cache_read_input_tokens is fabricated (see honesty rule in cache.go).
+	if s.respCache != nil {
+		if cached, ok := s.respCache.Lookup(&ar); ok {
+			s.recordCall(ar.Model, true, nil)
+			w.Header().Set("Content-Type", "application/json")
+			w.Header().Set("X-Gateway-Cache", "HIT")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write(cached)
+			return
+		}
+	}
+
 	resp, upstreamModel, stats, err := s.tryProviders(r.Context(), providers, &ar)
 	if err != nil {
 		st, typ, msg := mapUpstreamStatus(502, "")
@@ -213,7 +235,7 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 	if ar.Stream {
 		s.streamResponse(w, resp, upstreamModel)
 	} else {
-		s.proxyResponse(w, resp, upstreamModel)
+		s.proxyResponse(w, resp, upstreamModel, &ar)
 	}
 }
 
@@ -297,7 +319,7 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 					break
 				}
 			}
-			if keyRec != nil {
+if keyRec != nil {
 				s.mu.Lock()
 				overlay := s.keyModels
 				s.mu.Unlock()
@@ -307,7 +329,12 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 				}
 			}
 
-			or, notes := TranslateRequest(ar, model)
+			// Declarative adapter spec governs provider-specific request
+			// downgrades (tool-message image handling, tool support, schema
+			// stripping) BEFORE the request is sent upstream.
+			adapter := EffectiveAdapter(p)
+
+			or, notes := TranslateRequest(ar, model, adapter)
 			if or == nil {
 				lastErr = fmt.Errorf("translation error: %v", notes)
 				break
@@ -316,7 +343,6 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 				log.Printf("gateway: translate provider=%s model=%s note=%s", p.Name, model, n)
 			}
 			// Sanitize tools per adapter limits (logged, never secrets).
-			adapter := EffectiveAdapter(p)
 			if len(or.Tools) > 0 && adapter.ToolSupport == "none" {
 				lastErr = fmt.Errorf("provider %s: no native tool support for this request", p.Name)
 				break
@@ -395,6 +421,7 @@ func (s *Server) doUpstream(ctx context.Context, p Provider, adapter AdapterSpec
 	attemptCtx, cancel := context.WithTimeout(ctx, s.cfg.AttemptTimeout())
 	req, err := http.NewRequestWithContext(attemptCtx, http.MethodPost, url, bytes.NewReader(reqBody))
 	if err != nil {
+		cancel()
 		return nil, err, base
 	}
 	req.Header.Set("Content-Type", "application/json")
@@ -563,7 +590,7 @@ func (s *Server) sortByCost(providers []Provider) []Provider {
 	return out
 }
 
-func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model string) {
+func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model string, ar *AnthropicRequest) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		writeAnthropicError(w, 502, "api_error", "upstream read failed")
@@ -578,9 +605,20 @@ func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model
 		return
 	}
 	anth := TranslateResponse(&oai, model)
+	encoded, err := json.Marshal(anth)
+	if err != nil {
+		writeAnthropicError(w, 502, "api_error", "response encode failed")
+		return
+	}
+	// Exact-match cache: store on miss. Streams never reach here (caller
+	// branches on ar.Stream); tools/thinking requests are ignored by Store.
+	if s.respCache != nil && ar != nil && s.respCache.Cacheable(ar) {
+		s.respCache.Set(s.respCache.Key(ar), encoded)
+		w.Header().Set("X-Gateway-Cache", "MISS")
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(anth)
+	_, _ = w.Write(encoded)
 }
 
 func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, model string) {
@@ -598,7 +636,7 @@ func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, mode
 	translator := NewStreamTranslator(model, newMsgID())
 	scanner := bufio.NewScanner(resp.Body)
 	scanner.Buffer(make([]byte, 0, 64*1024), 1024*1024)
-	usagePrompt, usageCompletion, usageCached := 0, 0, 0
+	usagePrompt, usageCompletion, usageCached, usageCreation := 0, 0, 0, 0
 	sawDone := false
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -627,20 +665,54 @@ func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, mode
 			// Try usage-only trailer.
 			var trailer struct {
 				Usage *struct {
-					PromptTokens     int `json:"prompt_tokens"`
-					CompletionTokens int `json:"completion_tokens"`
-					CachedTokens     int `json:"cached_tokens"`
+					PromptTokens        int `json:"prompt_tokens"`
+					CompletionTokens    int `json:"completion_tokens"`
+					CachedTokens        int `json:"cached_tokens"`
+					CacheCreation       int `json:"cache_creation_input_tokens"`
+					CacheCreationTokens int `json:"cache_creation_tokens"`
+					PromptDetails       *struct {
+						CachedTokens int `json:"cached_tokens"`
+					} `json:"prompt_tokens_details"`
 				} `json:"usage"`
 			}
 			if jerr := json.Unmarshal([]byte(data), &trailer); jerr == nil && trailer.Usage != nil {
 				usagePrompt = trailer.Usage.PromptTokens
 				usageCompletion = trailer.Usage.CompletionTokens
 				usageCached = trailer.Usage.CachedTokens
+				if trailer.Usage.PromptDetails != nil && trailer.Usage.PromptDetails.CachedTokens > usageCached {
+					usageCached = trailer.Usage.PromptDetails.CachedTokens
+				}
+				usageCreation = trailer.Usage.CacheCreation
+				if trailer.Usage.CacheCreationTokens > usageCreation {
+					usageCreation = trailer.Usage.CacheCreationTokens
+				}
 			}
 			continue
 		}
 		if chunk.Model == "" {
 			chunk.Model = model
+		}
+		if chunk.Usage != nil {
+			if chunk.Usage.PromptTokens > 0 {
+				usagePrompt = chunk.Usage.PromptTokens
+			}
+			if chunk.Usage.CompletionTokens > 0 {
+				usageCompletion = chunk.Usage.CompletionTokens
+			}
+			cached := chunk.Usage.CachedTokens
+			if chunk.Usage.PromptTokensDetails != nil && chunk.Usage.PromptTokensDetails.CachedTokens > cached {
+				cached = chunk.Usage.PromptTokensDetails.CachedTokens
+			}
+			if cached > 0 {
+				usageCached = cached
+			}
+			creation := chunk.Usage.CacheCreationTokens
+			if chunk.Usage.CacheCreationAlt > creation {
+				creation = chunk.Usage.CacheCreationAlt
+			}
+			if creation > 0 {
+				usageCreation = creation
+			}
 		}
 
 		events := translator.Translate(&chunk)
@@ -654,7 +726,7 @@ func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, mode
 			break
 		}
 	}
-	for _, ev := range translator.Finish(usagePrompt, usageCompletion, usageCached) {
+	for _, ev := range translator.Finish(usagePrompt, usageCompletion, usageCached, usageCreation) {
 		if b := EncodeSSE(ev); b != nil {
 			_, _ = w.Write(b)
 		}
@@ -819,6 +891,16 @@ func messageBlockTypes(ar *AnthropicRequest) []string {
 		}
 		for _, b := range blocks {
 			add(b.Type)
+			// Images/files arrive INSIDE tool_result content arrays; log those
+			// too or vision regressions hide from the traffic log.
+			if b.Type == "tool_result" && len(b.Content) > 0 {
+				var inner []ContentBlock
+				if err := json.Unmarshal(b.Content, &inner); err == nil {
+					for _, ib := range inner {
+						add("tool_result/" + ib.Type)
+					}
+				}
+			}
 		}
 	}
 	return out

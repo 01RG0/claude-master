@@ -49,6 +49,7 @@ def main():
             pass
     tcp, bport = "127.0.0.1:7783", 7788
     shim = os.path.join(REPO_ROOT, "hookshim", "hookshim.exe")
+    hook_cmd = f'"{shim}" --tcp {tcp}'
     logdir = os.path.join(tmp, "claude-live-logs")
     os.makedirs(logdir, exist_ok=True)
     blog = open(os.path.join(logdir, "brain.log"), "w")
@@ -64,9 +65,9 @@ def main():
         },
         "hooks": {
             "PreToolUse": [{"matcher": ".*", "hooks": [{"type": "command",
-                                                        "command": f'"{shim}"'}]}],
+                                                        "command": hook_cmd}]}],
             "PostToolUse": [{"matcher": ".*", "hooks": [{"type": "command",
-                                                         "command": f'"{shim}"'}]}],
+                                                         "command": hook_cmd}]}],
         },
     }
     claude_dir = os.path.join(TASKDIR, ".claude")

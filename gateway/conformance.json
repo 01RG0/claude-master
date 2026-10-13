@@ -1,85 +1,43 @@
 {
-  "open-mistral-7b": {
+  "ministral-8b-latest": {
     "chat": {
       "ok": true,
-      "ms": 764.0,
-      "note": "http=200 Got it! Let me know how I can help\u2014wheth"
-    },
-    "stream": {
-      "ok": false,
-      "ms": 0,
-      "note": "HTTPError"
-    },
-    "single-tool": {
-      "ok": false,
-      "ms": 2.0,
-      "note": "[]"
-    },
-    "parallel-tools": {
-      "ok": true,
-      "ms": 523.0,
-      "note": "calls=2"
-    },
-    "tool-error-recovery": {
-      "ok": true,
-      "ms": 403.0,
-      "note": "http=200"
-    },
-    "multiturn": {
-      "ok": true,
-      "ms": 657.0,
-      "note": "http=200"
-    },
-    "vision": {
-      "ok": true,
-      "ms": 4900.0,
-      "note": "http=200"
-    },
-    "schema-edge": {
-      "ok": true,
-      "ms": 372.0,
-      "note": "http=200"
-    }
-  },
-  "openai": {
-    "chat": {
-      "ok": true,
-      "ms": 245.0,
-      "note": "http=200 Ok."
+      "ms": 654.0,
+      "note": "http=200 Got it! How can I help you further? \ud83d\ude0a\n\n-"
     },
     "stream": {
       "ok": true,
-      "ms": 162.0,
-      "note": "events=23 ['message_start', 'content_block_start', 'content_block_delta', 'content_block_delta', 'content_block_delta', 'content_block_delta']"
+      "ms": 497.0,
+      "note": "events=29 ['message_start', 'content_block_start', 'content_block_delta', 'content_block_delta', 'content_block_delta', 'content_block_delta']"
     },
     "single-tool": {
       "ok": true,
-      "ms": 113.0,
+      "ms": 386.0,
       "note": "['tool_use']"
     },
     "parallel-tools": {
       "ok": true,
-      "ms": 107.0,
-      "note": "calls=1"
+      "ms": 477.0,
+      "note": "calls=2"
     },
     "tool-error-recovery": {
       "ok": true,
-      "ms": 166.0,
+      "ms": 349.0,
       "note": "http=200"
     },
     "multiturn": {
       "ok": true,
-      "ms": 171.0,
+      "ms": 698.0,
       "note": "http=200"
     },
     "vision": {
-      "ok": false,
-      "ms": 130.0,
-      "note": "http=529"
+      "ok": true,
+      "ms": 523.0,
+      "note": "http=200"
     },
     "schema-edge": {
       "ok": true,
-      "ms": 147.0,
+      "ms": 298.0,
       "note": "http=200"
     }
   }

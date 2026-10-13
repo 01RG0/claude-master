@@ -74,7 +74,7 @@ class BrainServer:
         """Evaluate a hook payload: stuck-check, gate, build context."""
         tool_val = payload.get("tool_name", "")
         tool = tool_val if isinstance(tool_val, str) else ""
-        raw_input = payload.get("input")
+        raw_input = payload.get("tool_input", payload.get("input"))
         command = ""
         if isinstance(raw_input, dict):
             cmd_val = raw_input.get("command", "")
