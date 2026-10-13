@@ -353,22 +353,40 @@ func modelsOf(cfg *gateway.Config, name string, discovered []string) []string {
 	return discovered
 }
 
+// modelKey normalizes a model id for comparison: Gemini lists every id with a
+// "models/" prefix ("models/gemini-2.5-flash") while configs declare the bare
+// name, and providers differ on case. Without this, live models are reported
+// as retired.
+func modelKey(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	if i := strings.LastIndex(s, "/"); i >= 0 {
+		s = s[i+1:]
+	}
+	return s
+}
+
 func diffModels(old, new []string) (added, gone []string) {
 	has := map[string]bool{}
 	for _, m := range new {
-		has[m] = true
+		has[modelKey(m)] = true
 	}
 	for _, m := range old {
-		if !has[m] {
+		if m == "*" || strings.TrimSpace(m) == "" {
+			continue // wildcard: "any model is acceptable", never retired
+		}
+		if !has[modelKey(m)] {
 			gone = append(gone, m)
 		}
 	}
 	had := map[string]bool{}
 	for _, m := range old {
-		had[m] = true
+		had[modelKey(m)] = true
 	}
 	for _, m := range new {
-		if !had[m] {
+		if "*" == m || strings.TrimSpace(m) == "" {
+			continue
+		}
+		if !had[modelKey(m)] {
 			added = append(added, m)
 		}
 	}

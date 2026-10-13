@@ -99,3 +99,53 @@ code-bound.
 
 Infra $0. Drex burns this session: 220-call bench $0.000579 + eval ~100 calls
 ~$0.00017. Provider calls: free-tier keys only.
+
+## E2E request latency and overhead attribution (2026-10-13, real CLI)
+
+Measured through the real Claude Code binary with the matrix harness
+(`scripts/e2e_claude_matrix.py`), isolated profiles, gateway traffic log.
+
+Scenario S2-runtests (`python check.py`, report output), n=3 repetitions:
+
+```
+reps (wall): 13.0s, 88.6s, 170.9s   -> median 88.6s, p95 170.9s, pass 3/3
+```
+
+Variance is real, not flakiness of the oracle (all three verified pass).
+Attribution from the gateway traffic log over a 267s window (67 requests):
+
+```
+by class:
+  main tool-turn           35   (msgs>1 or tools>0)
+  aux  (1 msg, 0 tools)    30   <- 45% of every upstream call
+by class+model:
+  main tool-turn   ministral-8b-latest   20
+  aux              openai/gpt-oss-120b   14
+  aux              qwen/qwen3.8-27b      13
+  main tool-turn   openai/gpt-oss-120b   10
+  main tool-turn   qwen/qwen3.8-27b       5
+```
+
+Findings (each measured, no estimates):
+
+1. **45% of upstream calls are auxiliary** (single message, no tools),
+   1-11s each, interleaved with main turns. They are the clearest waste
+   on the hot path; caching/deduping them is the first optimization bet.
+2. **Main tool-turns are routed to `ministral-8b-latest` 20/35 times** -
+   a small model on tool-heavy turns, which correlates with the long
+   runs (many extra tool-loop turns at 5-7s each).
+3. **Dead provider entries were burning every request.** Before the
+   config fix the chain was: groq 404, cerebras 404, openrouter 400,
+   apertis 404, pooled 400, anyapi 403, alibaba 401 - every request.
+   After fixing the retired ids (groq/cerebras now live ids) and the
+   scan comparison, `provider.exe validate` prints
+   `all adapter specs valid` and a measured run showed **0 provider
+   HTTP failures**.
+
+Reproduce:
+
+```
+./provider.exe validate --config gateway/config.json
+python scripts/e2e_claude_matrix.py --scenario S2-runtests --repeat 3 \
+  --json-out off/e2e/s2x3.json
+```

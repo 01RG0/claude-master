@@ -81,3 +81,31 @@ re-verified mid-session via `cm test`).
 - Next: extend to the full Part-2 matrix (interactive PTY driver, MCP
   stdio+HTTP, plugins, hooks all events, LSP, permissions, failover
   residency tests), stats over N reps, `cm e2e report`, per-commit trend.
+
+## Session 4 (latency investigation + config data fixes)
+
+Measured with the real CLI (see docs/benchmarks.md for the full table):
+
+- S2 n=3: 13.0s / 88.6s / 170.9s (median 88.6, p95 170.9), 3/3 verified.
+  The 176s outlier is REAL and reproduces; it is not harness flakiness.
+- Traffic attribution over 267s / 67 requests: 45% of upstream calls are
+  aux (1 msg, 0 tools, 1-11s each); main tool-turns hit the small
+  `ministral-8b-latest` 20/35 times.
+- FIXED (verified): dead provider entries were burning every request
+  (groq/cerebras 404 chain + 400/401/403 from unkeyed/unknown providers).
+  Config now carries live ids (groq `openai/gpt-oss-120b`,
+  `qwen/qwen3.8-27b`; cerebras `gpt-oss-120b`, `qwen-3.8-27b`);
+  `provider.exe validate` = "all adapter specs valid"; a measured run
+  showed 0 provider HTTP failures (was a failure chain per request).
+- FIXED: `provider.exe scan` reported false retirements - `diffModels`
+  compared raw strings (Gemini's `models/` prefix) and treated the `*`
+  wildcard as a literal model. Normalized + wildcard-skipped, regression
+  tests in gateway/cmd/provider/main_test.go.
+- Still open (measured, ordered): (1) aux-call reduction on the hot path
+  (45% of calls) - cache/dedupe; (2) routing tool-heavy turns away from
+  ministral-8b; (3) `provider.exe pin|ban` is a STUB (prints guidance,
+  hides nothing) - persist bans and honour them at startup.
+- Heads-up for the other session: admin-API tests still write fixture
+  providers into the live gateway/config.json (re-polluted twice today);
+  set CLAUDE_MASTER_GATEWAY_CONFIG to a copy (ADR-010) - the fix is
+  already in brain/api/services/config_service.py (uncommitted, theirs).
