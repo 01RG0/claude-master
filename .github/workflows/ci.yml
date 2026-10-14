@@ -12,7 +12,17 @@ jobs:
           python-version: "3.12"
       - run: python scripts/bootstrap.py
       - run: python scripts/secret_scan.py
-      - run: python -m pytest -q
+      - name: Run Python tests with failure summary
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q 2>&1 | tee pytest-output.txt
+          test_status=${PIPESTATUS[0]}
+          if [ "$test_status" -ne 0 ]; then
+            summary=$(tail -n 25 pytest-output.txt | tr '\n' ' ' | cut -c1-4000)
+            echo "::error title=Pytest failure summary::$summary"
+          fi
+          exit "$test_status"
   go:
     runs-on: ubuntu-latest
     steps:

@@ -19,6 +19,12 @@ ROOT = Path(__file__).resolve().parent.parent
 
 def run(cmd, cwd=ROOT, check=True):
     print(f"$ {' '.join(str(c) for c in cmd)}")
+    # On Windows, npm is a .cmd launcher. CreateProcess can't invoke batch
+    # files directly; pass through cmd.exe instead of relying on PowerShell's
+    # command resolver (which Python does not use).
+    if os.name == "nt" and cmd and str(cmd[0]).lower() == "npm":
+        npm = shutil.which("npm.cmd") or shutil.which("npm") or "npm.cmd"
+        cmd = [os.environ.get("COMSPEC", "cmd.exe"), "/d", "/c", npm, *cmd[1:]]
     return subprocess.run(cmd, cwd=cwd, check=check)
 
 
