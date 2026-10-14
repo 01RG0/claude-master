@@ -79,6 +79,8 @@ def resilience_server():
 
 @pytest.fixture(scope="module")
 def browser_instance():
+    if not Path(CHROMIUM_EXE).is_file():
+        pytest.skip(f"Configured Chromium executable is unavailable: {CHROMIUM_EXE}")
     pw = sync_playwright().start()
     browser = pw.chromium.launch(
         executable_path=CHROMIUM_EXE,
