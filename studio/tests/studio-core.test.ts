@@ -14,6 +14,43 @@ import { PrivacyScreen } from "../src/screens/PrivacyScreen.js";
 import { BudgetsScreen } from "../src/screens/BudgetsScreen.js";
 import { DoctorScreen } from "../src/screens/DoctorScreen.js";
 import { LogsScreen } from "../src/screens/LogsScreen.js";
+import type { ModelItem, ProviderItem } from "../src/state/types.js";
+
+const unscoredModel: ModelItem = {
+  id: "test-model",
+  name: "Test Model",
+  provider: "test-provider",
+  family: "test-family",
+  quality_score: null,
+  latency_ms: null,
+  cost_input_1m: 0,
+  cost_output_1m: 0,
+  roles: [],
+  capabilities: {
+    streaming: false,
+    tool_calling: false,
+    vision: false,
+    json_mode: false,
+    reasoning: false,
+    context_window: 0,
+    max_output_tokens: 0,
+    provenance: "declared",
+  },
+  status: "active",
+  overridden: false,
+};
+
+const testProvider: ProviderItem = {
+  name: "groq",
+  base_url: "https://example.invalid/v1",
+  privacy_policy: "zero_retention",
+  models: [],
+  key_pools: [],
+  enabled: false,
+  pool_strategy: "priority",
+  region: "test",
+  tags: [],
+};
 
 describe("Studio State Store", () => {
   beforeEach(async () => {
@@ -153,6 +190,7 @@ describe("Screens Rendering in JSDOM", () => {
   });
 
   it("renders ProvidersScreen with key pools", () => {
+    store.getState().providers.push(testProvider);
     const el = document.createElement("div");
     const screen = new ProvidersScreen(el);
     screen.render();
@@ -184,6 +222,7 @@ describe("Screens Rendering in JSDOM", () => {
   });
 
   it("renders ModelsScreen with task leaderboards and manual overrides", () => {
+    store.getState().models.push(unscoredModel);
     const el = document.createElement("div");
     const screen = new ModelsScreen(el);
     screen.render();
@@ -192,6 +231,7 @@ describe("Screens Rendering in JSDOM", () => {
     expect(el.innerHTML).toContain("Sample Size (N)");
     expect(el.innerHTML).toContain("95% Confidence Interval");
     expect(el.innerHTML).toContain("Tokens / Sec");
+    expect(el.innerHTML).toContain("NOT MEASURED");
     expect(el.querySelectorAll(".btn-force-route").length).toBeGreaterThan(0);
     expect(el.querySelectorAll(".btn-pin-model").length).toBeGreaterThan(0);
     expect(el.querySelectorAll(".btn-ban-model").length).toBeGreaterThan(0);

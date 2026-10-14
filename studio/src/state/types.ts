@@ -45,8 +45,8 @@ export interface ModelItem {
   name: string;
   provider: string;
   family: string;
-  quality_score: number; // 0-100
-  latency_ms: number; // TTFT
+  quality_score: number | null; // 0-100, null means NOT MEASURED
+  latency_ms: number | null; // TTFT, null means NOT MEASURED
   cost_input_1m: number; // $ per 1M input
   cost_output_1m: number; // $ per 1M output
   roles: string[]; // e.g. ["main", "small-fast"]

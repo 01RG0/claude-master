@@ -376,7 +376,7 @@ export class RoutingScreen {
                 .map(
                   (m) => `
                 <option value="${m.id}" ${m.id === r.model_id ? "selected" : ""}>
-                  ${escapeHtml(m.name)} (${m.provider}) — TTFT: ${m.latency_ms}ms, IQ: ${m.quality_score}
+                    ${escapeHtml(m.name)} (${m.provider}) — Latency: ${m.latency_ms == null ? "NOT MEASURED" : `${m.latency_ms} ms`}, quality: ${m.quality_score == null ? "NOT MEASURED" : m.quality_score}
                 </option>
               `,
                 )

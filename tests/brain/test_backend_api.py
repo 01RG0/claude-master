@@ -213,7 +213,7 @@ def test_wizard_import_env(temp_db_and_server):
     client = temp_db_and_server["client"]
     auth = temp_db_and_server["auth_headers"]
 
-    mock_env = "GROQ_API_KEY=gsk_1234567890abcdef1234567890\nMISTRAL_API_KEY=mis_9876543210fedcba\n"
+    mock_env = "GROQ_API_KEY=gsk_1234567890abcdef1234567890\nMISTRAL_API_KEY=mis_9876543210fedcba\n"  # fake test-only values
     resp = client.post(
         "/api/wizard/import-env",
         json={"env_content": mock_env, "apply": False},

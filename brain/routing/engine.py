@@ -126,7 +126,7 @@ class TaskClassifier:
     _SUMM_RE = re.compile(r'\b(summarize|summary|tldr|tl;dr|recap|condense|brief)\b', re.I)
     _MULTI_RE = re.compile(r'\b(then|next|step\s+\d|after that|finally|first)\b', re.I)
 
-    def classify(self, prompt: str) -> TaskContext:
+    def classify(self, prompt: str, prompt_tokens: Optional[int] = None) -> TaskContext:
         text = prompt.strip()
         vision_needed = bool(self._VISION_RE.search(text))
         language = "ar" if self._ARABIC_RE.search(text) else ("code" if self._CODE_RE.search(text) else "en")
@@ -158,7 +158,7 @@ class TaskClassifier:
             complexity=complexity,
             vision_needed=vision_needed,
             tools_needed=True,
-            prompt_tokens=len(text) // 4,
+            prompt_tokens=prompt_tokens if prompt_tokens is not None else len(text) // 4,
             multi_step=multi_step,
         )
 
@@ -232,6 +232,8 @@ class DynamicRouter:
     ):
         self.classifier = TaskClassifier()
         self.candidate_filter = CandidateFilter()
+        # Compatibility name used by the API service layer.
+        self.filter_engine = self.candidate_filter
         self.scorer = scorer or ExpectedUtilityScorer()
         self.bandit = bandit or BanditRouter()
         self.drex = drex_router or DrexRouter()

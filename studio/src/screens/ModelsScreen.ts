@@ -86,9 +86,11 @@ export class ModelsScreen {
       if (a.status !== "pinned" && b.status === "pinned") return 1;
 
       // Then by score for current task
-      const scoreA = a.benchmarks?.[this.selectedTaskType]?.score ?? a.quality_score ?? 0;
-      const scoreB = b.benchmarks?.[this.selectedTaskType]?.score ?? b.quality_score ?? 0;
-      return scoreB - scoreA;
+      const scoreA = a.benchmarks?.[this.selectedTaskType]?.score ?? a.quality_score;
+      const scoreB = b.benchmarks?.[this.selectedTaskType]?.score ?? b.quality_score;
+      if (scoreA == null && scoreB != null) return 1;
+      if (scoreB == null && scoreA != null) return -1;
+      return (scoreB ?? 0) - (scoreA ?? 0);
     });
 
     return `
@@ -151,13 +153,14 @@ export class ModelsScreen {
   private renderLeaderboardRow(m: ModelItem, rank: number): string {
     const isSelected = this.selectedForCompare.includes(m.id);
     const bm = m.benchmarks?.[this.selectedTaskType];
-    const score = bm?.score ?? m.quality_score ?? 0;
-    const sampleN = bm?.sample_size_n ?? m.sample_size_n ?? 1200;
-    const ciLow = bm?.ci_95_low ?? (score - 1.5);
-    const ciHigh = bm?.ci_95_high ?? (score + 1.5);
+    const score = bm?.score ?? m.quality_score;
+    const sampleN = bm?.sample_size_n ?? m.sample_size_n;
+    const ciLow = bm?.ci_95_low;
+    const ciHigh = bm?.ci_95_high;
     const ttft = bm?.measured_ttft_ms ?? m.latency_ms;
-    const tps = bm?.tokens_per_sec ?? m.tokens_per_sec ?? 120;
-    const prov = m.overridden ? "override" : (bm?.provenance ?? m.capabilities.provenance);
+    const tps = bm?.tokens_per_sec ?? m.tokens_per_sec;
+    const prov = m.overridden ? "override" : (bm?.provenance ?? m.capabilities.provenance ?? "NOT MEASURED");
+    const scoreMeasured = typeof score === "number" && Number.isFinite(score);
 
     const isPinned = m.status === "pinned";
     const isBanned = m.status === "banned";
@@ -179,23 +182,21 @@ export class ModelsScreen {
         <td><span class="badge info">${escapeHtml(m.provider)}</span></td>
         <td>
           <div class="score-pill-wrap">
-            <div class="score-pill ${score >= 90 ? "high" : score >= 75 ? "mid" : "low"}">
-              ${score.toFixed(1)}%
+            <div class="score-pill ${scoreMeasured ? (score! >= 90 ? "high" : score! >= 75 ? "mid" : "low") : "unknown"}">
+              ${scoreMeasured ? `${score!.toFixed(1)}%` : "NOT MEASURED"}
             </div>
-            <div class="score-bar-mini">
-              <div class="score-bar-fill" style="width: ${Math.min(score, 100)}%"></div>
-            </div>
+            ${scoreMeasured ? `<div class="score-bar-mini"><div class="score-bar-fill" style="width: ${Math.min(score!, 100)}%"></div></div>` : ""}
           </div>
         </td>
         <td class="mono">
-          <span class="sample-size-pill">N = ${sampleN.toLocaleString()}</span>
+          <span class="sample-size-pill">${typeof sampleN === "number" ? `N = ${sampleN.toLocaleString()}` : "NOT MEASURED"}</span>
         </td>
         <td class="mono text-xs">
-          <span class="ci-badge">[${ciLow.toFixed(1)}% – ${ciHigh.toFixed(1)}%]</span>
+          <span class="ci-badge">${typeof ciLow === "number" && typeof ciHigh === "number" ? `[${ciLow.toFixed(1)}% – ${ciHigh.toFixed(1)}%]` : "NOT MEASURED"}</span>
         </td>
-        <td class="mono">${ttft > 0 ? `${ttft} ms` : "—"}</td>
+        <td class="mono">${typeof ttft === "number" && ttft > 0 ? `${ttft} ms` : "NOT MEASURED"}</td>
         <td class="mono">
-          <span class="tps-badge">${tps > 0 ? `${tps} t/s` : "—"}</span>
+          <span class="tps-badge">${typeof tps === "number" && tps > 0 ? `${tps} t/s` : "NOT MEASURED"}</span>
         </td>
         <td>
           <span class="prov-badge ${prov}">${prov}</span>
@@ -279,11 +280,11 @@ export class ModelsScreen {
         </td>
         <td><span class="badge info">${escapeHtml(m.provider)}</span></td>
         <td>
-          <div class="score-pill ${m.quality_score >= 85 ? "high" : m.quality_score >= 70 ? "mid" : "low"}">
-            ${m.quality_score}/100
+          <div class="score-pill ${m.quality_score == null ? "unknown" : m.quality_score >= 85 ? "high" : m.quality_score >= 70 ? "mid" : "low"}">
+            ${m.quality_score == null ? "NOT MEASURED" : `${m.quality_score}/100`}
           </div>
         </td>
-        <td class="mono">${m.latency_ms} ms</td>
+        <td class="mono">${m.latency_ms == null ? "NOT MEASURED" : `${m.latency_ms} ms`}</td>
         <td class="mono text-xs">$${m.cost_input_1m.toFixed(2)} / $${m.cost_output_1m.toFixed(2)}</td>
         <td>
           <div class="caps-tags-group">
@@ -343,15 +344,15 @@ export class ModelsScreen {
                   <div class="mono text-xs muted">${escapeHtml(m.id)}</div>
                   <hr/>
                   <p><strong>Provider:</strong> ${m.provider}</p>
-                  <p><strong>Agentic IQ Score:</strong> ${m.quality_score}/100</p>
-                  <p><strong>Latency TTFT:</strong> ${m.latency_ms} ms</p>
+                  <p><strong>Agentic IQ Score:</strong> ${m.quality_score == null ? "NOT MEASURED" : `${m.quality_score}/100`}</p>
+                  <p><strong>Latency TTFT:</strong> ${m.latency_ms == null ? "NOT MEASURED" : `${m.latency_ms} ms`}</p>
                   <p><strong>Context Window:</strong> ${m.capabilities.context_window.toLocaleString()} tokens</p>
                   <p><strong>Input Price / 1M:</strong> $${m.cost_input_1m.toFixed(2)}</p>
                   <p><strong>Output Price / 1M:</strong> $${m.cost_output_1m.toFixed(2)}</p>
                   <p><strong>Tool Calling:</strong> ${m.capabilities.tool_calling ? "✓ Supported" : "✗ No"}</p>
                   <p><strong>Vision:</strong> ${m.capabilities.vision ? "✓ Supported" : "✗ No"}</p>
-                  <p><strong>Measured TTFT:</strong> ${m.benchmarks?.[this.selectedTaskType]?.measured_ttft_ms ?? m.latency_ms} ms</p>
-                  <p><strong>Throughput:</strong> ${m.benchmarks?.[this.selectedTaskType]?.tokens_per_sec ?? m.tokens_per_sec ?? 120} t/s</p>
+                  <p><strong>Measured TTFT:</strong> ${(m.benchmarks?.[this.selectedTaskType]?.measured_ttft_ms ?? m.latency_ms) ?? "NOT MEASURED"} ms</p>
+                  <p><strong>Throughput:</strong> ${(m.benchmarks?.[this.selectedTaskType]?.tokens_per_sec ?? m.tokens_per_sec) ?? "NOT MEASURED"} t/s</p>
                   <p><strong>Provenance:</strong> <span class="prov-badge ${m.capabilities.provenance}">${m.capabilities.provenance}</span></p>
                 </div>
               `,

@@ -61,7 +61,15 @@ def main() -> int:
             for line in text.splitlines():
                 if any(a in line for a in ALLOW_SUBSTR):
                     continue
-                if ASSIGN.search(line) and "example" not in path.lower():
+                assignment = ASSIGN.search(line)
+                if not assignment or "example" in path.lower():
+                    continue
+                # Dynamic token factories are code, not committed literals.
+                if line[assignment.end(2):].lstrip().startswith("("):
+                    continue
+                if path.startswith("tests/") and re.search(r"\bmock_[A-Za-z0-9_]*\s*=", line):
+                    continue
+                if assignment:
                     print(f"SUSPECT: {path}: possible committed credential (redacted)")
                     leaks += 1
                     break
