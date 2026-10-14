@@ -5,6 +5,10 @@ tests/test_desktop.py — Unit and integration tests for native Windows desktop 
 import os
 import sys
 import pytest
+
+if sys.platform != "win32":
+    pytest.skip("Native desktop shell tests require Windows", allow_module_level=True)
+
 from PIL import Image
 
 from desktop.icons import create_tray_icon_image, get_icon_bytes, STATUS_COLORS, STATUS_NAMES
