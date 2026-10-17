@@ -1,0 +1,482 @@
+[
+  {
+    "id": "SCN-B01-TOOLS",
+    "dimension": "B",
+    "category": "tools",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "C"
+    ],
+    "tier": "smoke",
+    "title": "Standard Tool Calling Set (Write/Edit/Read/Glob/Grep/Bash)",
+    "description": "Verify complete round-trip tool invocation for all core Claude tools with structured argument schemas.",
+    "setup": {
+      "files": {
+        "test_seed.txt": "seed_data_123\n"
+      }
+    },
+    "input": {
+      "prompt": "Read test_seed.txt, write out.txt with the uppercase content, and verify using Bash echo.",
+      "tools": [
+        "Read",
+        "Write",
+        "Bash"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "file_contains": {
+          "out.txt": [
+            "SEED_DATA_123"
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "feature",
+      "tools",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-B02-STREAMING",
+    "dimension": "B",
+    "category": "streaming",
+    "cross_dimensions": [
+      "B",
+      "C",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "SSE Token Chunking & Delta Reconstruction",
+    "description": "Verify gateway streamOpenAIResponse handles fragmented delta tokens and backpressure correctly.",
+    "setup": {},
+    "input": {
+      "prompt": "Write a 500 word narrative streaming response on operating system kernel architectures.",
+      "stream": true
+    },
+    "expected_oracle": {
+      "type": "stream_oracle",
+      "spec": {
+        "min_chunks": 15,
+        "valid_sse_format": true,
+        "no_delta_loss": true
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "streaming",
+      "sse"
+    ]
+  },
+  {
+    "id": "SCN-B03-THINKING",
+    "dimension": "B",
+    "category": "thinking",
+    "cross_dimensions": [
+      "B",
+      "C"
+    ],
+    "tier": "standard",
+    "title": "Reasoning Models & Thinking Block Separation",
+    "description": "Verify models emitting <thinking> or reasoning_content tags have internal reasoning stripped from terminal user output.",
+    "setup": {},
+    "input": {
+      "prompt": "Solve: if a clock gains 5 minutes every 3 hours, how many minutes will it gain in 36 hours? Explain step-by-step.",
+      "thinking_budget": 2048
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "answer_contains": "60",
+        "thinking_tags_hidden_from_final": true
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "thinking",
+      "reasoning"
+    ]
+  },
+  {
+    "id": "SCN-B04-CACHING",
+    "dimension": "B",
+    "category": "caching",
+    "cross_dimensions": [
+      "B",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Prompt Prefix Caching & Hit Latency Acceleration",
+    "description": "Verify consecutive queries with 4,000+ token identical system prompt prefix trigger cache hit and lower TTFT by >50%.",
+    "setup": {
+      "cache_prefix_tokens": 4096
+    },
+    "input": {
+      "prompt": "Summarize rule #3 of the provided instructions."
+    },
+    "expected_oracle": {
+      "type": "metric_counter",
+      "spec": {
+        "cache_read_input_tokens_gt": 3000,
+        "ttft_speedup_ratio_min": 1.5
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "caching",
+      "latency"
+    ]
+  },
+  {
+    "id": "SCN-B05-VISION",
+    "dimension": "B",
+    "category": "vision",
+    "cross_dimensions": [
+      "B",
+      "C"
+    ],
+    "tier": "standard",
+    "title": "Multimodal Visual Diagram & UI Mockup Analysis",
+    "description": "Send a PNG image of an architecture flowchart and verify model extracts component relationships.",
+    "setup": {
+      "image_assets": [
+        "data/evals/assets/diag.png"
+      ]
+    },
+    "input": {
+      "prompt": "Analyze diag.png and list the components connected to the Gateway database.",
+      "images": [
+        "data/evals/assets/diag.png"
+      ]
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_keywords": [
+          "sqlite",
+          "gateway",
+          "brain"
+        ]
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "vision",
+      "multimodal"
+    ]
+  },
+  {
+    "id": "SCN-B06-SKILLS",
+    "dimension": "B",
+    "category": "skills",
+    "cross_dimensions": [
+      "B",
+      "A"
+    ],
+    "tier": "standard",
+    "title": "Custom Skill Discovery and SKILL.md Execution",
+    "description": "Create custom skill directory with SKILL.md, verify Claude CLI discovers and applies skill instructions.",
+    "setup": {
+      "skills": {
+        "code-auditor": {
+          "SKILL.md": "---\nname: code-auditor\ndescription: Audit code security\n---\nAlways append '# AUDITED' to file headers.\n"
+        }
+      },
+      "files": {
+        "sample.py": "x = 1\n"
+      }
+    },
+    "input": {
+      "prompt": "Use code-auditor skill on sample.py."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "file_contains": {
+          "sample.py": [
+            "# AUDITED"
+          ]
+        }
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "skills",
+      "customization"
+    ]
+  },
+  {
+    "id": "SCN-B07-PLUGINS",
+    "dimension": "B",
+    "category": "plugins",
+    "cross_dimensions": [
+      "B"
+    ],
+    "tier": "extended",
+    "title": "Plugin Manifest Registration and External Tool Invoke",
+    "description": "Load plugin manifest defining custom hook and tool, verifying proper registration and execution.",
+    "setup": {
+      "plugins": {
+        "linter": {
+          "manifest.json": "{\"name\": \"py-linter\", \"version\": \"1.0.0\"}"
+        }
+      }
+    },
+    "input": {
+      "prompt": "Run py-linter plugin check."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "returncode": 0
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "plugins"
+    ]
+  },
+  {
+    "id": "SCN-B08-MCP-STDIO",
+    "dimension": "B",
+    "category": "mcp-stdio",
+    "cross_dimensions": [
+      "B",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Model Context Protocol STDIO Process Transport",
+    "description": "Spawn local Python MCP server communicating over JSON-RPC stdin/stdout, calling custom tools.",
+    "setup": {
+      "mcp_config": {
+        "mcpServers": {
+          "calculator": {
+            "command": "python",
+            "args": [
+              "-c",
+              "import sys, json; print(json.dumps({'jsonrpc':'2.0','id':1,'result':{'tools':[{'name':'add','description':'add numbers','inputSchema':{'type':'object','properties':{'a':{'type':'number'},'b':{'type':'number'}}}}]}})); sys.stdout.flush()"
+            ]
+          }
+        }
+      }
+    },
+    "input": {
+      "prompt": "Add 25 and 47 using the calculator MCP tool."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "72"
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "feature",
+      "mcp",
+      "stdio"
+    ]
+  },
+  {
+    "id": "SCN-B09-MCP-HTTP",
+    "dimension": "B",
+    "category": "mcp-http",
+    "cross_dimensions": [
+      "B",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Model Context Protocol HTTP / SSE Remote Transport",
+    "description": "Connect to local HTTP SSE MCP endpoint, perform capability handshake, and invoke remote tool.",
+    "setup": {
+      "mcp_http_endpoint": "http://127.0.0.1:8999/mcp/sse"
+    },
+    "input": {
+      "prompt": "Query system status from the remote MCP server."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "returncode": 0
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "mcp",
+      "http"
+    ]
+  },
+  {
+    "id": "SCN-B10-SUBAGENTS",
+    "dimension": "B",
+    "category": "subagents",
+    "cross_dimensions": [
+      "B",
+      "A",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Subagent Delegation and Parent-Child Coordination",
+    "description": "Parent agent delegates research task to subagent in isolated context, receiving final synthesized report.",
+    "setup": {
+      "files": {
+        "notes.txt": "alpha: 40\nbeta: 60\n"
+      }
+    },
+    "input": {
+      "prompt": "Delegate to a research subagent to sum values in notes.txt and report the total back."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "100"
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "feature",
+      "subagents",
+      "orchestration"
+    ]
+  },
+  {
+    "id": "SCN-B11-HOOKS",
+    "dimension": "B",
+    "category": "hooks",
+    "cross_dimensions": [
+      "B",
+      "G"
+    ],
+    "tier": "standard",
+    "title": "Pre-Tool Execution Policy Hook Interception",
+    "description": "Verify gateway hook blocks dangerous shell commands (rm -rf /, format c:) while allowing safe commands.",
+    "setup": {},
+    "input": {
+      "prompt": "Run command: rm -rf /tmp/dangerous_probe. If blocked, state BLOCKED."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains_one_of": [
+          "BLOCKED",
+          "denied",
+          "policy"
+        ],
+        "file_not_created": "/tmp/dangerous_probe"
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "feature",
+      "hooks",
+      "security"
+    ]
+  },
+  {
+    "id": "SCN-B12-SLASH",
+    "dimension": "B",
+    "category": "slash",
+    "cross_dimensions": [
+      "B"
+    ],
+    "tier": "smoke",
+    "title": "Interactive Slash Command Execution (/help, /compact, /shout)",
+    "description": "Invoke registered slash command `/shout hello world` and verify intercepted custom action.",
+    "setup": {},
+    "input": {
+      "prompt": "/shout hello world"
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "HELLO WORLD",
+        "returncode": 0
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "feature",
+      "slash",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-B13-LSP",
+    "dimension": "B",
+    "category": "lsp",
+    "cross_dimensions": [
+      "B",
+      "A"
+    ],
+    "tier": "extended",
+    "title": "Language Server Protocol Symbol Definition and Hover",
+    "description": "Use LSP integration on TypeScript/Python workspace to resolve definition location and type info.",
+    "setup": {
+      "files": {
+        "types.ts": "export interface User { id: string; name: string; }\n",
+        "index.ts": "import { User } from './types';\nconst u: User = { id: '1', name: 'Alice' };\n"
+      }
+    },
+    "input": {
+      "prompt": "Inspect the type definition of 'User' in index.ts using LSP."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "types.ts"
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "feature",
+      "lsp"
+    ]
+  },
+  {
+    "id": "SCN-B14-PERMISSIONS",
+    "dimension": "B",
+    "category": "permissions",
+    "cross_dimensions": [
+      "B",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Permission Modes (dontAsk vs Interactive Mode)",
+    "description": "Verify execution in --permission-mode dontAsk proceeds without hanging on user stdin prompts.",
+    "setup": {
+      "files": {
+        "perm.txt": "initial\n"
+      }
+    },
+    "input": {
+      "prompt": "Overwrite perm.txt with 'authorized' in dontAsk mode.",
+      "permission_mode": "dontAsk"
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "file_contains": {
+          "perm.txt": [
+            "authorized"
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "feature",
+      "permissions",
+      "non-interactive"
+    ]
+  }
+]

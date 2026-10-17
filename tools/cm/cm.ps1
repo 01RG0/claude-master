@@ -538,22 +538,75 @@ function Invoke-E2eReport {
 }
 
 # ---------------------------------------------------------------------------
-# cm e2e - the REAL Claude Code scenario matrix
-# Usage: cm e2e [matrix|live]  (matrix = 10 scenarios; live = single live run)
+# cm e2e - the REAL Claude Code scenario matrix & validation suite
+# Usage:
+#   cm e2e pass [--tier smoke|standard|full] [--repeat N]
+#   cm e2e explore [--turns N]
+#   cm e2e fuzz [--iterations N] [--target api|hooks|all]
+#   cm e2e soak [--duration N] [--concurrency N]
+#   cm e2e chaos [--suite degradation|resilience|all]
+#   cm e2e report
 function Invoke-E2E {
-  $which = "matrix"
-  if ($Rest.Count -gt 0) { $which = $Rest[0] }
+  $which = "pass"
+  if ($Rest.Count -gt 0) { $which = $Rest[0].ToLower() }
   if ($which -eq "report") { Invoke-E2eReport; return }
+
+  $subRest = @()
+  if ($Rest.Count -gt 1) { $subRest = $Rest[1..($Rest.Count - 1)] }
+
   switch ($which) {
-    "matrix" { $script = "e2e_claude_matrix.py" }
-    "live"   { $script = "e2e_claude_live.py" }
-    default  { Fail "unknown e2e target '$which' (matrix|live|report)"; exit 2 }
+    "pass" {
+      Info "==> cm e2e pass: executing scenario matrix using real Claude CLI driver"
+      python (Join-Path $Root "scripts\e2e_claude_matrix.py") @subRest
+      exit $LASTEXITCODE
+    }
+    "matrix" {
+      Info "==> cm e2e pass: executing scenario matrix using real Claude CLI driver"
+      python (Join-Path $Root "scripts\e2e_claude_matrix.py") @subRest
+      exit $LASTEXITCODE
+    }
+    "explore" {
+      Info "==> cm e2e explore: unconstrained exploratory session"
+      python (Join-Path $Root "cli\cm.py") e2e explore @subRest
+      exit $LASTEXITCODE
+    }
+    "fuzz" {
+      Info "==> cm e2e fuzz: API and prompt mutation fuzzing"
+      python (Join-Path $Root "cli\cm.py") e2e fuzz @subRest
+      exit $LASTEXITCODE
+    }
+    "soak" {
+      Info "==> cm e2e soak: continuous workload and concurrency load test"
+      python (Join-Path $Root "cli\cm.py") e2e soak @subRest
+      exit $LASTEXITCODE
+    }
+    "chaos" {
+      Info "==> cm e2e chaos: fault injection and degradation suite"
+      python (Join-Path $Root "cli\cm.py") e2e chaos @subRest
+      exit $LASTEXITCODE
+    }
+    "live" {
+      Info "==> cm e2e live: single live run with hooks active"
+      python (Join-Path $Root "scripts\e2e_claude_live.py") @subRest
+      exit $LASTEXITCODE
+    }
+    "help" {
+      Info "Usage: cm e2e <subcommand> [options]"
+      Info ""
+      Info "Subcommands:"
+      Info "  pass [--tier smoke|standard|full] [--repeat N]  Run scenario matrix using real Claude CLI driver"
+      Info "  explore [--turns N]                             Run unconstrained exploratory session"
+      Info "  fuzz [--iterations N] [--target api|hooks|all]  Run API/prompt mutation fuzzers"
+      Info "  soak [--duration N] [--concurrency N]           Run continuous workload and load test"
+      Info "  chaos [--suite degradation|resilience|all]      Run fault injection tests"
+      Info "  report                                          Display stored E2E artifact pass rates"
+      return
+    }
+    default {
+      Fail "unknown e2e subcommand '$which' (pass|explore|fuzz|soak|chaos|report|help)"
+      exit 2
+    }
   }
-  Info "==> cm e2e $which ($script) - real claude binary through the gateway"
-  $rest = @()
-  if ($Rest.Count -gt 1) { $rest = $Rest[1..($Rest.Count - 1)] }
-  python (Join-Path $Root "scripts\$script") @rest
-  exit $LASTEXITCODE
 }
 
 # ---------------------------------------------------------------------------

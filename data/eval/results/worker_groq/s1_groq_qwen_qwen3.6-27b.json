@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_groq:qwen/qwen3.6-27b",
+  "route_id": "groq:qwen/qwen3.6-27b",
+  "canonical_id": "qwen/qwen3.6-27b-20260422",
+  "provider": "groq",
+  "provider_model_id": "qwen/qwen3.6-27b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_404",
+  "timestamp": 1792257514.4667654,
+  "duration_seconds": 2.21,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 404,
+      "latency_ms": 214.06,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"The model `qwen/qwen3.6-27b` does not exist or you do not have access to it.\",\"type\":\"invalid_request_error\",\"code\":\"model_not_found\"}}\n"
+    }
+  }
+}

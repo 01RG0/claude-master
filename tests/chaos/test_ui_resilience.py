@@ -122,7 +122,7 @@ def test_daemon_kill_and_offline_banner(resilience_server, browser_instance):
     assert "Start / Repair System" in repair_btn.inner_text()
 
     # 4. Click repair button and verify feedback toast
-    repair_btn.click()
+    page.click("#btn-banner-repair")
     page.wait_for_timeout(300)
 
     # Verify toast or button transition

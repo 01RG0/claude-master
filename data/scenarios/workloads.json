@@ -1,0 +1,427 @@
+[
+  {
+    "id": "SCN-A01-MULTIFILE",
+    "dimension": "A",
+    "category": "multi-file",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "C",
+      "E"
+    ],
+    "tier": "smoke",
+    "title": "Cross-File Interdependent Module Creation",
+    "description": "Create a multi-file Python package where mod_a imports mod_b and mod_c, verifying correct exports and imports.",
+    "setup": {
+      "files": {
+        "package/__init__.py": "# empty\n"
+      }
+    },
+    "input": {
+      "prompt": "Create package/mod_b.py with calculate(x) -> x*2, package/mod_c.py with format_res(v) -> f'VAL:{v}', and package/mod_a.py that imports both and exposes run(x).",
+      "tools": [
+        "Write",
+        "Edit",
+        "Read"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "package/mod_a.py",
+          "package/mod_b.py",
+          "package/mod_c.py"
+        ],
+        "file_contains": {
+          "package/mod_a.py": [
+            "from .mod_b import",
+            "from .mod_c import",
+            "def run("
+          ],
+          "package/mod_b.py": [
+            "def calculate("
+          ],
+          "package/mod_c.py": [
+            "def format_res("
+          ]
+        },
+        "returncode": 0
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "workload",
+      "multi-file",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-A02-REFACTOR",
+    "dimension": "A",
+    "category": "refactoring",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "C"
+    ],
+    "tier": "standard",
+    "title": "Symbol Renaming Across Call Sites",
+    "description": "Rename public function `process_payment` to `execute_transaction` across service.py, handler.py, and test_service.py without breaking signature.",
+    "setup": {
+      "files": {
+        "service.py": "def process_payment(account_id: str, amount_cents: int) -> bool:\n    return amount_cents > 0\n",
+        "handler.py": "from service import process_payment\n\ndef handle_req(acct, amt):\n    return process_payment(acct, amt)\n",
+        "test_service.py": "from service import process_payment\n\ndef test_payment():\n    assert process_payment('acc_1', 500) is True\n"
+      }
+    },
+    "input": {
+      "prompt": "Refactor: rename process_payment to execute_transaction in service.py and all usages in handler.py and test_service.py.",
+      "tools": [
+        "Edit",
+        "Read",
+        "Grep"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "file_contains": {
+          "service.py": [
+            "def execute_transaction("
+          ],
+          "handler.py": [
+            "execute_transaction(acct, amt)"
+          ],
+          "test_service.py": [
+            "execute_transaction('acc_1', 500)"
+          ]
+        },
+        "file_not_contains": {
+          "service.py": [
+            "process_payment"
+          ],
+          "handler.py": [
+            "process_payment"
+          ],
+          "test_service.py": [
+            "process_payment"
+          ]
+        },
+        "returncode": 0
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "workload",
+      "refactoring",
+      "ast"
+    ]
+  },
+  {
+    "id": "SCN-A03-TESTFIX",
+    "dimension": "A",
+    "category": "test-fixes",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "C"
+    ],
+    "tier": "standard",
+    "title": "Diagnosis and Fix of Off-By-One Slice Bug",
+    "description": "Execute failing test suite, diagnose off-by-one boundary failure in paginate(), and fix source file until tests pass.",
+    "setup": {
+      "files": {
+        "paginator.py": "def paginate(items, page, page_size):\n    # Buggy implementation: skips last item\n    start = (page - 1) * page_size\n    end = start + page_size - 1\n    return items[start:end]\n",
+        "test_paginator.py": "from paginator import paginate\ndef test_paginator():\n    items = list(range(10))\n    res = paginate(items, 1, 5)\n    assert len(res) == 5, f'Expected 5, got {len(res)}'\n    assert res == [0, 1, 2, 3, 4]\n"
+      }
+    },
+    "input": {
+      "prompt": "Run the tests with `python -m pytest test_paginator.py`. Diagnose the failure and fix paginator.py until tests pass.",
+      "tools": [
+        "Bash",
+        "Read",
+        "Edit"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "file_contains": {
+          "paginator.py": [
+            "start + page_size"
+          ]
+        },
+        "command_succeeds": "python -m pytest test_paginator.py"
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "workload",
+      "test-fixes",
+      "python"
+    ]
+  },
+  {
+    "id": "SCN-A04-DEBUG",
+    "dimension": "A",
+    "category": "debug",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Null Pointer & Unhandled NoneType Remediation",
+    "description": "Fix AttributeError: 'NoneType' object has no attribute 'get' in deep nested dictionary config parser.",
+    "setup": {
+      "files": {
+        "parser.py": "def extract_db_host(cfg):\n    return cfg['database']['connections']['primary']['host']\n",
+        "main.py": "from parser import extract_db_host\nprint(extract_db_host({'database': None}))\n"
+      }
+    },
+    "input": {
+      "prompt": "Run main.py, observe crash, and make extract_db_host resilient against missing or None keys by returning a default 'localhost'.",
+      "tools": [
+        "Bash",
+        "Read",
+        "Edit"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "command_succeeds": "python main.py",
+        "file_contains": {
+          "parser.py": [
+            "localhost"
+          ]
+        }
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "workload",
+      "debug",
+      "resilience"
+    ]
+  },
+  {
+    "id": "SCN-A05-BOMCRLF",
+    "dimension": "A",
+    "category": "bom-crlf",
+    "cross_dimensions": [
+      "A",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "UTF-8 BOM Preservation and CRLF Line Ending Integrity",
+    "description": "Edit a legacy Windows file containing UTF-8 Byte Order Mark (0xEF, 0xBB, 0xBF) and CRLF (\\r\\n), ensuring neither BOM nor line endings are stripped.",
+    "setup": {
+      "files_base64": {
+        "win_config.ini": "77u/W3NldHRpbmdzXQ0KdGltZW91dD0zMA0KZW5hYmxlZD10cnVlDQo="
+      }
+    },
+    "input": {
+      "prompt": "Update win_config.ini to set timeout=60. Preserve existing encoding and line endings exactly.",
+      "tools": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "expected_oracle": {
+      "type": "binary_assertion",
+      "spec": {
+        "starts_with_bytes": [
+          239,
+          187,
+          191
+        ],
+        "contains_bytes": [
+          13,
+          10
+        ],
+        "text_contains": "timeout=60"
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "workload",
+      "windows",
+      "crlf",
+      "bom"
+    ]
+  },
+  {
+    "id": "SCN-A06-GIT",
+    "dimension": "A",
+    "category": "git",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Git Conflict Resolution and Atomic Commit",
+    "description": "Resolve three-way merge conflict markers in app.py, verify git status is clean, and commit with message 'resolve merge conflict'.",
+    "setup": {
+      "git_repo": true,
+      "files": {
+        "app.py": "<<<<<<< HEAD\nPORT = 8080\nDEBUG = True\n=======\nPORT = 9000\nDEBUG = False\n>>>>>>> feature\n"
+      }
+    },
+    "input": {
+      "prompt": "Resolve git conflict in app.py: choose PORT = 8080 and DEBUG = False. Remove conflict markers, stage app.py, and commit.",
+      "tools": [
+        "Read",
+        "Edit",
+        "Bash"
+      ]
+    },
+    "expected_oracle": {
+      "type": "git_state",
+      "spec": {
+        "conflict_markers_absent": "app.py",
+        "clean_working_tree": true,
+        "last_commit_contains": "resolve merge conflict"
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "workload",
+      "git",
+      "conflict"
+    ]
+  },
+  {
+    "id": "SCN-A07-BIGSEARCH",
+    "dimension": "A",
+    "category": "big-search",
+    "cross_dimensions": [
+      "A",
+      "B"
+    ],
+    "tier": "extended",
+    "title": "Scalable Traversal in Large Repository (10,000+ Files)",
+    "description": "Search for specific secret needle string inside a synthetic 10,000 file nested hierarchy without timing out or running out of memory.",
+    "setup": {
+      "generate_nested_files": {
+        "count": 2500,
+        "target": "sub_42/needle.txt",
+        "content": "NEEDLE_KEY_99214"
+      }
+    },
+    "input": {
+      "prompt": "Find the file containing the needle pattern 'NEEDLE_KEY_99214' and write its relative path into found.txt.",
+      "tools": [
+        "Glob",
+        "Grep",
+        "Write"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "found.txt"
+        ],
+        "file_contains": {
+          "found.txt": [
+            "needle.txt"
+          ]
+        }
+      }
+    },
+    "timeout_s": 180,
+    "tags": [
+      "workload",
+      "search",
+      "scale"
+    ]
+  },
+  {
+    "id": "SCN-A08-SHELL",
+    "dimension": "A",
+    "category": "shell",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Complex PowerShell Pipeline and Exit Code Capture",
+    "description": "Execute PowerShell pipeline filtering processes and environment variables, verifying stdout capturing and exit code handling.",
+    "setup": {
+      "files": {
+        "script.ps1": "Write-Output 'PIPE-DATA-ALPHA'; Write-Output 'PIPE-DATA-BETA'\n"
+      }
+    },
+    "input": {
+      "prompt": "Run powershell -ExecutionPolicy Bypass -File script.ps1 | Select-String 'BETA' and save output to result.txt.",
+      "tools": [
+        "Bash",
+        "Write"
+      ]
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "result.txt"
+        ],
+        "file_contains": {
+          "result.txt": [
+            "PIPE-DATA-BETA"
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "workload",
+      "shell",
+      "powershell"
+    ]
+  },
+  {
+    "id": "SCN-A09-LONGSESSION",
+    "dimension": "A",
+    "category": "long-sessions",
+    "cross_dimensions": [
+      "A",
+      "B",
+      "D"
+    ],
+    "tier": "extended",
+    "title": "Multi-Turn Context Rollover & Compaction (30+ Turns)",
+    "description": "Simulate 35 sequential conversational turns building an application incrementally, verifying earlier turn state retention after compaction.",
+    "setup": {
+      "files": {
+        "initial_secret.txt": "ORIGIN_TOKEN_ALPHA_77\n"
+      }
+    },
+    "input": {
+      "prompt": "Recall initial_secret.txt token and write it to final_verify.txt after completing multi-step steps.",
+      "turns_count": 35
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "final_verify.txt"
+        ],
+        "file_contains": {
+          "final_verify.txt": [
+            "ORIGIN_TOKEN_ALPHA_77"
+          ]
+        }
+      }
+    },
+    "timeout_s": 300,
+    "tags": [
+      "workload",
+      "long-sessions",
+      "compaction"
+    ]
+  }
+]

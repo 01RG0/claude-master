@@ -22,8 +22,9 @@ const (
 type PrivacyClass string
 
 const (
-	PrivacyClassInternal PrivacyClass = "internal"
-	PrivacyClassPublic   PrivacyClass = "public"
+	PrivacyClassInternal      PrivacyClass = "internal"
+	PrivacyClassPublic        PrivacyClass = "public"
+	PrivacyClassZeroRetention PrivacyClass = "zero_retention"
 )
 
 // KeyPool holds one API key slot referencing an environment variable.
@@ -118,6 +119,16 @@ type Config struct {
 	Roles *RoleMapping `json:"roles,omitempty"`
 	// Logging enables redacted request logging for traffic capture/tuning.
 	Logging *LoggingConfig `json:"logging,omitempty"`
+	// ToolRescueEnabled controls Tier-2 argument and format rescue (default true).
+	ToolRescueEnabled *bool `json:"tool_rescue_enabled,omitempty"`
+}
+
+// IsToolRescueEnabled returns whether tool rescue is enabled (default true).
+func (c *Config) IsToolRescueEnabled() bool {
+	if c == nil || c.ToolRescueEnabled == nil {
+		return true
+	}
+	return *c.ToolRescueEnabled
 }
 
 // LoggingConfig controls redacted request logging.

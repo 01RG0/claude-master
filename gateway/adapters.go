@@ -34,21 +34,23 @@ type AdapterSpec struct {
 	// that 400 on that shape must downgrade here rather than fail the whole
 	// request. Values: "parts" (default — keep), "text" (placeholder), "drop".
 	ToolImages string `json:"tool_images,omitempty"`
-	// MaxTokens caps outbound max_tokens. 0 = DefaultMaxTokensCap.
-	// Claude Code sends 128000; free OpenAI-compat providers reject that
-	// (groq ≤16384/65536, pooled ≤32000, openrouter context+output overflow)
-	// and the resulting 400 chain is the dominant E2E latency driver.
-	MaxTokens int `json:"max_tokens,omitempty"`
+	// MaxTokens optionally caps outbound max_tokens when declared in adapter spec.
+	// When 0, dynamic per-model limits from ModelLimit registry / probes take effect.
+	MaxTokens    int    `json:"max_tokens,omitempty"`
+	ProviderName string `json:"provider_name,omitempty"`
 }
 
 // DefaultMaxTokensCap is the free-tier-safe outbound max_tokens when the
 // adapter does not set MaxTokens. Chosen to clear groq's tightest live model
 // (qwen/qwen3.8-27b ≤16384) while leaving headroom for tool-use JSON.
-const DefaultMaxTokensCap = 16384
+const DefaultMaxTokensCap = 8192
 
 // EffectiveAdapter returns the provider's spec with documented defaults.
 func EffectiveAdapter(p Provider) AdapterSpec {
 	a := p.Adapter
+	if a.ProviderName == "" {
+		a.ProviderName = p.Name
+	}
 	if a.Dialect == "" {
 		a.Dialect = "openai-chat"
 	}

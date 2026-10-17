@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:bytedance-seed/seed-2-1-turbo",
+  "route_id": "openrouter:bytedance-seed/seed-2-1-turbo",
+  "canonical_id": "bytedance-seed/seed-2-1-turbo-20260810",
+  "provider": "openrouter",
+  "provider_model_id": "bytedance-seed/seed-2-1-turbo",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257756.2497194,
+  "duration_seconds": 12.27,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 2441.72,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "\n         \n\n         \n{\"id\":\"gen-1792257749-wGKYVumSTCgguGzUcC4H\",\"object\":\"chat.completion\",\"created\":1792257749,\"model\":\"bytedance-seed/seed-2-1-turbo\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\",\"refusal\":null,\"reasoning\":\"\\nGot it,7×6 is 42, I'll add it to the tags as requested.\\n\",\"reasoning_details\":[{\"type\":\"reaso"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1566.8,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257755-aBl0W5Fo9dETOmw9CKfA\",\"object\":\"chat.completion\",\"created\":1792257755,\"model\":\"bytedance-seed/seed-2-1-turbo\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"The user wants to check the health of the database service. I'll check the database service.\\n\",\"tool_calls\":[{\""
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 788.51,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257758-8hYMIiRvsutq2qXw24QX\",\"object\":\"chat.completion\",\"created\":1792257758,\"model\":\"bytedance-seed/seed-2-1-turbo\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":\":\",\"refusal\":null,\"reasoning\":\"The user wants to check the status of two services: 'database' and 'redis' simultaneously.  I will make parallel call"
+    }
+  }
+}

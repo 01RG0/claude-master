@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_mistral:ministral-8b-latest",
+  "route_id": "mistral:ministral-8b-latest",
+  "canonical_id": "mistralai/ministral-8b-instruct",
+  "provider": "mistral",
+  "provider_model_id": "ministral-8b-latest",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257478.1864047,
+  "duration_seconds": 6.41,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 678.75,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"45d52534f33b483585ff3b66dd04383f\",\"created\":1792257477,\"model\":\"ministral-8b-latest\",\"usage\":{\"prompt_tokens\":27,\"total_tokens\":36,\"completion_tokens\":9,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"tool_calls\":null,\"content\":\"<answer>42</answer>\"}}]}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 708.05,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"c6583f9d1c7c471d90f355c655b559fb\",\"created\":1792257480,\"model\":\"ministral-8b-latest\",\"usage\":{\"prompt_tokens\":77,\"total_tokens\":88,\"completion_tokens\":11,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"vdxw7Ki2p\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\""
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1020.58,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"47da6de46ed44893bd798d8b573ea73c\",\"created\":1792257483,\"model\":\"ministral-8b-latest\",\"usage\":{\"prompt_tokens\":75,\"total_tokens\":96,\"completion_tokens\":21,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"IkKHxnUUb\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\""
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_cerebras:qwen-3.8-27b",
+  "route_id": "cerebras:qwen-3.8-27b",
+  "canonical_id": "qwen/qwen3.8-27b",
+  "provider": "cerebras",
+  "provider_model_id": "qwen-3.8-27b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_402",
+  "timestamp": 1792257640.9290164,
+  "duration_seconds": 2.33,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 402,
+      "latency_ms": 333.37,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"message\":\"Payment required to access this resource. Visit your billing tab.\",\"type\":\"payment_required_error\",\"param\":\"quota\",\"code\":\"payment_required\"}"
+    }
+  }
+}

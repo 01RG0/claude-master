@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:cohere-transcribe-03-2026",
+  "route_id": "cohere:cohere-transcribe-03-2026",
+  "canonical_id": "cohere/cohere-transcribe",
+  "provider": "cohere",
+  "provider_model_id": "cohere-transcribe-03-2026",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257520.500304,
+  "duration_seconds": 5.11,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 400,
+      "latency_ms": 542.05,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"id\":\"e1cc68a2-25dc-437d-afb7-d7e1ff414c81\",\"message\":\"invalid request: model 'cohere-transcribe-03-2026' is not compatible with this API\"}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 400,
+      "latency_ms": 291.85,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"id\":\"d1623c9a-9f29-4197-b056-a8ff8c6b23ac\",\"message\":\"invalid request: model 'cohere-transcribe-03-2026' is not compatible with this API\"}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 269.49,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"id\":\"35cbc216-167c-4a2a-8d60-d34d23215366\",\"message\":\"invalid request: model 'cohere-transcribe-03-2026' is not compatible with this API\"}"
+    }
+  }
+}

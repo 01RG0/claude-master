@@ -160,6 +160,52 @@ describe("Screens Rendering in JSDOM", () => {
     expect(el.innerHTML).toContain("GROQ");
   });
 
+  it("renders ProvidersScreen with active adaptive cooldowns, learned duration and provenance badge", () => {
+    store.setCooldownEntries([
+      {
+        key_hash: "a428a1ce",
+        model: "llama-3.3-70b",
+        status: "rate_limited",
+        state: "rate_limited",
+        cooldown_until: new Date(Date.now() + 45000).toISOString(),
+        backoff_s: 45,
+        remaining_s: 45,
+        duration_ms: 45000,
+        learned_backoff_ms: 45000,
+        failure_count: 2,
+        provenance: "retry_after_header",
+        last_tested_at: new Date().toISOString(),
+      },
+      {
+        key_hash: "653ab28d",
+        model: "*",
+        status: "dead",
+        state: "dead",
+        cooldown_until: new Date(Date.now() + 300000).toISOString(),
+        backoff_s: 300,
+        remaining_s: 300,
+        duration_ms: 300000,
+        learned_backoff_ms: 300000,
+        failure_count: 1,
+        provenance: "status_code_default",
+        last_tested_at: new Date().toISOString(),
+      },
+    ]);
+
+    const el = document.createElement("div");
+    const screen = new ProvidersScreen(el);
+    screen.render();
+    expect(el.innerHTML).toContain("Upstream Providers");
+    expect(el.innerHTML).toContain("Active Circuit Breakers &amp; Route Cooldowns");
+    expect(el.innerHTML).toContain("a428a1ce");
+    expect(el.innerHTML).toContain("rate_limited");
+    expect(el.innerHTML).toContain("45s remaining");
+    expect(el.innerHTML).toContain("45s (45000ms)");
+    expect(el.innerHTML).toContain("Retry-After Header");
+    expect(el.innerHTML).toContain("dead");
+    expect(el.innerHTML).toContain("Status Code Default");
+  });
+
   it("renders ModelsScreen with capability matrix and provenance badges", () => {
     const el = document.createElement("div");
     const screen = new ModelsScreen(el);

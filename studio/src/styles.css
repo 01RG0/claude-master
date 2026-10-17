@@ -746,6 +746,41 @@ html, body, #app {
 .prov-badge.measured { background: #064e3b; color: #6ee7b7; }
 .prov-badge.learned { background: #4c1d95; color: #c4b5fd; }
 .prov-badge.override { background: #78350f; color: #fde047; border: 1px solid #eab308; }
+.prov-badge.retry_after_header { background: #0369a1; color: #bae6fd; }
+.prov-badge.adaptive_backoff { background: #581c87; color: #f5d0fe; }
+.prov-badge.probe_recovery { background: #047857; color: #a7f3d0; }
+.prov-badge.status_code_default { background: #374151; color: #d1d5db; }
+
+/* Cooldown state badges */
+.state-badge.state-rate_limited { background: #78350f; color: #fde68a; }
+.state-badge.state-exhausted { background: #581c87; color: #f5d0fe; }
+.state-badge.state-dead { background: #7f1d1d; color: #fecaca; }
+.state-badge.state-restricted { background: #831843; color: #fbcfe8; }
+.state-badge.state-probing { background: #0e7490; color: #cffafe; }
+.state-badge.state-active { background: var(--ok-bg); color: var(--ok); }
+
+/* Cooldown tracker card */
+.cooldown-card {
+  margin-bottom: 20px;
+}
+.cooldown-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.cooldown-title-group h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+}
+.cooldown-empty-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-subtle);
+  border-radius: 6px;
+}
 
 .provenance-legend-bar {
   display: flex;

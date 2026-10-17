@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_xai:grok-3",
+  "route_id": "xai:grok-3",
+  "canonical_id": "xai/grok",
+  "provider": "xai",
+  "provider_model_id": "grok-3",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257669.7865784,
+  "duration_seconds": 5.24,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 400,
+      "latency_ms": 473.72,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"code\":\"invalid-argument\",\"error\":\"Incorrect API key provided. You can obtain an API key from https://console.x.ai.\"}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 400,
+      "latency_ms": 309.29,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"code\":\"invalid-argument\",\"error\":\"Incorrect API key provided. You can obtain an API key from https://console.x.ai.\"}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 458.58,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"code\":\"invalid-argument\",\"error\":\"Incorrect API key provided. You can obtain an API key from https://console.x.ai.\"}"
+    }
+  }
+}

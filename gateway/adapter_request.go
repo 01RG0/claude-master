@@ -28,20 +28,49 @@ type AnthropicRequest struct {
 	Metadata      map[string]interface{} `json:"metadata,omitempty"`
 }
 
-// PrivacyClass extracts the "privacy_class" field from metadata if present.
+// PrivacyClass extracts the "privacy_class", "privacy_policy", or "require_zero_retention" field from metadata if present.
 func (r *AnthropicRequest) PrivacyClass() PrivacyClass {
-	if r.Metadata == nil {
+	if r == nil || r.Metadata == nil {
 		return PrivacyClassPublic
+	}
+	if reqZR, ok := r.Metadata["require_zero_retention"].(bool); ok && reqZR {
+		return PrivacyClassZeroRetention
+	}
+	if pp, ok := r.Metadata["privacy_policy"].(string); ok && strings.ToLower(strings.TrimSpace(pp)) == string(PrivacyZeroRetention) {
+		return PrivacyClassZeroRetention
 	}
 	v, ok := r.Metadata["privacy_class"]
 	if !ok {
 		return PrivacyClassPublic
 	}
 	s, _ := v.(string)
-	if strings.ToLower(s) == string(PrivacyClassInternal) {
+	s = strings.ToLower(strings.TrimSpace(s))
+	if s == string(PrivacyClassZeroRetention) {
+		return PrivacyClassZeroRetention
+	}
+	if s == string(PrivacyClassInternal) {
 		return PrivacyClassInternal
 	}
 	return PrivacyClassPublic
+}
+
+// RequiresZeroRetention returns whether the request strictly mandates zero data retention.
+func (r *AnthropicRequest) RequiresZeroRetention() bool {
+	if r == nil {
+		return false
+	}
+	if r.PrivacyClass() == PrivacyClassZeroRetention {
+		return true
+	}
+	if r.Metadata != nil {
+		if reqZR, ok := r.Metadata["require_zero_retention"].(bool); ok && reqZR {
+			return true
+		}
+		if pp, ok := r.Metadata["privacy_policy"].(string); ok && strings.ToLower(strings.TrimSpace(pp)) == string(PrivacyZeroRetention) {
+			return true
+		}
+	}
+	return false
 }
 
 // AnthropicMessage is a single turn in the conversation.
@@ -184,7 +213,8 @@ func TranslateRequest(ar *AnthropicRequest, upstreamModel string, adapter Adapte
 		})
 	}
 
-	mt, clampNote := clampMaxTokens(ar.MaxTokens, adapter)
+	estimatedInput := EstimateInputTokens(ar)
+	mt, clampNote := clampMaxTokens(ar.MaxTokens, upstreamModel, adapter, estimatedInput)
 	if clampNote != "" {
 		notes = append(notes, clampNote)
 	}
@@ -209,19 +239,54 @@ func TranslateRequest(ar *AnthropicRequest, upstreamModel string, adapter Adapte
 	return or, notes
 }
 
-// clampMaxTokens enforces the adapter (or default) outbound max_tokens cap.
-// Claude Code routinely requests 128000; free providers 400 on that and the
-// failover chain burns tens of seconds per turn.
-func clampMaxTokens(requested int, adapter AdapterSpec) (int, string) {
-	capN := adapter.MaxTokens
-	if capN <= 0 {
-		capN = DefaultMaxTokensCap
+// EstimateInputTokens estimates the prompt token count using chars/4 heuristic.
+func EstimateInputTokens(ar *AnthropicRequest) int {
+	if ar == nil {
+		return 0
 	}
+	chars := 0
+	if len(ar.System) > 0 {
+		chars += len(ar.System)
+	}
+	for _, m := range ar.Messages {
+		chars += len(m.Content)
+	}
+	for _, t := range ar.Tools {
+		chars += len(t.Name) + len(t.Description) + len(t.InputSchema)
+	}
+	return (chars + 3) / 4
+}
+
+// clampMaxTokens dynamically enforces per-model limits derived from
+// measured probes, declared specs, or adapter defaults.
+// Formula: min(requested, model.MaxOutputTokens, model.ContextWindow - estimatedInput)
+func clampMaxTokens(requested int, upstreamModel string, adapter AdapterSpec, estimatedInput int) (int, string) {
 	if requested <= 0 {
 		return requested, ""
 	}
-	if requested > capN {
-		return capN, fmt.Sprintf("max_tokens clamped %d->%d (provider cap)", requested, capN)
+	limit := LookupModelLimit(adapter.ProviderName, upstreamModel, adapter)
+
+	effectiveCap := requested
+	if limit.MaxOutputTokens > 0 && limit.MaxOutputTokens < effectiveCap {
+		effectiveCap = limit.MaxOutputTokens
+	}
+	if limit.ContextWindow > 0 {
+		avail := limit.ContextWindow - estimatedInput
+		if avail < 1 {
+			avail = 1
+		}
+		if avail < effectiveCap {
+			effectiveCap = avail
+		}
+	}
+	// If adapter has an explicit MaxTokens override that is tighter:
+	if adapter.MaxTokens > 0 && adapter.MaxTokens < effectiveCap {
+		effectiveCap = adapter.MaxTokens
+		return effectiveCap, fmt.Sprintf("max_tokens clamped %d->%d (provenance: adapter spec)", requested, effectiveCap)
+	}
+
+	if effectiveCap < requested {
+		return effectiveCap, fmt.Sprintf("max_tokens clamped %d->%d (provenance: %s)", requested, effectiveCap, limit.Provenance())
 	}
 	return requested, ""
 }
@@ -554,6 +619,18 @@ func openAIContentText(v interface{}) string {
 			return ""
 		}
 		return *c
+	case json.RawMessage:
+		var s string
+		if err := json.Unmarshal(c, &s); err == nil {
+			return s
+		}
+		return string(c)
+	case []byte:
+		var s string
+		if err := json.Unmarshal(c, &s); err == nil {
+			return s
+		}
+		return string(c)
 	case []interface{}:
 		var parts []string
 		for _, p := range c {

@@ -25,6 +25,7 @@ import type {
   TaskBenchmark,
   TaskType,
   TestCaseResult,
+  RouteCooldownEntry,
 } from "./types.js";
 
 export class ApiClient {
@@ -77,6 +78,20 @@ export class ApiClient {
         routing: { type: "object" },
       },
     };
+  }
+
+  // Cooldown & Circuit Breakers
+  async fetchCooldownEntries(): Promise<RouteCooldownEntry[]> {
+    try {
+      const res = await fetch(`${this.baseUrl}/admin/cooldown`, { signal: AbortSignal.timeout(2000) });
+      if (res.ok) {
+        const data = await res.json();
+        return data.entries || [];
+      }
+    } catch {
+      // offline
+    }
+    return [];
   }
 
   // Providers & Keys

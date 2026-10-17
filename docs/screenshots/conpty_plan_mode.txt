@@ -1,0 +1,11 @@
+Claude Code's fullscreen renderer didn't finish starting last time on this machine, so this launch is using the classic
+renderer. It will try fullscreen again next launch; /tui default keeps the classic renderer.
+[<u[>5u[>4;2m ▐▛███▛█   Claude Code v2.1.296
+▝▜██████▀  Opus 5.5 · API Usage Billing
+ ▝▝   ▝▝   D:\pRoG\claude-master\scratch\conpty_verification\session\repo
+
+
+
+  Try "fix typecheck errors"
+❯ Try "fix typecheck errors"
+  ⏸ plan mode on (shift+tab to cycle) · ← for agents                                                ◐ medium · /effort

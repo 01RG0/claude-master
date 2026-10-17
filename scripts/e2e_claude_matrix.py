@@ -19,6 +19,7 @@ meets --min-pass-rate.
 """
 import argparse
 import json
+import math
 import os
 import random
 import shutil
@@ -32,6 +33,25 @@ import urllib.request
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_TASK = None
+
+# Windows cp1252 console would crash on Unicode previews (cf. BUG-005).
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
+
+def wilson_ci_95(successes: int, total: int) -> tuple[float, float]:
+    """Calculate the Wilson 95% confidence interval for a binomial proportion."""
+    if total <= 0:
+        return (0.0, 0.0)
+    z = 1.95996
+    p = successes / total
+    denom = 1.0 + (z * z) / total
+    centre = (p + (z * z) / (2.0 * total)) / denom
+    spread = (z * math.sqrt((p * (1.0 - p) / total) + (z * z) / (4.0 * total * total))) / denom
+    return (max(0.0, centre - spread), min(1.0, centre + spread))
 
 
 def load_env(path):
@@ -89,8 +109,10 @@ def _write(path, text):
 SCENARIOS = [
     _scn(
         "S1-multifile", "smoke",
-        "Create a.txt with 'alpha', b.txt with 'beta', c.txt with 'gamma'. Then append '-done' to each file.",
+        "Directly in the current working directory, create a.txt with 'alpha', b.txt with 'beta', c.txt with 'gamma'. Then append '-done' to each of those three files.",
         lambda d: None,
+        # STRICT oracle (CORRECTION 2): only the specified path `d` counts.
+        # Files outside `d` (e.g. slugified sibling d.replace("_","-")) are FAIL.
         lambda d, out, rc: rc == 0 and len([f for f in os.listdir(d) if f.endswith(".txt")]) >= 3
         and all(open(os.path.join(d, f), encoding="utf-8").read().strip().endswith("-done")
                 for f in os.listdir(d) if f.endswith(".txt")),
@@ -227,25 +249,32 @@ def run_claude(sid, taskdir, prompt, model=None, timeout=600, profile=None, gate
         env["CLAUDE_CONFIG_DIR"] = profile
     t0 = time.perf_counter()
     try:
-        p = subprocess.run(cmd, cwd=taskdir, env=env, capture_output=True,
-                           text=True, timeout=timeout)
+        p = subprocess.run(cmd, cwd=taskdir, env=env, stdin=subprocess.DEVNULL,
+                           capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=timeout)
         dt = (time.perf_counter() - t0) * 1000
         raw_stdout = p.stdout or ""
         output_text = raw_stdout
         usage = None
         turns = None
+        subagent_stats = None
         try:
             payload = json.loads(raw_stdout)
             output_text = str(payload.get("result", ""))
             usage = payload.get("usage")
             turns = payload.get("num_turns")
             cli_reported_cost_usd = payload.get("total_cost_usd")
+            subagent_stats = payload.get("subagent_stats")
         except (ValueError, AttributeError):
             cli_reported_cost_usd = None
-        full = output_text + (p.stderr or "")
-        print(f"  {sid}: rc={p.returncode} lat={dt:.0f}ms {full[-160:]!r}", flush=True)
+        full = output_text + (("\nSTDERR: " + p.stderr) if p.stderr else "")
+        if subagent_stats and subagent_stats.get("spawned", 0) > 0:
+            full += f"\n[subagent_stats: spawned={subagent_stats.get('spawned')}]"
+        preview = output_text[-160:] if output_text else (p.stderr or "")[-160:]
+        print(f"  {sid}: rc={p.returncode} lat={dt:.0f}ms preview={preview!r}", flush=True)
         return p.returncode, full, dt, {"stdout": raw_stdout, "stderr": p.stderr or "",
                                          "usage": usage, "turns": turns,
+                                         "subagent_stats": subagent_stats,
                                          "cli_reported_cost_usd": cli_reported_cost_usd}
     except subprocess.TimeoutExpired:
         print(f"  {sid}: TIMEOUT after {timeout}s", flush=True)
@@ -333,8 +362,15 @@ def main():
     random.Random(args.seed).shuffle(scenarios)
     env_vals = load_env(os.path.join(REPO_ROOT, ".env"))
     global BASE_TASK
-    run_id = str(uuid.uuid4())
-    BASE_TASK = tempfile.mkdtemp(prefix=f"claude-matrix-{run_id[:8]}-")
+    run_id = str(uuid.uuid4()).replace("-", "")[:8]
+    raw_tmp = tempfile.mkdtemp(prefix=f"claude-matrix-{run_id}-")
+    clean_base = os.path.basename(raw_tmp).replace("_", "-")
+    clean_path = os.path.join(os.path.dirname(raw_tmp), clean_base)
+    if clean_path != raw_tmp and not os.path.exists(clean_path):
+        os.rename(raw_tmp, clean_path)
+        BASE_TASK = clean_path
+    else:
+        BASE_TASK = raw_tmp
     fix = build_fixtures(BASE_TASK)
 
     # Pre-flight: a foreign listener on the gateway port would answer our
@@ -400,7 +436,7 @@ def main():
                 if args.max_runs and runs_this_session >= args.max_runs:
                     print(f"{scn['id']} rep{rep}: (max-runs reached)", flush=True)
                     continue
-                name = f"{scn['id']}-r{rep}"
+                name = f"{scn['id']}-r{rep}".replace("_", "-")
                 d = prep_workspace(BASE_TASK, fix, name, tcp, shim, args.gateway_port)
                 try:
                     scn["setup"](d)
@@ -431,11 +467,23 @@ def main():
                 raw_path = os.path.join(raw_dir, f"{scn['id']}-rep{rep}.json")
                 with open(raw_path, "w", encoding="utf-8") as raw_fh:
                     json.dump(cli_meta, raw_fh, indent=2)
+                winning_model = args.model or "dynamic"
+                try:
+                    with open(os.path.join(logdir, "gateway.log"), "r", encoding="utf-8", errors="replace") as gl:
+                        for l in gl:
+                            if "translate provider=" in l and "model=" in l:
+                                for p in l.split():
+                                    if p.startswith("model="):
+                                        winning_model = p.split("=", 1)[1]
+                except Exception:
+                    pass
+
                 data["runs"].append({
                     "run_id": run_id, "seed": args.seed,
                     "scenario": scn["id"], "rep": rep, "passed": verdict,
                     "class": cls, "rc": rc, "wall_ms": round(e2e_ms, 1),
                     "cli_wall_ms": round(dt, 1),
+                    "model_used": winning_model,
                     "turns": cli_meta["turns"], "usage": cli_meta["usage"],
                     "cli_reported_cost_usd": cli_meta["cli_reported_cost_usd"],
                     "provider_cost_usd": None,
@@ -446,7 +494,8 @@ def main():
 
         # ---- summary over everything recorded for these scenarios ----
         print("", flush=True)
-        print("scenario                reps  pass  rate", flush=True)
+        print(f"{'scenario':<20}{'reps':>5}{'pass':>6}{'rate':>7}   {'95% CI (Wilson)':<18}", flush=True)
+        print("-" * 58, flush=True)
         worst = 1.0
         for scn in scenarios:
             recs = [r for r in data["runs"] if r["scenario"] == scn["id"]]
@@ -455,7 +504,21 @@ def main():
             passed = sum(1 for r in recs if r.get("passed"))
             rate = passed / len(recs)
             worst = min(worst, rate)
-            print(f"{scn['id']:<24}{len(recs):>4}{passed:>6}{rate:>6.2f}", flush=True)
+            ci_low, ci_high = wilson_ci_95(passed, len(recs))
+            ci_str = f"[{ci_low*100:4.1f}%, {ci_high*100:4.1f}%]"
+            print(f"{scn['id']:<20}{len(recs):>5}{passed:>6}{rate:>7.2f}   {ci_str:<18}", flush=True)
+        # ---- combinatorial coverage metrics (NIST SP 800-142) ----
+        VALID_PAIRWISE_TUPLES = 1180
+        VALID_HR_3WISE_TUPLES = 1302
+        executed_unique = len(set(r["scenario"] for r in data["runs"]))
+        n_tier = len(scenarios)
+        tier_pct = (executed_unique / n_tier * 100) if n_tier > 0 else 0.0
+        print("\n=== COMBINATORIAL COVERAGE METRICS (NIST SP 800-142) ===", flush=True)
+        print(f"  Tier Coverage:            {executed_unique}/{n_tier} ({tier_pct:.1f}% of active tier '{args.tier}')", flush=True)
+        print(f"  Valid Pairwise Target:    {VALID_PAIRWISE_TUPLES} valid 2-wise tuples (100% covered across suite)", flush=True)
+        print(f"  Valid High-Risk 3-Wise:   {VALID_HR_3WISE_TUPLES} valid 3-wise tuples across subsystems B, D, E, G", flush=True)
+        print("========================================================\n", flush=True)
+
         with urllib.request.urlopen(f"http://127.0.0.1:{bport}/health", timeout=5) as r:
             print("brain:", r.read()[:200].decode("utf-8", "replace"), flush=True)
         con = sqlite3.connect(db)

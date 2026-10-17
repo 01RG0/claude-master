@@ -1,0 +1,215 @@
+{
+  "version": "2.0.0",
+  "generated_at": "2026-10-14T21:48:53.147060+00:00",
+  "methodology": {
+    "generator": "Constrained Greedy Covering Array with IPOG Tuple Extension",
+    "t_way_base": 2,
+    "t_way_high_risk": 3,
+    "high_risk_dimensions": [
+      "B",
+      "D",
+      "E",
+      "G"
+    ],
+    "random_seed": 20261014,
+    "scientific_reference": "NIST Special Publication 800-142 (Practical Combinatorial Testing)"
+  },
+  "combinatorial_metrics": {
+    "pairwise_t2": {
+      "theoretical_tuples": 1188,
+      "invalid_tuples_removed": 8,
+      "total_valid_tuples": 1180,
+      "covered_valid_tuples": 1180,
+      "real_coverage_pct": 100.0
+    },
+    "high_risk_3wise_t3": {
+      "high_risk_dimensions": [
+        "B",
+        "D",
+        "E",
+        "G"
+      ],
+      "dimension_triples": [
+        "B-D-E",
+        "B-D-G",
+        "B-E-G",
+        "D-E-G"
+      ],
+      "theoretical_tuples": 1302,
+      "invalid_tuples_removed": 0,
+      "total_valid_tuples": 1302,
+      "covered_valid_tuples": 1302,
+      "real_coverage_pct": 100.0
+    },
+    "all_3wise_t3": {
+      "theoretical_tuples": 14778,
+      "total_valid_tuples": 14476,
+      "covered_valid_tuples": 6304,
+      "real_coverage_pct": 43.5479
+    }
+  },
+  "pair_breakdown": {
+    "A-B": {
+      "theoretical": 126,
+      "valid": 126,
+      "invalid": 0
+    },
+    "A-C": {
+      "theoretical": 45,
+      "valid": 45,
+      "invalid": 0
+    },
+    "A-D": {
+      "theoretical": 45,
+      "valid": 45,
+      "invalid": 0
+    },
+    "A-E": {
+      "theoretical": 63,
+      "valid": 63,
+      "invalid": 0
+    },
+    "A-F": {
+      "theoretical": 45,
+      "valid": 45,
+      "invalid": 0
+    },
+    "A-G": {
+      "theoretical": 36,
+      "valid": 36,
+      "invalid": 0
+    },
+    "A-H": {
+      "theoretical": 36,
+      "valid": 36,
+      "invalid": 0
+    },
+    "B-C": {
+      "theoretical": 70,
+      "valid": 67,
+      "invalid": 3
+    },
+    "B-D": {
+      "theoretical": 70,
+      "valid": 70,
+      "invalid": 0
+    },
+    "B-E": {
+      "theoretical": 98,
+      "valid": 98,
+      "invalid": 0
+    },
+    "B-F": {
+      "theoretical": 70,
+      "valid": 69,
+      "invalid": 1
+    },
+    "B-G": {
+      "theoretical": 56,
+      "valid": 56,
+      "invalid": 0
+    },
+    "B-H": {
+      "theoretical": 56,
+      "valid": 56,
+      "invalid": 0
+    },
+    "C-D": {
+      "theoretical": 25,
+      "valid": 24,
+      "invalid": 1
+    },
+    "C-E": {
+      "theoretical": 35,
+      "valid": 35,
+      "invalid": 0
+    },
+    "C-F": {
+      "theoretical": 25,
+      "valid": 25,
+      "invalid": 0
+    },
+    "C-G": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "C-H": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "D-E": {
+      "theoretical": 35,
+      "valid": 35,
+      "invalid": 0
+    },
+    "D-F": {
+      "theoretical": 25,
+      "valid": 24,
+      "invalid": 1
+    },
+    "D-G": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "D-H": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "E-F": {
+      "theoretical": 35,
+      "valid": 33,
+      "invalid": 2
+    },
+    "E-G": {
+      "theoretical": 28,
+      "valid": 28,
+      "invalid": 0
+    },
+    "E-H": {
+      "theoretical": 28,
+      "valid": 28,
+      "invalid": 0
+    },
+    "F-G": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "F-H": {
+      "theoretical": 20,
+      "valid": 20,
+      "invalid": 0
+    },
+    "G-H": {
+      "theoretical": 16,
+      "valid": 16,
+      "invalid": 0
+    }
+  },
+  "hr_triple_breakdown": {
+    "B-D-E": {
+      "theoretical": 490,
+      "valid": 490,
+      "invalid": 0
+    },
+    "B-D-G": {
+      "theoretical": 280,
+      "valid": 280,
+      "invalid": 0
+    },
+    "B-E-G": {
+      "theoretical": 392,
+      "valid": 392,
+      "invalid": 0
+    },
+    "D-E-G": {
+      "theoretical": 140,
+      "valid": 140,
+      "invalid": 0
+    }
+  }
+}

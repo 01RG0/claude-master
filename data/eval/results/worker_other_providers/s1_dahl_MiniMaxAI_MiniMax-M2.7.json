@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_dahl:MiniMaxAI/MiniMax-M2.7",
+  "route_id": "dahl:MiniMaxAI/MiniMax-M2.7",
+  "canonical_id": "minimax/minimax-2.7",
+  "provider": "dahl",
+  "provider_model_id": "MiniMaxAI/MiniMax-M2.7",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_522_cloudflare_timeout",
+  "timestamp": 1792257741.909983,
+  "duration_seconds": 0.68,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 522,
+      "latency_ms": 682.71,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "error code: 522\n"
+    }
+  }
+}

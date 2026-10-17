@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_mistral:mistral-code-latest",
+  "route_id": "mistral:mistral-code-latest",
+  "canonical_id": "mistralai/mistral-coder",
+  "provider": "mistral",
+  "provider_model_id": "mistral-code-latest",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257823.6454673,
+  "duration_seconds": 6.27,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 354.54,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"0ef97d3f62b04f2b9a8132d84bf876e5\",\"created\":1792257823,\"model\":\"mistral-code-latest\",\"usage\":{\"prompt_tokens\":27,\"total_tokens\":36,\"completion_tokens\":9,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"tool_calls\":null,\"content\":\"<answer>42</answer>\"}}]}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 443.85,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"ea5d2557c5404ccdb0c97d86980c213c\",\"created\":1792257825,\"model\":\"mistral-code-latest\",\"usage\":{\"prompt_tokens\":77,\"total_tokens\":88,\"completion_tokens\":11,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"5HY6o79ss\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\""
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1473.33,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"id\":\"f5f266b5a3ca4f6e9a33a8fe3e0071ba\",\"created\":1792257828,\"model\":\"mistral-code-latest\",\"usage\":{\"prompt_tokens\":75,\"total_tokens\":191,\"completion_tokens\":116,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"tool_calls\":null,\"content\":\"I'm sorry, but I currently don't have the capability to check the status of services"
+    }
+  }
+}

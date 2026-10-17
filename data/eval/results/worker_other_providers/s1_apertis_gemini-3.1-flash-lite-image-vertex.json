@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_apertis:gemini-3.1-flash-lite-image-vertex",
+  "route_id": "apertis:gemini-3.1-flash-lite-image-vertex",
+  "canonical_id": "google/gemini-3.1-flash",
+  "provider": "apertis",
+  "provider_model_id": "gemini-3.1-flash-lite-image-vertex",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_404",
+  "timestamp": 1792257774.4984965,
+  "duration_seconds": 1.52,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 404,
+      "latency_ms": 1515.84,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"code\":\"model_not_found\",\"message\":\"The model 'gemini-3.1-flash-lite-image-vertex' does not exist or you do not have access to it.\",\"type\":\"invalid_request_error\"}}"
+    }
+  }
+}

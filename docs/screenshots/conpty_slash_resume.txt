@@ -1,0 +1,21 @@
+ ▐▛███▛█   Claude Code v2.1.296
+▝▜██████▀  Opus 5.5 · API Usage Billing
+ ▝▝   ▝▝   D:\pRoG\claude-master\scratch\conpty_verification\session\repo
+
+
+❯ /help
+  ⎿  Help dialog dismissed
+
+❯ /compact
+  ⎿  Not enough messages to compact.
+
+❯ /config
+  ⎿  Config dialog dismissed
+
+
+    Show tips                                   true
+❯
+
+    Thinking mode                               true
+  ⏵⏵ auto mode on (shift+tab to cycle) · ← for agents                                               ◐ medium · /effort
+    Prompt suggestions                          true

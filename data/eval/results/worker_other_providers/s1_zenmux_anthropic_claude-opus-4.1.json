@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_zenmux:anthropic/claude-opus-4.1",
+  "route_id": "zenmux:anthropic/claude-opus-4.1",
+  "canonical_id": "anthropic/claude-4.1-opus-20250805",
+  "provider": "zenmux",
+  "provider_model_id": "anthropic/claude-opus-4.1",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_402",
+  "timestamp": 1792257766.375529,
+  "duration_seconds": 1.17,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 402,
+      "latency_ms": 1169.07,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"code\":\"402\",\"type\":\"reject_no_credit\",\"message\":\"Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: d8539bc9abfb4e5282c2ae5673d499e5)\"}}"
+    }
+  }
+}

@@ -244,6 +244,8 @@ class ModelInfo(BaseModel):
     latency_p50_ms: float = 0.0
     is_pinned: bool = False
     is_banned: bool = False
+    privacy_policy: Optional[str] = None
+    zero_retention_compliant: Optional[bool] = None
 
 
 class ModelPinBanRequest(BaseModel):
@@ -366,6 +368,7 @@ class PrivacyConfigResponse(BaseModel):
     secret_redaction_patterns: List[str]
     pii_redaction_patterns: List[str]
     guard_paths: List[str]
+    retention_evidence: Optional[Dict[str, Any]] = None
 
 
 class PrivacyUpdateRequest(BaseModel):

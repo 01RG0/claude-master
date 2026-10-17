@@ -69,11 +69,14 @@ func looksLikeCodeOrDiff(s string) bool {
 }
 
 // EffectivePrivacyClass returns the privacy class for routing. Explicit
-// metadata.internal always wins; otherwise content heuristics may elevate
-// a request to internal.
+// metadata zero_retention takes highest precedence, followed by metadata.internal,
+// and finally content heuristics that elevate a request to internal.
 func EffectivePrivacyClass(ar *AnthropicRequest) PrivacyClass {
 	if ar == nil {
 		return PrivacyClassPublic
+	}
+	if ar.RequiresZeroRetention() || ar.PrivacyClass() == PrivacyClassZeroRetention {
+		return PrivacyClassZeroRetention
 	}
 	if ar.PrivacyClass() == PrivacyClassInternal {
 		return PrivacyClassInternal

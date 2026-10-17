@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_aihubmix:gemini-4-argon",
+  "route_id": "aihubmix:gemini-4-argon",
+  "canonical_id": "google/gemini-4-argon",
+  "provider": "aihubmix",
+  "provider_model_id": "gemini-4-argon",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_401",
+  "timestamp": 1792257762.491675,
+  "duration_seconds": 0.28,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 401,
+      "latency_ms": 276.68,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"invalid key: gPvSe2 (tid: 202610171722489352276064181636)\",\"type\":\"Aihubmix_api_error\"}}"
+    }
+  }
+}

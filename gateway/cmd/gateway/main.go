@@ -31,9 +31,14 @@ func main() {
 	dotenv := flag.String("env-file", "", ".env file to import (default: auto-find repo .env)")
 	flag.Parse()
 
-	loadDotEnv(*dotenv, *configPath)
+	finalConfigPath := *configPath
+	if envCfg := os.Getenv("CLAUDE_MASTER_GATEWAY_CONFIG"); envCfg != "" && finalConfigPath == "gateway/config.json" {
+		finalConfigPath = envCfg
+	}
 
-	cfg, err := gateway.LoadConfig(*configPath)
+	loadDotEnv(*dotenv, finalConfigPath)
+
+	cfg, err := gateway.LoadConfig(finalConfigPath)
 	if err != nil {
 		log.Fatalf("gateway: %v", err)
 	}
@@ -44,7 +49,7 @@ func main() {
 		cfg.ListenAddr = *listen
 	}
 	srv := gateway.NewServer(cfg)
-	srv.ApplyRoutingState(gateway.CapsPathBesideConfig(*configPath))
+	srv.ApplyRoutingState(gateway.CapsPathBesideConfig(finalConfigPath))
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()

@@ -1,0 +1,1012 @@
+{
+  "unmeasured_models": [
+    {
+      "canonical_id": "meta/llama-22m-pro",
+      "display_name": "Meta Llama 22M Pro",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "classification_guard",
+      "is_agentic": false,
+      "routes_count": 1,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "openai/gpt-oss-safeguard-20b",
+      "display_name": "Openai Gpt Oss Safeguard 20B",
+      "vendor": "openai",
+      "family": "gpt",
+      "type": "classification_guard",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "meta/llama-86m-pro",
+      "display_name": "Meta Llama 86M Pro",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "classification_guard",
+      "is_agentic": false,
+      "routes_count": 1,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "canopy/orpheus",
+      "display_name": "Canopy Orpheus",
+      "vendor": "canopy",
+      "family": "orpheus",
+      "type": "audio_tts",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "openai/whisper-instruct",
+      "display_name": "Openai Whisper Instruct",
+      "vendor": "openai",
+      "family": "whisper",
+      "type": "audio_stt",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "openai/whisper",
+      "display_name": "Openai Whisper",
+      "vendor": "openai",
+      "family": "whisper",
+      "type": "audio_stt",
+      "is_agentic": false,
+      "routes_count": 3,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "mistralai/ministral-3-3b-instruct-2512",
+      "display_name": "Mistralai Ministral 3 3B Instruct 2512",
+      "vendor": "mistralai",
+      "family": "ministral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/ministral-3b-instruct",
+      "display_name": "Mistralai Ministral 3B Instruct",
+      "vendor": "mistralai",
+      "family": "ministral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/ministral-3-8b-instruct-2512",
+      "display_name": "Mistralai Ministral 3 8B Instruct 2512",
+      "vendor": "mistralai",
+      "family": "ministral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-medium-latest",
+      "display_name": "Mistralai Mistral Medium Latest",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-instruct",
+      "display_name": "Mistralai Mistral Instruct",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 23,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-3.5-instruct",
+      "display_name": "Mistralai Mistral 3.5 Instruct",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/magistral-medium-instruct",
+      "display_name": "Mistralai Magistral Medium Instruct",
+      "vendor": "mistralai",
+      "family": "magistral-medium",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/magistral-small-instruct",
+      "display_name": "Mistralai Magistral Small Instruct",
+      "vendor": "mistralai",
+      "family": "magistral-small",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/voxtral-small",
+      "display_name": "Mistralai Voxtral Small",
+      "vendor": "mistralai",
+      "family": "voxtral-small",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/voxtral-small-instruct",
+      "display_name": "Mistralai Voxtral Small Instruct",
+      "vendor": "mistralai",
+      "family": "voxtral-small",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-embed-embedding",
+      "display_name": "Mistralai Mistral Embed Embedding",
+      "vendor": "mistralai",
+      "family": "mistral-embed",
+      "type": "embeddings",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/voxtral-mini",
+      "display_name": "Mistralai Voxtral Mini",
+      "vendor": "mistralai",
+      "family": "voxtral-mini",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/voxtral-mini-instruct",
+      "display_name": "Mistralai Voxtral Mini Instruct",
+      "vendor": "mistralai",
+      "family": "voxtral-mini",
+      "type": "audio_stt",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/voxtral-mini-tts",
+      "display_name": "Mistralai Voxtral Mini Tts",
+      "vendor": "mistralai",
+      "family": "voxtral-mini",
+      "type": "audio_tts",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "mistralai/mistral-large-2411",
+      "display_name": "Mistralai Mistral Large 2411",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-large-instruct",
+      "display_name": "Mistralai Mistral Large Instruct",
+      "vendor": "mistralai",
+      "family": "mistral-large",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 12,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "zhipu/glm-5.2",
+      "display_name": "Zhipu Glm 5.2",
+      "vendor": "zhipu",
+      "family": "glm",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 8,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/devstral-medium-instruct",
+      "display_name": "Mistralai Devstral Medium Instruct",
+      "vendor": "mistralai",
+      "family": "devstral-medium",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-large-4",
+      "display_name": "Mistralai Mistral Large 4",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/open-mixtral-22b",
+      "display_name": "Mistralai Open Mixtral 22B",
+      "vendor": "mistralai",
+      "family": "open-mixtral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/devstral",
+      "display_name": "Mistralai Devstral",
+      "vendor": "mistralai",
+      "family": "devstral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/pixtral-12b",
+      "display_name": "Mistralai Pixtral 12B",
+      "vendor": "mistralai",
+      "family": "pixtral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/devstral-small",
+      "display_name": "Mistralai Devstral Small",
+      "vendor": "mistralai",
+      "family": "devstral-small",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/devstral-medium",
+      "display_name": "Mistralai Devstral Medium",
+      "vendor": "mistralai",
+      "family": "devstral-medium",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/labs-devstral",
+      "display_name": "Mistralai Labs Devstral",
+      "vendor": "mistralai",
+      "family": "labs-devstral",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/devstral-latest-instruct",
+      "display_name": "Mistralai Devstral Latest Instruct",
+      "vendor": "mistralai",
+      "family": "devstral-latest",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/pixtral-large-instruct",
+      "display_name": "Mistralai Pixtral Large Instruct",
+      "vendor": "mistralai",
+      "family": "pixtral-large",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/open-mixtral-7b",
+      "display_name": "Mistralai Open Mixtral 7B",
+      "vendor": "mistralai",
+      "family": "open-mixtral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "zhipu/glm-5.3",
+      "display_name": "Zhipu Glm 5.3",
+      "vendor": "zhipu",
+      "family": "glm",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 5,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "mistralai/mistral-7b-instruct",
+      "display_name": "Mistralai Mistral 7B Instruct",
+      "vendor": "mistralai",
+      "family": "mistral",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/command-r7b-12-2024",
+      "display_name": "Cohere Command R7B 12 2024",
+      "vendor": "cohere",
+      "family": "command",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/command-r7b-arabic-02-2025",
+      "display_name": "Cohere Command R7B Arabic 02 2025",
+      "vendor": "cohere",
+      "family": "command",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/embed-english-3.0-embedding",
+      "display_name": "Cohere Embed English 3.0 Embedding",
+      "vendor": "cohere",
+      "family": "embed-english",
+      "type": "embeddings",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "cohere/embed-english-3.0-image",
+      "display_name": "Cohere Embed English 3.0 Image",
+      "vendor": "cohere",
+      "family": "embed-english",
+      "type": "embeddings",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "cohere/embed-multilingual-3.0-embedding",
+      "display_name": "Cohere Embed Multilingual 3.0 Embedding",
+      "vendor": "cohere",
+      "family": "embed-multilingual",
+      "type": "embeddings",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "cohere/embed-multilingual-3.0-image",
+      "display_name": "Cohere Embed Multilingual 3.0 Image",
+      "vendor": "cohere",
+      "family": "embed-multilingual",
+      "type": "embeddings",
+      "is_agentic": false,
+      "routes_count": 2,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "cohere/north-mini-code-1-0",
+      "display_name": "Cohere North Mini Code 1 0",
+      "vendor": "cohere",
+      "family": "north",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/tiny-aya-fire",
+      "display_name": "Cohere Tiny Aya Fire",
+      "vendor": "cohere",
+      "family": "tiny",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/tiny-aya-earth",
+      "display_name": "Cohere Tiny Aya Earth",
+      "vendor": "cohere",
+      "family": "tiny",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/tiny-aya-global",
+      "display_name": "Cohere Tiny Aya Global",
+      "vendor": "cohere",
+      "family": "tiny",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/north-small-translate-1-0",
+      "display_name": "Cohere North Small Translate 1 0",
+      "vendor": "cohere",
+      "family": "north",
+      "type": "text_chat",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/tiny-aya-water",
+      "display_name": "Cohere Tiny Aya Water",
+      "vendor": "cohere",
+      "family": "tiny",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4.7-opus-20260416",
+      "display_name": "Anthropic Claude 4.7 Opus 20260416",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-haiku-5.5-20261007",
+      "display_name": "Anthropic Claude Haiku 5.5 20261007",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4.8-opus-20260528",
+      "display_name": "Anthropic Claude 4.8 Opus 20260528",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4.5-haiku-20251001",
+      "display_name": "Anthropic Claude 4.5 Haiku 20251001",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-opus-5-20260723",
+      "display_name": "Anthropic Claude Opus 5 20260723",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-sonnet-5.5-20260928",
+      "display_name": "Anthropic Claude Sonnet 5.5 20260928",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-fable-5.1-20260831",
+      "display_name": "Anthropic Claude Fable 5.1 20260831",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4.5-sonnet-20250929",
+      "display_name": "Anthropic Claude 4.5 Sonnet 20250929",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-5-fable-20260609",
+      "display_name": "Anthropic Claude 5 Fable 20260609",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4-sonnet-20250522",
+      "display_name": "Anthropic Claude 4 Sonnet 20250522",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-sonnet-5-20260630",
+      "display_name": "Anthropic Claude Sonnet 5 20260630",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-4.6-sonnet-20260217",
+      "display_name": "Anthropic Claude 4.6 Sonnet 20260217",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthropic/claude-opus-5.5-20260921",
+      "display_name": "Anthropic Claude Opus 5.5 20260921",
+      "vendor": "anthropic",
+      "family": "claude",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "nex-agi/nex-n2.5-mini-20260908",
+      "display_name": "Nex-agi Nex N2.5 Mini 20260908",
+      "vendor": "nex-agi",
+      "family": "nex",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "nex-agi/nex-n2.5-pro-20260907",
+      "display_name": "Nex-agi Nex N2.5 Pro 20260907",
+      "vendor": "nex-agi",
+      "family": "nex",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "cohere/north-mini-code-20260617",
+      "display_name": "Cohere North Mini Code 20260617",
+      "vendor": "cohere",
+      "family": "north",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-chat-v3.1",
+      "display_name": "Deepseek Deepseek Chat V3.1",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4-flash-20260731",
+      "display_name": "Deepseek Deepseek V4 Flash 20260731",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4.1-flash-20260910",
+      "display_name": "Deepseek Deepseek V4.1 Flash 20260910",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4-flash-vision-exp-20260821",
+      "display_name": "Deepseek Deepseek V4 Flash Vision Exp 20260821",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "multimodal",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v3.1-terminus",
+      "display_name": "Deepseek Deepseek V3.1 Terminus",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-chat-v3",
+      "display_name": "Deepseek Deepseek Chat V3",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4-pro-20260813",
+      "display_name": "Deepseek Deepseek V4 Pro 20260813",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v3.2-exp",
+      "display_name": "Deepseek Deepseek V3.2 Exp",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-chat-v3-0324",
+      "display_name": "Deepseek Deepseek Chat V3 0324",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-r1",
+      "display_name": "Deepseek Deepseek R1",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 9,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4-pro-20260423",
+      "display_name": "Deepseek Deepseek V4 Pro 20260423",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-r1-0528",
+      "display_name": "Deepseek Deepseek R1 0528",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v3.2-20251201",
+      "display_name": "Deepseek Deepseek V3.2 20251201",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "deepseek/deepseek-v4-flash-20260423",
+      "display_name": "Deepseek Deepseek V4 Flash 20260423",
+      "vendor": "deepseek",
+      "family": "deepseek",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 3,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "unbiased/pareto-26.10-preview-20260929",
+      "display_name": "Unbiased Pareto 26.10 Preview 20260929",
+      "vendor": "unbiased",
+      "family": "pareto",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "unbiased/pareto-20260917",
+      "display_name": "Unbiased Pareto 20260917",
+      "vendor": "unbiased",
+      "family": "pareto",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy3-preview-20260421",
+      "display_name": "Tencent Hy3 Preview 20260421",
+      "vendor": "tencent",
+      "family": "hy3",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hunyuan-a13b-instruct",
+      "display_name": "Tencent Hunyuan A13B Instruct",
+      "vendor": "tencent",
+      "family": "hunyuan",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy-mt2-30b-a3b-20260521",
+      "display_name": "Tencent Hy Mt2 30B A3B 20260521",
+      "vendor": "tencent",
+      "family": "hy",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy-mt2-1.8b-20260521",
+      "display_name": "Tencent Hy Mt2 1.8B 20260521",
+      "vendor": "tencent",
+      "family": "hy",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy3-20260706",
+      "display_name": "Tencent Hy3 20260706",
+      "vendor": "tencent",
+      "family": "hy3",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy-mt2-7b-20260521",
+      "display_name": "Tencent Hy Mt2 7B 20260521",
+      "vendor": "tencent",
+      "family": "hy",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "tencent/hy4-preview-20260827",
+      "display_name": "Tencent Hy4 Preview 20260827",
+      "vendor": "tencent",
+      "family": "hy4",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "anthracite-org/magnum-v4-72b",
+      "display_name": "Anthracite-org Magnum V4 72B",
+      "vendor": "anthracite-org",
+      "family": "magnum",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "meta/llama-4-scout-17b-16e-instruct",
+      "display_name": "Meta Llama 4 Scout 17B 16E Instruct",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "meta/llama-guard-4-12b",
+      "display_name": "Meta Llama Guard 4 12B",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "classification_guard",
+      "is_agentic": false,
+      "routes_count": 1,
+      "exploration_priority": "low"
+    },
+    {
+      "canonical_id": "meta/llama-4-maverick-17b-128e-instruct",
+      "display_name": "Meta Llama 4 Maverick 17B 128E Instruct",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "meta/llama-3.2-1b-instruct",
+      "display_name": "Meta Llama 3.2 1B Instruct",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "meta/llama-3.2-3b-instruct",
+      "display_name": "Meta Llama 3.2 3B Instruct",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "meta/llama-3.1-70b-instruct",
+      "display_name": "Meta Llama 3.1 70B Instruct",
+      "vendor": "meta",
+      "family": "llama",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 7,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "~google/gemini-flash-latest",
+      "display_name": "~google Gemini Flash Latest",
+      "vendor": "~google",
+      "family": "gemini",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "~google/gemini-pro-latest",
+      "display_name": "~google Gemini Pro Latest",
+      "vendor": "~google",
+      "family": "gemini",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "perceptron/perceptron-mk1-20260512",
+      "display_name": "Perceptron Perceptron Mk1 20260512",
+      "vendor": "perceptron",
+      "family": "perceptron",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "perceptron/perceptron-mk1.5-20260925",
+      "display_name": "Perceptron Perceptron Mk1.5 20260925",
+      "vendor": "perceptron",
+      "family": "perceptron",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 1,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "zhipu/glm-4.6-20251208",
+      "display_name": "Zhipu Glm 4.6 20251208",
+      "vendor": "zhipu",
+      "family": "glm",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    },
+    {
+      "canonical_id": "zhipu/glm-4.5",
+      "display_name": "Zhipu Glm 4.5",
+      "vendor": "zhipu",
+      "family": "glm",
+      "type": "tool_calling",
+      "is_agentic": true,
+      "routes_count": 2,
+      "exploration_priority": "high"
+    }
+  ],
+  "plan": {
+    "total_unmeasured_models": 966,
+    "agentic_unmeasured": 924,
+    "capped_exploration_budget_usd": 5.0,
+    "max_exploration_calls_per_model": 3,
+    "batch_cadence": "hourly_dynamic_bandit",
+    "entry_rule": "Unmeasured agentic models enter router candidate pool with initial optimistic prior (alpha=2, beta=1) under a 5% traffic exploration ceiling."
+  }
+}

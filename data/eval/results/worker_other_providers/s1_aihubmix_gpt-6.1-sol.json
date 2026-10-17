@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_aihubmix:gpt-6.1-sol",
+  "route_id": "aihubmix:gpt-6.1-sol",
+  "canonical_id": "openai/gpt-6.1-sol",
+  "provider": "aihubmix",
+  "provider_model_id": "gpt-6.1-sol",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_401",
+  "timestamp": 1792257761.005285,
+  "duration_seconds": 0.33,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 401,
+      "latency_ms": 333.61,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"invalid key: gPvSe2 (tid: 2026101717224660619472931160181)\",\"type\":\"Aihubmix_api_error\"}}"
+    }
+  }
+}

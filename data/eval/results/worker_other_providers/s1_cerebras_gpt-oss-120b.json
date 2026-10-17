@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_cerebras:gpt-oss-120b",
+  "route_id": "cerebras:gpt-oss-120b",
+  "canonical_id": "openai/gpt-oss-120b",
+  "provider": "cerebras",
+  "provider_model_id": "gpt-oss-120b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_402",
+  "timestamp": 1792257636.3142254,
+  "duration_seconds": 2.29,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 402,
+      "latency_ms": 289.02,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"message\":\"Payment required to access this resource. Visit your billing tab.\",\"type\":\"payment_required_error\",\"param\":\"quota\",\"code\":\"payment_required\"}"
+    }
+  }
+}

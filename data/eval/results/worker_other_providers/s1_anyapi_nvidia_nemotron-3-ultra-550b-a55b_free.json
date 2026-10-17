@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_anyapi:nvidia/nemotron-3-ultra-550b-a55b:free",
+  "route_id": "anyapi:nvidia/nemotron-3-ultra-550b-a55b:free",
+  "canonical_id": "nvidia/nemotron-3-ultra-550b-a55b-20260604",
+  "provider": "anyapi",
+  "provider_model_id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257806.897391,
+  "duration_seconds": 9.32,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1972.6,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257804-BS5pQdepQe5Uh3JsdJ7A\",\"created\":1792257804,\"model\":\"nvidia/nemotron-3-ultra-550b-a55b:free\",\"object\":\"chat.completion\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"<answer>42</answer>\",\"role\":\"assistant\",\"reasoning_content\":\"The user wants me to compute 7 * 6 and return only the answer enclosed in <answer> tags.\",\"provider_specific_fields\":{\"reasoning\":\"The user wants me to compute 7 * 6 and return only the answer enclosed in <answer> tags.\",\"refusal\":"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 503,
+      "latency_ms": 2962.21,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"There is no available model deployment that meets your routing requirements\",\"type\":null,\"param\":null,\"code\":\"503\"}}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 503,
+      "latency_ms": 2388.41,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"There is no available model deployment that meets your routing requirements\",\"type\":null,\"param\":null,\"code\":\"503\"}}"
+    }
+  }
+}

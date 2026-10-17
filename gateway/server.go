@@ -59,6 +59,7 @@ type Server struct {
 	logDir     string
 	logMaxBody int
 	respCache  *ResponseCache // exact-match replay cache (never logs content/keys)
+	rescue     *ToolRescueEmulation
 }
 
 // NewServer creates a Server from the provided configuration.
@@ -80,6 +81,7 @@ func NewServer(cfg *Config) *Server {
 		pinned:     make(map[string]bool),
 		stats:      make(map[string]*ModelStat),
 		respCache:  NewResponseCache(),
+		rescue:     NewToolRescueEmulation(),
 	}
 	if cfg.Logging != nil {
 		s.logDir = cfg.Logging.RequestsDir
@@ -107,6 +109,9 @@ func (s *Server) Bandit() *ThompsonBandit { return s.bandit }
 // Cooldown exposes the cooldown cache for tests.
 func (s *Server) Cooldown() *CooldownCache { return s.cooldown }
 
+// Rescue exposes the tool rescue emulation layer for tests and metrics.
+func (s *Server) Rescue() *ToolRescueEmulation { return s.rescue }
+
 // Handler returns the HTTP mux (useful for httptest tests without Listen).
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
@@ -118,6 +123,10 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("/v1/models", s.handleModels)
 	mux.HandleFunc("/v1/admin/keys", s.handleAdminKeys)
 	mux.HandleFunc("/v1/admin/stats", s.handleAdminStats)
+	mux.HandleFunc("/admin/cooldown", s.handleAdminCooldown)
+	mux.HandleFunc("/v1/admin/cooldown", s.handleAdminCooldown)
+	mux.HandleFunc("/admin/toolrescue", s.handleAdminToolRescue)
+	mux.HandleFunc("/v1/admin/toolrescue", s.handleAdminToolRescue)
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -164,7 +173,73 @@ func (s *Server) allCandidateModels() []string {
 	return out
 }
 
+func (s *Server) hasCandidateModelInProviders(providers []Provider, reqKey string) bool {
+	for _, p := range providers {
+		for _, m := range p.Models {
+			if m != "" && m != "*" && modelsKey(m) == reqKey {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (s *Server) hasCandidateModel(reqKey string) bool {
+	return s.hasCandidateModelInProviders(s.cfg.Providers, reqKey)
+}
+
+// StageLatency holds duration measurements for request pipeline stages per Directive 5.
+type StageLatency struct {
+	GatewayOverheadMs float64 `json:"t_gateway_overhead_ms"`
+	RouterMs          float64 `json:"t_router_ms"`
+	ProviderTTFTMs    float64 `json:"t_provider_ttft_ms"`
+	ProviderGenMs     float64 `json:"t_provider_generation_ms"`
+	RescueMs          float64 `json:"t_rescue_ms"`
+}
+
+// HeaderValue formats the stage latency breakdown per Directive 5.
+func (sl StageLatency) HeaderValue() string {
+	return fmt.Sprintf("gw=%.2f,router=%.2f,ttft=%.2f,gen=%.2f,rescue=%.2f",
+		sl.GatewayOverheadMs, sl.RouterMs, sl.ProviderTTFTMs, sl.ProviderGenMs, sl.RescueMs)
+}
+
+// StageTimings tracks durations of stages across the lifecycle of a request.
+type StageTimings struct {
+	GatewayOverhead time.Duration
+	Router          time.Duration
+	TTFT            time.Duration
+	Generation      time.Duration
+	Rescue          time.Duration
+	RescueEnabled   bool
+	RequestedModel  string
+	RepairsApplied  []string
+}
+
+// StageLatency converts durations to millisecond floats.
+func (st *StageTimings) StageLatency() StageLatency {
+	if st == nil {
+		return StageLatency{}
+	}
+	return StageLatency{
+		GatewayOverheadMs: float64(st.GatewayOverhead.Nanoseconds()) / 1e6,
+		RouterMs:          float64(st.Router.Nanoseconds()) / 1e6,
+		ProviderTTFTMs:    float64(st.TTFT.Nanoseconds()) / 1e6,
+		ProviderGenMs:     float64(st.Generation.Nanoseconds()) / 1e6,
+		RescueMs:          float64(st.Rescue.Nanoseconds()) / 1e6,
+	}
+}
+
+func (s *Server) toolRescueEnabledForRequest(r *http.Request) bool {
+	if r != nil {
+		if h := r.Header.Get("X-Tool-Rescue-Disabled"); strings.EqualFold(h, "true") || h == "1" {
+			return false
+		}
+	}
+	return s.cfg.IsToolRescueEnabled()
+}
+
 func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
+	t0 := time.Now()
 	if r.Method != http.MethodPost {
 		writeAnthropicError(w, 405, "invalid_request_error", "method not allowed")
 		return
@@ -181,7 +256,9 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 		writeAnthropicError(w, 400, "invalid_request_error", "invalid request")
 		return
 	}
+	tParse := time.Since(t0)
 
+	tRouterStart := time.Now()
 	// Model roles: every name maps, never 422.
 	requested := ar.Model
 	ar.Model = ResolveModel(requested, s.cfg.ModelAliases, s.cfg.Roles, s.allCandidateModels())
@@ -200,12 +277,19 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 			providers = stickyOrder(providers, sid)
 		}
 	}
+	tRouter := time.Since(tRouterStart)
+
+	timings := &StageTimings{
+		GatewayOverhead: tParse,
+		Router:          tRouter,
+		RescueEnabled:   s.toolRescueEnabledForRequest(r),
+		RequestedModel:  requested,
+	}
+
 	if len(providers) == 0 {
 		writeAnthropicError(w, 503, "overloaded_error", "no eligible providers available")
 		return
 	}
-
-	s.logRequest("anthropic", requested, &ar, nil)
 
 	// Exact-match replay cache: serve stored non-streaming responses without
 	// contacting upstream. Usage is replayed byte-for-byte (passthrough);
@@ -213,29 +297,39 @@ func (s *Server) handleMessages(w http.ResponseWriter, r *http.Request) {
 	if s.respCache != nil {
 		if cached, ok := s.respCache.Lookup(&ar); ok {
 			s.recordCall(ar.Model, true, nil)
+			sl := timings.StageLatency()
 			w.Header().Set("Content-Type", "application/json")
 			w.Header().Set("X-Gateway-Cache", "HIT")
+			w.Header().Set("X-Stage-Latency", sl.HeaderValue())
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write(cached)
+			s.logRequest("anthropic", requested, &ar, map[string]interface{}{
+				"cache":           "HIT",
+				"stage_latency":   sl,
+				"x_stage_latency": sl.HeaderValue(),
+			})
 			return
 		}
 	}
 
-	resp, upstreamModel, stats, err := s.tryProviders(r.Context(), providers, &ar)
+	resp, upstreamModel, stats, err := s.tryProviders(r.Context(), providers, &ar, timings)
 	if err != nil {
-		st, typ, msg := mapUpstreamStatus(502, "")
-		_ = msg
-		_ = stats
+		st, typ, _ := mapUpstreamStatus(502, "")
 		writeAnthropicError(w, st, typ, "all providers failed: "+redactForLog(err.Error()))
+		s.logRequest("anthropic", requested, &ar, map[string]interface{}{
+			"error":           err.Error(),
+			"stage_latency":   timings.StageLatency(),
+			"x_stage_latency": timings.StageLatency().HeaderValue(),
+		})
 		return
 	}
 	defer resp.Body.Close()
 
 	s.recordCall(upstreamModel, true, stats)
 	if ar.Stream {
-		s.streamResponse(w, resp, upstreamModel)
+		s.streamResponse(w, resp, upstreamModel, &ar, timings)
 	} else {
-		s.proxyResponse(w, resp, upstreamModel, &ar)
+		s.proxyResponse(w, resp, upstreamModel, &ar, timings)
 	}
 }
 
@@ -273,17 +367,25 @@ func (s *Server) handleOutcome(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// callStats carries per-attempt observations for accounting.
+// callStats carries per-attempt observations for accounting and stage timings.
 type callStats struct {
 	latencyMs      float64
 	promptTokens   int
 	completionToks int
 	cachedTokens   int
+	timings        StageTimings
 }
 
 // tryProviders iterates providers; within each provider cascades keys on 429,
 // then mirrors, then the next provider. Returns the winning response.
-func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *AnthropicRequest) (*http.Response, string, *callStats, error) {
+func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *AnthropicRequest, optTimings ...*StageTimings) (*http.Response, string, *callStats, error) {
+	var timings *StageTimings
+	if len(optTimings) > 0 && optTimings[0] != nil {
+		timings = optTimings[0]
+	} else {
+		timings = &StageTimings{RescueEnabled: true}
+	}
+
 	var lastErr error
 	ordered := s.orderProviders(providers, ar)
 	for _, p := range ordered {
@@ -292,10 +394,15 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 			continue
 		}
 
-		// Cascade across keys of the SAME account pool on 429.
+		model := s.pickModel(p, ar, ordered)
+		if model == "" {
+			continue
+		}
+
+		// Cascade across keys of the SAME account pool on 429 / 401 / 402 / 403.
 		tried := map[string]bool{}
 		for {
-			key, ok := s.cooldown.PickKey(keys)
+			key, ok := s.cooldown.PickKeyForModel(keys, model)
 			if !ok {
 				lastErr = fmt.Errorf("provider %s: all keys in cooldown", p.Name)
 				break
@@ -306,11 +413,6 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 				break
 			}
 			tried[kh] = true
-
-			model := s.pickModel(p, ar)
-			if model == "" && len(p.Models) > 0 {
-				model = p.Models[0]
-			}
 			// Per-key model allowlist: only keys with access serve this model.
 			var keyRec *ResolvedKey
 			for i, k := range keys {
@@ -319,7 +421,7 @@ func (s *Server) tryProviders(ctx context.Context, providers []Provider, ar *Ant
 					break
 				}
 			}
-if keyRec != nil {
+			if keyRec != nil {
 				s.mu.Lock()
 				overlay := s.keyModels
 				s.mu.Unlock()
@@ -334,6 +436,7 @@ if keyRec != nil {
 			// stripping) BEFORE the request is sent upstream.
 			adapter := EffectiveAdapter(p)
 
+			tAdapterStart := time.Now()
 			or, notes := TranslateRequest(ar, model, adapter)
 			if or == nil {
 				lastErr = fmt.Errorf("translation error: %v", notes)
@@ -348,6 +451,7 @@ if keyRec != nil {
 				break
 			}
 			or.Tools = sanitizeTools(or.Tools, ar.Tools, adapter)
+			timings.GatewayOverhead += time.Since(tAdapterStart)
 
 			bases := []string{p.BaseURL}
 			for _, m := range p.Mirrors {
@@ -358,9 +462,11 @@ if keyRec != nil {
 			var resp *http.Response
 			var reqErr error
 			var usedBase string
+			var ttft time.Duration
 			for _, base := range bases {
-				resp, reqErr, usedBase = s.doUpstream(ctx, p, adapter, base, key, or)
+				resp, reqErr, usedBase, ttft = s.doUpstream(ctx, p, adapter, base, key, or)
 				if reqErr == nil {
+					timings.TTFT = ttft
 					break
 				}
 				log.Printf("gateway: provider=%s base=%s error=%s", p.Name, redactForLog(usedBase), redactForLog(reqErr.Error()))
@@ -372,13 +478,27 @@ if keyRec != nil {
 				continue
 			}
 
-			if resp.StatusCode == http.StatusTooManyRequests {
+			if resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == 402 || resp.StatusCode == 401 || resp.StatusCode == 403 {
+				retryAfter := resp.Header.Get("Retry-After")
 				resp.Body.Close()
-				dur := s.cooldown.Mark429(kh)
-				// Never log raw keys — hash only.
-				log.Printf("gateway: provider=%s model=%s key=%s 429 cooldown=%s", p.Name, model, kh, dur)
+				var dur time.Duration
+				switch resp.StatusCode {
+				case http.StatusUnauthorized: // 401: invalid key -> dead
+					dur = s.cooldown.RecordFailure(kh, "*", StatusDead, retryAfter)
+					log.Printf("gateway: provider=%s model=%s key=%s HTTP 401 dead cooldown=%s", p.Name, model, kh, dur)
+				case http.StatusPaymentRequired: // 402: payment required -> exhausted
+					dur = s.cooldown.RecordFailure(kh, "*", StatusExhausted, retryAfter)
+					log.Printf("gateway: provider=%s model=%s key=%s HTTP 402 exhausted cooldown=%s", p.Name, model, kh, dur)
+				case http.StatusForbidden: // 403: permission denied -> restricted per model
+					dur = s.cooldown.RecordFailure(kh, model, StatusRestricted, retryAfter)
+					log.Printf("gateway: provider=%s model=%s key=%s HTTP 403 restricted cooldown=%s", p.Name, model, kh, dur)
+				case http.StatusTooManyRequests: // 429: rate limited
+					dur = s.cooldown.RecordFailure(kh, model, StatusRateLimited, retryAfter)
+					// Never log raw keys — hash only.
+					log.Printf("gateway: provider=%s model=%s key=%s 429 cooldown=%s", p.Name, model, kh, dur)
+				}
 				s.bandit.Update(model, false)
-				lastErr = fmt.Errorf("provider %s: 429 rate limited", p.Name)
+				lastErr = fmt.Errorf("provider %s: HTTP %d key cooldown", p.Name, resp.StatusCode)
 				continue // cascade to next key
 			}
 
@@ -403,7 +523,8 @@ if keyRec != nil {
 			}
 
 			s.bandit.Update(model, true)
-			return resp, model, &callStats{}, nil
+			s.cooldown.RecordSuccess(kh, model)
+			return resp, model, &callStats{timings: *timings}, nil
 		}
 	}
 	if lastErr == nil {
@@ -415,10 +536,10 @@ if keyRec != nil {
 // doUpstream sends one translated request to one base URL with auth applied.
 // Each attempt is bounded by AttemptTimeout so a hung provider fails over
 // fast instead of consuming the whole request budget.
-func (s *Server) doUpstream(ctx context.Context, p Provider, adapter AdapterSpec, base, key string, or *OpenAIRequest) (*http.Response, error, string) {
+func (s *Server) doUpstream(ctx context.Context, p Provider, adapter AdapterSpec, base, key string, or *OpenAIRequest) (*http.Response, error, string, time.Duration) {
 	reqBody, err := json.Marshal(or)
 	if err != nil {
-		return nil, err, base
+		return nil, err, base, 0
 	}
 
 	url := strings.TrimRight(base, "/") + adapter.ChatPath
@@ -429,7 +550,7 @@ func (s *Server) doUpstream(ctx context.Context, p Provider, adapter AdapterSpec
 	req, err := http.NewRequestWithContext(attemptCtx, http.MethodPost, url, bytes.NewReader(reqBody))
 	if err != nil {
 		cancel()
-		return nil, err, base
+		return nil, err, base, 0
 	}
 	req.Header.Set("Content-Type", "application/json")
 	applyAuth(req, adapter, key)
@@ -438,15 +559,15 @@ func (s *Server) doUpstream(ctx context.Context, p Provider, adapter AdapterSpec
 	}
 	t0 := time.Now()
 	resp, err := s.client.Do(req)
+	ttft := time.Since(t0)
 	if err == nil {
-		_ = time.Since(t0)
 		// Canceling attemptCtx closes resp.Body (http.Client contract), so
 		// release it only when the caller is done streaming, not on return.
 		resp.Body = &cancelBody{ReadCloser: resp.Body, cancel: cancel}
 	} else {
 		cancel()
 	}
-	return resp, err, base
+	return resp, err, base, ttft
 }
 
 // cancelBody releases the attempt context when the body is fully consumed.
@@ -517,30 +638,51 @@ func (s *Server) orderProviders(providers []Provider, ar *AnthropicRequest) []Pr
 	if sel == "" {
 		sel = s.cfg.Routing.Strategy
 	}
+	var base []Provider
 	switch sel {
-	case "priority":
-		return append([]Provider{}, providers...)
 	case "round_robin":
 		if len(providers) == 0 {
 			return providers
 		}
 		n := atomic.AddUint64(&s.rr, 1)
 		k := int(n % uint64(len(providers)))
-		out := make([]Provider, 0, len(providers))
-		out = append(out, providers[k:]...)
-		out = append(out, providers[:k]...)
-		return out
+		base = make([]Provider, 0, len(providers))
+		base = append(base, providers[k:]...)
+		base = append(base, providers[:k]...)
 	case "latency":
-		return s.sortByLatency(providers)
+		base = s.sortByLatency(providers)
 	case "cost":
-		return s.sortByCost(providers)
-	default: // thompson_sampling
-		return append([]Provider{}, providers...)
+		base = s.sortByCost(providers)
+	default: // priority / thompson_sampling
+		base = append([]Provider{}, providers...)
 	}
+
+	if ar == nil || ar.Model == "" || ar.Model == "*" {
+		return base
+	}
+
+	reqKey := modelsKey(ar.Model)
+	var exact []Provider
+	var fallbacks []Provider
+	for _, p := range base {
+		hasModel := false
+		for _, m := range p.Models {
+			if modelsKey(m) == reqKey || m == "*" {
+				hasModel = true
+				break
+			}
+		}
+		if hasModel {
+			exact = append(exact, p)
+		} else {
+			fallbacks = append(fallbacks, p)
+		}
+	}
+	return append(exact, fallbacks...)
 }
 
 // pickModel selects the upstream model for one provider attempt.
-func (s *Server) pickModel(p Provider, ar *AnthropicRequest) string {
+func (s *Server) pickModel(p Provider, ar *AnthropicRequest, eligible ...[]Provider) string {
 	sel := s.cfg.Routing.Selection
 	if sel == "" {
 		sel = s.cfg.Routing.Strategy
@@ -550,6 +692,14 @@ func (s *Server) pickModel(p Provider, ar *AnthropicRequest) string {
 	s.mu.Lock()
 	pinned := s.pinned
 	s.mu.Unlock()
+	hasWildcard := false
+	for _, m := range p.Models {
+		if m == "*" {
+			hasWildcard = true
+			break
+		}
+	}
+
 	cands := make([]string, 0, len(p.Models))
 	for _, m := range p.Models {
 		if m == "" || m == "*" {
@@ -560,13 +710,24 @@ func (s *Server) pickModel(p Provider, ar *AnthropicRequest) string {
 		}
 		cands = append(cands, m)
 	}
-	if len(cands) == 0 {
-		if ar != nil && ar.Model != "" && ar.Model != "*" {
+
+	// If a specific model was requested:
+	if ar != nil && ar.Model != "" && ar.Model != "*" {
+		reqKey := modelsKey(ar.Model)
+		for _, m := range cands {
+			if modelsKey(m) == reqKey {
+				return m
+			}
+		}
+		if hasWildcard {
 			if banned, ok := pinned[ar.Model]; ok && banned {
 				return ""
 			}
 			return ar.Model
 		}
+	}
+
+	if len(cands) == 0 {
 		return ""
 	}
 	switch sel {
@@ -617,8 +778,18 @@ func (s *Server) sortByCost(providers []Provider) []Provider {
 	return out
 }
 
-func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model string, ar *AnthropicRequest) {
+func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model string, ar *AnthropicRequest, optTimings ...*StageTimings) {
+	var timings *StageTimings
+	if len(optTimings) > 0 && optTimings[0] != nil {
+		timings = optTimings[0]
+	} else {
+		timings = &StageTimings{RescueEnabled: true}
+	}
+
+	tGenStart := time.Now()
 	body, err := io.ReadAll(resp.Body)
+	timings.Generation = time.Since(tGenStart)
+
 	if err != nil {
 		writeAnthropicError(w, 502, "api_error", "upstream read failed")
 		return
@@ -626,12 +797,28 @@ func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model
 	var oai OpenAIChatResponse
 	if err := json.Unmarshal(body, &oai); err != nil {
 		// Pass through if not parseable.
+		sl := timings.StageLatency()
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("X-Stage-Latency", sl.HeaderValue())
 		w.WriteHeader(resp.StatusCode)
 		_, _ = w.Write(body)
 		return
 	}
-	anth := TranslateResponse(&oai, model)
+
+	var tools []AnthropicTool
+	if ar != nil {
+		tools = ar.Tools
+	}
+
+	rescueLayer := s.rescue
+	if rescueLayer == nil {
+		rescueLayer = DefaultToolRescue
+	}
+
+	tRescueStart := time.Now()
+	anth, repairTypes := rescueLayer.TranslateResponse(&oai, model, tools, timings.RescueEnabled)
+	timings.Rescue = time.Since(tRescueStart)
+
 	encoded, err := json.Marshal(anth)
 	if err != nil {
 		writeAnthropicError(w, 502, "api_error", "response encode failed")
@@ -643,12 +830,52 @@ func (s *Server) proxyResponse(w http.ResponseWriter, resp *http.Response, model
 		s.respCache.Set(s.respCache.Key(ar), encoded)
 		w.Header().Set("X-Gateway-Cache", "MISS")
 	}
+
+	sl := timings.StageLatency()
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("X-Stage-Latency", sl.HeaderValue())
+	if len(repairTypes) > 0 {
+		w.Header().Set("X-Tool-Rescue", strings.Join(repairTypes, ","))
+	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(encoded)
+
+	reqModel := model
+	if ar != nil && ar.Model != "" {
+		reqModel = ar.Model
+	}
+	if timings.RequestedModel != "" {
+		reqModel = timings.RequestedModel
+	}
+	log.Printf("gateway: stage_latency %s model=%s rescue=%v", sl.HeaderValue(), model, repairTypes)
+	s.logRequest("anthropic", reqModel, ar, map[string]interface{}{
+		"stage_latency": map[string]interface{}{
+			"t_gateway_overhead_ms": sl.GatewayOverheadMs,
+			"t_router_ms":           sl.RouterMs,
+			"t_provider_ttft_ms":    sl.ProviderTTFTMs,
+			"t_provider_generation_ms": sl.ProviderGenMs,
+			"t_rescue_ms":           sl.RescueMs,
+		},
+		"x_stage_latency": sl.HeaderValue(),
+		"x_tool_rescue":   repairTypes,
+	})
 }
 
-func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, model string) {
+func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, model string, optArgs ...interface{}) {
+	var ar *AnthropicRequest
+	var timings *StageTimings
+	for _, arg := range optArgs {
+		switch v := arg.(type) {
+		case *AnthropicRequest:
+			ar = v
+		case *StageTimings:
+			timings = v
+		}
+	}
+	if timings == nil {
+		timings = &StageTimings{RescueEnabled: true}
+	}
+
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		writeAnthropicError(w, 500, "api_error", "streaming not supported")
@@ -658,9 +885,21 @@ func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, mode
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("X-Accel-Buffering", "no")
+	w.Header().Set("Trailer", "X-Stage-Latency, X-Tool-Rescue")
+	w.Header().Set("X-Stage-Latency", timings.StageLatency().HeaderValue())
 	w.WriteHeader(http.StatusOK)
 
+	tGenStart := time.Now()
+
 	translator := NewStreamTranslator(model, newMsgID())
+	if ar != nil {
+		translator.SetRescue(timings.RescueEnabled, ar.Tools)
+	}
+	// CORRECTION 5: route streaming rescue logs to this server's layer so
+	// GET /admin/toolrescue reflects every rescue (log every rescue).
+	if s.rescue != nil {
+		translator.SetRescueLayer(s.rescue)
+	}
 	scanner := bufio.NewScanner(resp.Body)
 	scanner.Buffer(make([]byte, 0, 64*1024), 1024*1024)
 	usagePrompt, usageCompletion, usageCached, usageCreation := 0, 0, 0, 0
@@ -758,8 +997,34 @@ func (s *Server) streamResponse(w http.ResponseWriter, resp *http.Response, mode
 			_, _ = w.Write(b)
 		}
 	}
+	if len(translator.RepairsApplied) > 0 {
+		timings.RepairsApplied = append(timings.RepairsApplied, translator.RepairsApplied...)
+		w.Header().Set("X-Tool-Rescue", strings.Join(timings.RepairsApplied, ","))
+	}
+	timings.Generation = time.Since(tGenStart)
+	sl := timings.StageLatency()
+	w.Header().Set("X-Stage-Latency", sl.HeaderValue())
 	flusher.Flush()
 	_ = sawDone
+
+	reqModel := model
+	if ar != nil && ar.Model != "" {
+		reqModel = ar.Model
+	}
+	if timings.RequestedModel != "" {
+		reqModel = timings.RequestedModel
+	}
+	log.Printf("gateway: stage_latency %s model=%s (stream)", sl.HeaderValue(), model)
+	s.logRequest("anthropic", reqModel, ar, map[string]interface{}{
+		"stage_latency": map[string]interface{}{
+			"t_gateway_overhead_ms": sl.GatewayOverheadMs,
+			"t_router_ms":           sl.RouterMs,
+			"t_provider_ttft_ms":    sl.ProviderTTFTMs,
+			"t_provider_generation_ms": sl.ProviderGenMs,
+			"t_rescue_ms":           sl.RescueMs,
+		},
+		"x_stage_latency": sl.HeaderValue(),
+	})
 }
 
 func newMsgID() string {

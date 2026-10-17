@@ -130,6 +130,12 @@ func EligibleProviders(cfg *Config, pc PrivacyClass) (primary, githubFallback []
 		if pc == PrivacyClassInternal && p.PrivacyPolicy == PrivacyPublicDataOnly {
 			continue
 		}
+		// Zero Retention: strictly require verified zero-retention evidence with valid provenance.
+		if pc == PrivacyClassZeroRetention {
+			if !HasValidZeroRetentionEvidence(p.Name) || p.PrivacyPolicy != PrivacyZeroRetention {
+				continue
+			}
+		}
 		if ghOnly && IsGitHubModels(p) {
 			githubFallback = append(githubFallback, p)
 			continue

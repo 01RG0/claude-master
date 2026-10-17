@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:command-r-plus-08-2024",
+  "route_id": "cohere:command-r-plus-08-2024",
+  "canonical_id": "cohere/command-r-plus-08-2024",
+  "provider": "cohere",
+  "provider_model_id": "command-r-plus-08-2024",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257487.7815099,
+  "duration_seconds": 16.36,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 2283.33,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"05ee5ba2-76cf-4a0d-bb98-6b4c1c47b13d\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":24,\"output_tokens\":8},\"tokens\":{\"input_tokens\":225,\"output_tokens\":9},\"cached_tokens\":192}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 3716.55,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"52199a0c-128d-4041-a491-c0ad722e0028\",\"message\":{\"role\":\"assistant\",\"tool_plan\":\"I will check the status of the database service.\",\"tool_calls\":[{\"id\":\"check_status_e1yxws5ry94a\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}}]},\"finish_reason\":\"TOOL_CALL\",\"usage\":{\"billed_units\":{\"input_tokens\":20,\"output_tokens\":18},\"tokens\":{\"input_tokens\":896,\"output_tokens\":53},\"cached_tokens\":336}}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 6354.29,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"ba92e0eb-e75c-4a4b-8024-8490cc523f69\",\"message\":{\"role\":\"assistant\",\"tool_plan\":\"I will use the check_status tool to check the status of both 'database' and 'redis' services simultaneously.\",\"tool_calls\":[{\"id\":\"check_status_kvmky197tmwt\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}},{\"id\":\"check_status_ftgc00f0ee76\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"redis\\\"}\"}}]},\"finish_reason\":\"TOOL_CALL\",\"us"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_gemini:models/gemini-2.5-flash",
+  "route_id": "gemini:models/gemini-2.5-flash",
+  "canonical_id": "google/gemini-2.5-flash",
+  "provider": "gemini",
+  "provider_model_id": "models/gemini-2.5-flash",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257504.7598968,
+  "duration_seconds": 11.14,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1078.63,
+      "output_text": "<answer>42</answer",
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"message\":{\"content\":\"<answer>42</answer\",\"role\":\"assistant\"}}],\"created\":1792257500,\"id\":\"263TarygN_jbxs0P2N-T2QM\",\"model\":\"models/gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":7,\"prompt_tokens\":25,\"total_tokens\":71}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 788.6,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"function-call-15195173259560287453\",\"type\":\"function\"}]}}],\"created\":1792257505,\"id\":\"4K3TaqvlJaCX28oPjpiGmAQ\",\"model\":\"models/gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":15,\"prompt_tokens\":47,\"total_tokens\":103}}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1274.82,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"function-call-13736173261203700500\",\"type\":\"function\"},{\"function\":{\"arguments\":\"{\\\"service\\\":\\\"redis\\\"}\",\"name\":\"check_status\"},\"id\":\"function-call-13736173261203699815\",\"type\":\"function\"}]}}],\"created\":1792257510,\"id\":\"5a3TasbQIp7zvdIPysrq6Ag\",\"model\":\"models/gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"comp"
+    }
+  }
+}

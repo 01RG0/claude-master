@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:sao10k/l3-lunaris-8b",
+  "route_id": "openrouter:sao10k/l3-lunaris-8b",
+  "canonical_id": "sao10k/l3-lunaris-8b",
+  "provider": "openrouter",
+  "provider_model_id": "sao10k/l3-lunaris-8b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257658.6252527,
+  "duration_seconds": 3.13,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 633.8,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257661-wfsxxPTBsIKDpSfIJxsf\",\"object\":\"chat.completion\",\"created\":1792257661,\"model\":\"sao10k/l3-lunaris-8b\",\"provider\":\"Parasail\",\"system_fingerprint\":\"vllm-0.23.0-0b2c79d3\",\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\",\"refusal\":null,\"reasoning\":null}}],\"usage\":{\"prompt_tokens\":34,\"completion_tokens\":8,\"total_tokens\":42,\"cost\":0.00000176,\"is_byok\":false,\""
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 404,
+      "latency_ms": 160.06,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"No endpoints found that support tool use. Try disabling \\\"check_status\\\". To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\",\"code\":404,\"metadata\":{\"routing_funnel\":[{\"step\":\"Initial Endpoints\",\"endpoint_count\":2}],\"failed_routing_step\":\"Filter by Tool Compatibility\"}}}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 404,
+      "latency_ms": 289.67,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"No endpoints found that support tool use. Try disabling \\\"check_status\\\". To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\",\"code\":404,\"metadata\":{\"routing_funnel\":[{\"step\":\"Initial Endpoints\",\"endpoint_count\":2}],\"failed_routing_step\":\"Filter by Tool Compatibility\"}}}"
+    }
+  }
+}

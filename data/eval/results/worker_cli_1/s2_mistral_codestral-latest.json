@@ -1,0 +1,2038 @@
+{
+  "job_id": "s2_mistral:codestral-latest",
+  "route_id": "mistral:codestral-latest",
+  "canonical_id": "mistralai/codestral-coder",
+  "provider": "mistral",
+  "provider_model_id": "codestral-latest",
+  "stage": 2,
+  "state": "done",
+  "timestamp": 1792259081.3635623,
+  "s1": {
+    "reps": 10,
+    "successes": 9,
+    "pass_rate": 0.9,
+    "ci_95": [
+      0.5959,
+      0.9821
+    ],
+    "mean_latency_ms": 13748.49,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9768.64,
+        "num_turns": 7,
+        "total_cost_usd": 0.30894,
+        "session_id": "dbad0ce9-9977-48ea-be60-bc334721d7d2",
+        "cli_output": {
+          "duration_api_ms": 8193,
+          "stop_reason": "end_turn",
+          "session_id": "dbad0ce9-9977-48ea-be60-bc334721d7d2",
+          "total_cost_usd": 0.30894,
+          "usage": {
+            "input_tokens": 73980,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 25600,
+            "output_tokens": 395,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 73980,
+              "outputTokens": 395,
+              "cacheReadInputTokens": 25600,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.30894,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The three files have been created and updated as requested:\n\n- `alpha.txt` → `alpha-done`\n- `beta.txt` → `beta-done`\n- `gamma.txt` → `gamma-done`",
+          "ttft_ms": 3523,
+          "type": "result",
+          "duration_ms": 8776,
+          "uuid": "cf447df1-d48a-48df-a43b-0321c46aca63",
+          "ttft_stream_ms": 3521,
+          "time_to_request_ms": 374,
+          "first_content_frame_ms": 3521,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10566.89,
+        "num_turns": 3,
+        "total_cost_usd": 0.200052,
+        "session_id": "629744fd-8d0c-4c1b-921f-525e8d67806f",
+        "cli_output": {
+          "duration_api_ms": 8619,
+          "stop_reason": "end_turn",
+          "session_id": "629744fd-8d0c-4c1b-921f-525e8d67806f",
+          "total_cost_usd": 0.200052,
+          "usage": {
+            "input_tokens": 48804,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 229,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48804,
+              "outputTokens": 229,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.200052,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 3,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and modified:\n\n- `a.txt` contains: `alpha-done`\n- `b.txt` contains: `beta-done`\n- `c.txt` contains: `gamma-done`\n\nWould you like to verify the contents of these files or proceed with any other tasks?",
+          "ttft_ms": 4589,
+          "type": "result",
+          "duration_ms": 9751,
+          "uuid": "641f4b1a-7022-4fa7-98ef-da2f3d053ab5",
+          "ttft_stream_ms": 4585,
+          "time_to_request_ms": 359,
+          "first_content_frame_ms": 4585,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9452.2,
+        "num_turns": 7,
+        "total_cost_usd": 0.308928,
+        "session_id": "16b44635-8e81-4b9f-9aab-6cfe4ab6c12e",
+        "cli_output": {
+          "duration_api_ms": 7970,
+          "stop_reason": "end_turn",
+          "session_id": "16b44635-8e81-4b9f-9aab-6cfe4ab6c12e",
+          "total_cost_usd": 0.308928,
+          "usage": {
+            "input_tokens": 73989,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24960,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 73989,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 24960,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.308928,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3111,
+          "type": "result",
+          "duration_ms": 8521,
+          "uuid": "14da32c3-9609-44f0-8dca-8a9265407877",
+          "ttft_stream_ms": 3109,
+          "time_to_request_ms": 356,
+          "first_content_frame_ms": 3109,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": false,
+        "rc": 0,
+        "latency_ms": 19966.91,
+        "num_turns": 7,
+        "total_cost_usd": 0.5177008,
+        "session_id": "eb79dace-40c9-43eb-8e39-80f1b4c08526",
+        "cli_output": {
+          "duration_api_ms": 13986,
+          "stop_reason": "end_turn",
+          "session_id": "eb79dace-40c9-43eb-8e39-80f1b4c08526",
+          "total_cost_usd": 0.5177008,
+          "usage": {
+            "input_tokens": 124692,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 27264,
+            "output_tokens": 674,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 124692,
+              "outputTokens": 674,
+              "cacheReadInputTokens": 27264,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.5177008,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "jVhHMr5Ke",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\a.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\a.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to a.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "YECWCDmug",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\b.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\b.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to b.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "mUKRMa2FU",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\c.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_4\\c.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to c.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "I need permission to use PowerShell to append text to the files `a.txt`, `b.txt`, and `c.txt`. This is necessary to complete the task of appending `-done` to each file.\n\nSince the current permission mode is set to \"don't ask,\" I cannot proceed without explicit permission. Would you like to grant the necessary permissions to allow me to complete this task? If so, please confirm, and I will proceed with the changes.",
+          "ttft_ms": 3033,
+          "type": "result",
+          "duration_ms": 19145,
+          "uuid": "8b08cd6b-857a-4c13-b2b5-12aad927fa42",
+          "ttft_stream_ms": 3030,
+          "time_to_request_ms": 350,
+          "first_content_frame_ms": 3031,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 23267.91,
+        "num_turns": 11,
+        "total_cost_usd": 0.5379656,
+        "session_id": "25a10e56-2231-4b02-901b-a4636da3f9dd",
+        "cli_output": {
+          "duration_api_ms": 16546,
+          "stop_reason": "end_turn",
+          "session_id": "25a10e56-2231-4b02-901b-a4636da3f9dd",
+          "total_cost_usd": 0.5379656,
+          "usage": {
+            "input_tokens": 126589,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 50048,
+            "output_tokens": 1080,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 126589,
+              "outputTokens": 1080,
+              "cacheReadInputTokens": 50048,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.5379656,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "2A5u12gkx",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\alpha.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\alpha.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to alpha.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "DhIcV8duQ",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\beta.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\beta.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to beta.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "8P6Y1KaqA",
+              "tool_input": {
+                "command": "$content = Get-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\gamma.txt\" -ErrorAction Stop; $newContent = $content + \"-done\"; Set-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_5\\gamma.txt\" -Value $newContent -Encoding utf8",
+                "description": "Append '-done' to gamma.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 11,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The task is now complete. The three files have been successfully updated with their respective content followed by `-done`:\n\n- `alpha.txt` now contains: `alpha-done`\n- `beta.txt` now contains: `beta-done`\n- `gamma.txt` now contains: `gamma-done`",
+          "ttft_ms": 3670,
+          "type": "result",
+          "duration_ms": 22441,
+          "uuid": "e9c3b857-e993-4feb-9efe-a5e5806894d0",
+          "ttft_stream_ms": 3599,
+          "time_to_request_ms": 353,
+          "first_content_frame_ms": 3612,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9362.19,
+        "num_turns": 7,
+        "total_cost_usd": 0.304116,
+        "session_id": "79839526-424c-4a88-ab5d-00d66e4f2bb9",
+        "cli_output": {
+          "duration_api_ms": 7966,
+          "stop_reason": "end_turn",
+          "session_id": "79839526-424c-4a88-ab5d-00d66e4f2bb9",
+          "total_cost_usd": 0.304116,
+          "usage": {
+            "input_tokens": 73968,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1920,
+            "output_tokens": 393,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 73968,
+              "outputTokens": 393,
+              "cacheReadInputTokens": 1920,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.304116,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `alpha.txt` → `alpha-done`\n- `beta.txt` → `beta-done`\n- `gamma.txt` → `gamma-done`",
+          "ttft_ms": 3234,
+          "type": "result",
+          "duration_ms": 8528,
+          "uuid": "5e5f073d-f7e1-4774-b6b5-60830ae9c7a1",
+          "ttft_stream_ms": 3230,
+          "time_to_request_ms": 380,
+          "first_content_frame_ms": 3231,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 7923.42,
+        "num_turns": 3,
+        "total_cost_usd": 0.3018688,
+        "session_id": "45065f2f-f058-4272-aeb4-3b3f1675e1e6",
+        "cli_output": {
+          "duration_api_ms": 5941,
+          "stop_reason": "end_turn",
+          "session_id": "45065f2f-f058-4272-aeb4-3b3f1675e1e6",
+          "total_cost_usd": 0.3018688,
+          "usage": {
+            "input_tokens": 73232,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 21504,
+            "output_tokens": 232,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 73232,
+              "outputTokens": 232,
+              "cacheReadInputTokens": 21504,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.3018688,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 3,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been created and updated as requested:\n\n- `a.txt` contains: `alpha-done`\n- `b.txt` contains: `beta-done`\n- `c.txt` contains: `gamma-done`",
+          "ttft_ms": 2504,
+          "type": "result",
+          "duration_ms": 7081,
+          "uuid": "0c45fe29-1b6b-46a0-af51-1a9244deeb9a",
+          "ttft_stream_ms": 2502,
+          "time_to_request_ms": 354,
+          "first_content_frame_ms": 2503,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 8,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 15855.63,
+        "num_turns": 8,
+        "total_cost_usd": 0.6137368000000001,
+        "session_id": "61f00f39-719a-401a-b99b-915061108cf3",
+        "cli_output": {
+          "duration_api_ms": 12835,
+          "stop_reason": "end_turn",
+          "session_id": "61f00f39-719a-401a-b99b-915061108cf3",
+          "total_cost_usd": 0.6137368000000001,
+          "usage": {
+            "input_tokens": 149453,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 26624,
+            "output_tokens": 530,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 149453,
+              "outputTokens": 530,
+              "cacheReadInputTokens": 26624,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.6137368000000001,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "uZx2D07Pu",
+              "tool_input": {
+                "command": "$content = 'alpha-done'; (Get-Content 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_8\\a.txt') -replace 'alpha', $content | Set-Content 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_8\\a.txt'",
+                "description": "Appends '-done' to the content of a.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 8,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as requested:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3070,
+          "type": "result",
+          "duration_ms": 14969,
+          "uuid": "72b25fe3-bb8d-4b1e-ba27-4bfd49548e66",
+          "ttft_stream_ms": 3066,
+          "time_to_request_ms": 370,
+          "first_content_frame_ms": 3067,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 18816.17,
+        "num_turns": 8,
+        "total_cost_usd": 0.4217016,
+        "session_id": "938d2161-1edf-4dd8-b9f1-0719d7c08cad",
+        "cli_output": {
+          "duration_api_ms": 11822,
+          "stop_reason": "end_turn",
+          "session_id": "938d2161-1edf-4dd8-b9f1-0719d7c08cad",
+          "total_cost_usd": 0.4217016,
+          "usage": {
+            "input_tokens": 100417,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 26368,
+            "output_tokens": 738,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 100417,
+              "outputTokens": 738,
+              "cacheReadInputTokens": 26368,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.4217016,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "yGHf0s91Z",
+              "tool_input": {
+                "command": "$content = Get-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\a.txt'\nSet-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\a.txt' -Value \"$content-done\"",
+                "description": "Append '-done' to the content of a.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "crpOu6a6i",
+              "tool_input": {
+                "command": "$content = Get-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\b.txt'\nSet-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\b.txt' -Value \"$content-done\"",
+                "description": "Append '-done' to the content of b.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "vys2ExhB9",
+              "tool_input": {
+                "command": "$content = Get-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\c.txt'\nSet-Content -Path 'C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\c.txt' -Value \"$content-done\"",
+                "description": "Append '-done' to the content of c.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 8,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The task is complete. I have successfully created the three files (`a.txt`, `b.txt`, and `c.txt`) with the following content:\n\n- `a.txt`: `alpha-done`\n- `b.txt`: `beta-done`\n- `c.txt`: `gamma-done`",
+          "ttft_ms": 3174,
+          "type": "result",
+          "duration_ms": 17789,
+          "uuid": "40a67722-164d-475d-97e1-25b6fe31e080",
+          "ttft_stream_ms": 3170,
+          "time_to_request_ms": 401,
+          "first_content_frame_ms": 3170,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 12504.96,
+        "num_turns": 9,
+        "total_cost_usd": 0.409868,
+        "session_id": "5c7f3958-b3ec-421c-ac87-2d7e929b65d4",
+        "cli_output": {
+          "duration_api_ms": 11078,
+          "stop_reason": "end_turn",
+          "session_id": "5c7f3958-b3ec-421c-ac87-2d7e929b65d4",
+          "total_cost_usd": 0.409868,
+          "usage": {
+            "input_tokens": 99344,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2560,
+            "output_tokens": 599,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 99344,
+              "outputTokens": 599,
+              "cacheReadInputTokens": 2560,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.409868,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 9,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "All three files have now been successfully created and updated:\n\n- `alpha.txt` → `alpha-done`\n- `beta.txt` → `beta-done`\n- `gamma.txt` → `gamma-done`",
+          "ttft_ms": 3096,
+          "type": "result",
+          "duration_ms": 11654,
+          "uuid": "29dc6c66-b879-4f6f-ba5c-80eb46f19645",
+          "ttft_stream_ms": 3092,
+          "time_to_request_ms": 353,
+          "first_content_frame_ms": 3092,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  },
+  "s2": {
+    "reps": 10,
+    "successes": 10,
+    "pass_rate": 1.0,
+    "ci_95": [
+      0.7225,
+      1.0
+    ],
+    "mean_latency_ms": 6196.02,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6041.43,
+        "num_turns": 2,
+        "total_cost_usd": 0.19551600000000002,
+        "session_id": "93c9f6be-efb6-46cb-84d1-8a065a35bfab",
+        "cli_output": {
+          "duration_api_ms": 3511,
+          "stop_reason": "end_turn",
+          "session_id": "93c9f6be-efb6-46cb-84d1-8a065a35bfab",
+          "total_cost_usd": 0.19551600000000002,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19551600000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2600,
+          "type": "result",
+          "duration_ms": 5176,
+          "uuid": "0625313b-d5c5-4b06-baa6-105bd2edff2a",
+          "ttft_stream_ms": 2598,
+          "time_to_request_ms": 868,
+          "first_content_frame_ms": 2599,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 4810.62,
+        "num_turns": 2,
+        "total_cost_usd": 0.2004824,
+        "session_id": "010bc1fc-c024-44aa-a028-e31b15e13c16",
+        "cli_output": {
+          "duration_api_ms": 2830,
+          "stop_reason": "end_turn",
+          "session_id": "010bc1fc-c024-44aa-a028-e31b15e13c16",
+          "total_cost_usd": 0.2004824,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24832,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 24832,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.2004824,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2069,
+          "type": "result",
+          "duration_ms": 3995,
+          "uuid": "3c9234fd-7288-4564-98e3-6176f11c5fd5",
+          "ttft_stream_ms": 2067,
+          "time_to_request_ms": 370,
+          "first_content_frame_ms": 2067,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5776.02,
+        "num_turns": 2,
+        "total_cost_usd": 0.195772,
+        "session_id": "307a67ba-33fa-4fd4-9e8e-7cc1ef43a3e1",
+        "cli_output": {
+          "duration_api_ms": 3732,
+          "stop_reason": "end_turn",
+          "session_id": "307a67ba-33fa-4fd4-9e8e-7cc1ef43a3e1",
+          "total_cost_usd": 0.195772,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195772,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` ran successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2227,
+          "type": "result",
+          "duration_ms": 4881,
+          "uuid": "c380c9b1-e347-48c5-a1bf-e433a1ae3793",
+          "ttft_stream_ms": 2222,
+          "time_to_request_ms": 355,
+          "first_content_frame_ms": 2222,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5597.55,
+        "num_turns": 2,
+        "total_cost_usd": 0.19551600000000002,
+        "session_id": "313640d4-de65-47d8-bf01-b7011445554e",
+        "cli_output": {
+          "duration_api_ms": 3595,
+          "stop_reason": "end_turn",
+          "session_id": "313640d4-de65-47d8-bf01-b7011445554e",
+          "total_cost_usd": 0.19551600000000002,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19551600000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2063,
+          "type": "result",
+          "duration_ms": 4790,
+          "uuid": "b4d1ffa8-3b5f-4a3d-bb49-b422dacaf759",
+          "ttft_stream_ms": 2060,
+          "time_to_request_ms": 342,
+          "first_content_frame_ms": 2061,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5547.33,
+        "num_turns": 2,
+        "total_cost_usd": 0.19551600000000002,
+        "session_id": "7cb00ffc-188a-4bb3-bd27-d98fb37f1fb3",
+        "cli_output": {
+          "duration_api_ms": 3572,
+          "stop_reason": "end_turn",
+          "session_id": "7cb00ffc-188a-4bb3-bd27-d98fb37f1fb3",
+          "total_cost_usd": 0.19551600000000002,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19551600000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2186,
+          "type": "result",
+          "duration_ms": 4723,
+          "uuid": "27b3a4e4-d2a9-4193-b6c2-e07d8d69d4c2",
+          "ttft_stream_ms": 2184,
+          "time_to_request_ms": 392,
+          "first_content_frame_ms": 2185,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 8203.59,
+        "num_turns": 2,
+        "total_cost_usd": 0.195704,
+        "session_id": "499698da-bde3-481b-bdae-478f0b9158c9",
+        "cli_output": {
+          "duration_api_ms": 6188,
+          "stop_reason": "end_turn",
+          "session_id": "499698da-bde3-481b-bdae-478f0b9158c9",
+          "total_cost_usd": 0.195704,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 58,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 58,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195704,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` was run successfully, and it returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 4847,
+          "type": "result",
+          "duration_ms": 7418,
+          "uuid": "c0a213be-ddcb-4023-b6eb-068940a27d88",
+          "ttft_stream_ms": 4845,
+          "time_to_request_ms": 465,
+          "first_content_frame_ms": 4845,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6392.75,
+        "num_turns": 2,
+        "total_cost_usd": 0.195772,
+        "session_id": "a01e438b-469e-43bb-b700-b2df4383ebb1",
+        "cli_output": {
+          "duration_api_ms": 4491,
+          "stop_reason": "end_turn",
+          "session_id": "a01e438b-469e-43bb-b700-b2df4383ebb1",
+          "total_cost_usd": 0.195772,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195772,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 3023,
+          "type": "result",
+          "duration_ms": 5592,
+          "uuid": "d5a23f81-6d2d-4a15-a95d-fb43e6017935",
+          "ttft_stream_ms": 3021,
+          "time_to_request_ms": 346,
+          "first_content_frame_ms": 3022,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 8,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 7013.14,
+        "num_turns": 2,
+        "total_cost_usd": 0.19551600000000002,
+        "session_id": "8d6b7ffd-5840-412f-a487-949dda93c0eb",
+        "cli_output": {
+          "duration_api_ms": 5005,
+          "stop_reason": "end_turn",
+          "session_id": "8d6b7ffd-5840-412f-a487-949dda93c0eb",
+          "total_cost_usd": 0.19551600000000002,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19551600000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 3572,
+          "type": "result",
+          "duration_ms": 6206,
+          "uuid": "5282e208-9e40-44dd-a64e-a1d86ba3fea0",
+          "ttft_stream_ms": 3571,
+          "time_to_request_ms": 448,
+          "first_content_frame_ms": 3571,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6375.52,
+        "num_turns": 2,
+        "total_cost_usd": 0.195644,
+        "session_id": "3266d516-f87d-4d94-b396-2bccb4e13a33",
+        "cli_output": {
+          "duration_api_ms": 4486,
+          "stop_reason": "end_turn",
+          "session_id": "3266d516-f87d-4d94-b396-2bccb4e13a33",
+          "total_cost_usd": 0.195644,
+          "usage": {
+            "input_tokens": 48604,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48604,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195644,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` ran successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2016,
+          "type": "result",
+          "duration_ms": 5598,
+          "uuid": "f65d2c94-4cef-4edc-841a-83d2d5777d63",
+          "ttft_stream_ms": 2014,
+          "time_to_request_ms": 355,
+          "first_content_frame_ms": 2015,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6202.22,
+        "num_turns": 2,
+        "total_cost_usd": 0.19579600000000003,
+        "session_id": "4144e983-e289-435f-87d0-573d18253a2c",
+        "cli_output": {
+          "duration_api_ms": 4306,
+          "stop_reason": "end_turn",
+          "session_id": "4144e983-e289-435f-87d0-573d18253a2c",
+          "total_cost_usd": 0.19579600000000003,
+          "usage": {
+            "input_tokens": 48610,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-latest": {
+              "inputTokens": 48610,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19579600000000003,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-latest",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2838,
+          "type": "result",
+          "duration_ms": 5416,
+          "uuid": "b6fe85f2-9054-454c-85bd-edc62ccee66e",
+          "ttft_stream_ms": 2836,
+          "time_to_request_ms": 349,
+          "first_content_frame_ms": 2836,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_pooled:qwen3.5-omni-flash-official",
+  "route_id": "pooled:qwen3.5-omni-flash-official",
+  "canonical_id": "qwen/qwen-3.5-flash",
+  "provider": "pooled",
+  "provider_model_id": "qwen3.5-omni-flash-official",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:network_dns_failure",
+  "timestamp": 1792257809.3649366,
+  "duration_seconds": 0.0,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 0,
+      "latency_ms": 2.24,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "<urlopen error [Errno 11001] getaddrinfo failed>"
+    }
+  }
+}

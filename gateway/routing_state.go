@@ -118,7 +118,11 @@ func (s *Server) PersistPinned() error {
 	return SaveRoutingState(path, RoutingState{BannedModels: banned, PinnedModels: pinned})
 }
 
-// CapsPathBesideConfig returns gateway/capabilities.json next to config.json.
+// CapsPathBesideConfig returns gateway/capabilities.json next to config.json,
+// or respects CLAUDE_MASTER_GATEWAY_CAPABILITIES when test isolation is active.
 func CapsPathBesideConfig(configPath string) string {
+	if envCap := os.Getenv("CLAUDE_MASTER_GATEWAY_CAPABILITIES"); envCap != "" {
+		return envCap
+	}
 	return filepath.Join(filepath.Dir(configPath), "capabilities.json")
 }

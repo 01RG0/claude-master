@@ -1,0 +1,165 @@
+[
+  {
+    "id": "SCN-C01-GEMINI",
+    "dimension": "C",
+    "category": "gemini",
+    "cross_dimensions": [
+      "C",
+      "B",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Google Gemini Provider End-to-End Routing",
+    "description": "Route agent request through Gemini 2.5 Flash, verifying OpenAI dialect adapter and tool calling format.",
+    "setup": {
+      "provider": "gemini",
+      "model": "gemini-2.5-flash"
+    },
+    "input": {
+      "prompt": "Generate a json dictionary with keys 'status'='ok' and 'provider'='gemini'."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": [
+          "status",
+          "ok"
+        ]
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "provider",
+      "gemini"
+    ]
+  },
+  {
+    "id": "SCN-C02-GROQ",
+    "dimension": "C",
+    "category": "groq",
+    "cross_dimensions": [
+      "C",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Groq LPU Ultra-Low Latency TTFT Benchmark",
+    "description": "Route through Groq GPT-OSS 120b or Qwen 27B, verifying Time-To-First-Token under 600ms.",
+    "setup": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b"
+    },
+    "input": {
+      "prompt": "Answer in exactly 5 words: what is an operating system kernel?"
+    },
+    "expected_oracle": {
+      "type": "metric_counter",
+      "spec": {
+        "ttft_ms_max": 900,
+        "returncode": 0
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "provider",
+      "groq",
+      "latency"
+    ]
+  },
+  {
+    "id": "SCN-C03-MISTRAL",
+    "dimension": "C",
+    "category": "mistral",
+    "cross_dimensions": [
+      "C",
+      "G"
+    ],
+    "tier": "standard",
+    "title": "Mistral AI Zero-Retention Strict Policy Compliance",
+    "description": "Route sensitive code audit request through Mistral Small Latest with strict zero-data-retention headers.",
+    "setup": {
+      "provider": "mistral",
+      "model": "mistral-small-latest"
+    },
+    "input": {
+      "prompt": "Identify any potential SQL injection vulnerability in: query = f'SELECT * FROM users WHERE id={user_id}'"
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "SQL injection"
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "provider",
+      "mistral",
+      "privacy"
+    ]
+  },
+  {
+    "id": "SCN-C04-COHERE",
+    "dimension": "C",
+    "category": "cohere",
+    "cross_dimensions": [
+      "C",
+      "B"
+    ],
+    "tier": "standard",
+    "title": "Cohere Command R+ Enterprise Tool Calling",
+    "description": "Route multi-step tool calls through Cohere Command R+ v2 API, validating tool schema alignment.",
+    "setup": {
+      "provider": "cohere",
+      "model": "command-r-plus-08-2024"
+    },
+    "input": {
+      "prompt": "Create cohere_verify.txt with current timestamp and read it back."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "cohere_verify.txt"
+        ]
+      }
+    },
+    "timeout_s": 75,
+    "tags": [
+      "provider",
+      "cohere",
+      "tools"
+    ]
+  },
+  {
+    "id": "SCN-C05-OPENROUTER",
+    "dimension": "C",
+    "category": "openrouter",
+    "cross_dimensions": [
+      "C",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "OpenRouter Fallback Routing Across Diverse Models",
+    "description": "Route through OpenRouter candidate pool (Qwen 30B, Gemma 12B) verifying header pass-through.",
+    "setup": {
+      "provider": "openrouter",
+      "model": "qwen/qwen3-30b-a3b"
+    },
+    "input": {
+      "prompt": "Explain the difference between a mutex and a semaphore in two sentences."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": [
+          "mutex",
+          "semaphore"
+        ]
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "provider",
+      "openrouter"
+    ]
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_groq:openai/gpt-oss-120b",
+  "route_id": "groq:openai/gpt-oss-120b",
+  "canonical_id": "openai/gpt-oss-120b",
+  "provider": "groq",
+  "provider_model_id": "openai/gpt-oss-120b",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257483.7555616,
+  "duration_seconds": 6.14,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 768.12,
+      "output_text": "<answer>42</",
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-aaa54cc8-50d8-4f1b-a422-c80b44e989f8\",\"object\":\"chat.completion\",\"created\":1792257484,\"model\":\"openai/gpt-oss-120b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\\u003canswer\\u003e42\\u003c/\",\"reasoning\":\"The user asks to compute 7 * 6, which is 42. They want answer only enclosed in tags \\u003canswer\\u003e42\\u003c/answer\\u003e. So respond with that only.\"},\"logprobs\":null,\"finish_reason\":\"length\"}],\"usage\":{\"queue_time\":0.292714826,\"prompt_tokens\":94,\"prompt_time\""
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 744.56,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-4c3cc58d-d9ae-414e-a5dd-72676e96fa26\",\"object\":\"chat.completion\",\"created\":1792257486,\"model\":\"openai/gpt-oss-120b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"reasoning\":\"User wants to check health of database service. Use check_status function with service \\\"database\\\".\",\"tool_calls\":[{\"id\":\"fc_c03faaed-efab-43e7-948d-af5a03d542c2\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}}]},\"logprobs\":null,\"finish_reason\":\"tool_call"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 623.75,
+      "tool_count": 1,
+      "passed": false,
+      "raw_response": "{\"id\":\"chatcmpl-cd8f3274-a125-4bd7-b02d-78fed11ac93a\",\"object\":\"chat.completion\",\"created\":1792257489,\"model\":\"openai/gpt-oss-120b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"reasoning\":\"We need to call check_status for each service. The request: \\\"Check the status of both 'database' AND 'redis' services simultaneously.\\\" We can make two calls. Probably we can call one after another. Use function.\",\"tool_calls\":[{\"id\":\"fc_5e742850-9ba2-4e5e-a4a2-1088a55c323f\",\"type\":\"function\",\"functio"
+    }
+  }
+}

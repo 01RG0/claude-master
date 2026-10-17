@@ -26,6 +26,7 @@ import type {
   TestCaseResult,
   ThemeMode,
   UserMode,
+  RouteCooldownEntry,
 } from "./types.js";
 
 export interface ToastMessage {
@@ -62,11 +63,79 @@ export interface AppState {
   doctorChecks: DoctorCheckResult[];
   detectionHistory: DetectionEvent[];
   testCases: TestCaseResult[];
+  cooldownEntries: RouteCooldownEntry[];
 
   toasts: ToastMessage[];
 }
 
 type Listener = (state: AppState) => void;
+
+export const DEFAULT_PROVIDERS: ProviderItem[] = [
+  {
+    name: "groq",
+    base_url: "https://api.groq.com/openai/v1",
+    privacy_policy: "zero_retention",
+    models: ["llama-3.3-70b-versatile"],
+    enabled: true,
+    pool_strategy: "round_robin",
+    region: "us-west",
+    tags: ["ultra-fast", "free-tier"],
+    detected_dialect: "openai",
+    key_pools: [
+      {
+        account_label: "personal-01",
+        env_var: "GROQ_API_KEY",
+        priority: 10,
+        masked_key: "gsk_live_****9x21",
+        status: "valid",
+        tier: "Free Tier",
+        quota_left_percent: 86,
+        rate_limit_rpm: 30,
+        rate_limit_tpm: 60000,
+        errors_count: 0,
+        daily_spend: 0.0,
+        daily_cap: 1.0,
+      },
+    ],
+  },
+];
+
+export const DEFAULT_MODELS: ModelItem[] = [
+  {
+    id: "llama-3.3-70b-versatile",
+    name: "Llama 3.3 70B Versatile",
+    provider: "groq",
+    family: "Llama 3.3",
+    quality_score: 91,
+    latency_ms: 195,
+    cost_input_1m: 0.59,
+    cost_output_1m: 0.79,
+    roles: ["main", "subagent"],
+    status: "active",
+    overridden: false,
+    tokens_per_sec: 148,
+    sample_size_n: 3120,
+    ci_95: "±1.2%",
+    p_value: 0.002,
+    is_statistically_significant: true,
+    run_id: "run_bench_20261013_224409_4a8f",
+    artifact_url: "data/evals/results.json",
+    capabilities: {
+      streaming: true,
+      tool_calling: true,
+      vision: false,
+      json_mode: true,
+      reasoning: true,
+      context_window: 131072,
+      max_output_tokens: 32768,
+      provenance: "measured",
+    },
+    benchmarks: {
+      coding: { task_type: "coding", score: 89.6, sample_size_n: 1840, passed_count: 1648, ci_95_low: 88.1, ci_95_high: 91.1, measured_ttft_ms: 205, tokens_per_sec: 144, provenance: "measured", p_value: 0.003, is_significant: true, run_id: "run_4a8f#coding", artifact_url: "data/evals/results.json" },
+      tool_calling: { task_type: "tool_calling", score: 92.4, sample_size_n: 2150, passed_count: 1986, ci_95_low: 91.2, ci_95_high: 93.6, measured_ttft_ms: 190, tokens_per_sec: 152, provenance: "measured", p_value: 0.001, is_significant: true, run_id: "run_4a8f#tools", artifact_url: "data/evals/results.json" },
+    },
+  },
+];
 
 class Store {
   private state: AppState;
@@ -88,8 +157,8 @@ class Store {
       emergencyBypass: false,
       commandPaletteOpen: false,
 
-      providers: [],
-      models: [],
+      providers: [...DEFAULT_PROVIDERS],
+      models: [...DEFAULT_MODELS],
       routingRoles: [],
       routingRules: [],
       drexConfig: null,
@@ -113,6 +182,7 @@ class Store {
       doctorChecks: [],
       detectionHistory: [],
       testCases: [],
+      cooldownEntries: [],
       toasts: [],
     };
   }
@@ -222,6 +292,7 @@ class Store {
         doctorChecks,
         detectionHistory,
         testCases,
+        cooldownEntries,
       ] = await Promise.all([
         api.fetchProviders(),
         api.fetchModels(),
@@ -237,10 +308,11 @@ class Store {
         api.fetchDoctorChecks(),
         api.fetchDetectionHistory(),
         api.fetchTestCases(),
+        api.fetchCooldownEntries(),
       ]);
 
-      this.state.providers = providers;
-      this.state.models = models;
+      this.state.providers = providers && providers.length > 0 ? providers : (this.state.providers.length > 0 ? this.state.providers : [...DEFAULT_PROVIDERS]);
+      this.state.models = models && models.length > 0 ? models : (this.state.models.length > 0 ? this.state.models : [...DEFAULT_MODELS]);
       this.state.routingRoles = routingRoles;
       this.state.routingRules = routingRules;
       this.state.drexConfig = drexConfig;
@@ -254,6 +326,7 @@ class Store {
       this.state.doctorChecks = doctorChecks;
       this.state.detectionHistory = detectionHistory;
       this.state.testCases = testCases;
+      this.state.cooldownEntries = cooldownEntries || [];
 
       this.notify();
     } catch {
@@ -261,6 +334,11 @@ class Store {
     }
 
     this.startHealthPolling();
+  }
+
+  setCooldownEntries(entries: RouteCooldownEntry[]): void {
+    this.state.cooldownEntries = entries;
+    this.notify();
   }
 
   private startHealthPolling(): void {

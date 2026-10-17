@@ -1,0 +1,99 @@
+{
+  "version": "2.0.0",
+  "total_constraints": 5,
+  "invalid_2wise_tuples_removed": 8,
+  "constraints": [
+    {
+      "id": "C-01",
+      "name": "Vision-Only Tasks on Text-Only Models",
+      "description": "Multimodal visual reasoning (B05) cannot be executed by text-only LLMs (Groq C2, Mistral C3, Cohere C4). Only multimodal endpoints (Gemini C1, OpenRouter C5) support image attachments.",
+      "dimensions": [
+        "B",
+        "C"
+      ],
+      "prohibited_pairs": [
+        [
+          "B05",
+          "C2"
+        ],
+        [
+          "B05",
+          "C3"
+        ],
+        [
+          "B05",
+          "C4"
+        ]
+      ],
+      "rationale": "Attempting to feed image blocks to text-only model APIs produces a hard 400 Bad Request or unhandled serialization crash rather than valid testable behavior."
+    },
+    {
+      "id": "C-02",
+      "name": "Linux Signals on Windows cmd.exe Without ConPTY",
+      "description": "POSIX signals (SIGINT/SIGTERM, mid-stream cancellation F4, abrupt kill F5) cannot be cleanly captured or tested in legacy Windows cmd.exe (E2) without ConPTY pseudo-console emulation.",
+      "dimensions": [
+        "E",
+        "F"
+      ],
+      "prohibited_pairs": [
+        [
+          "E2",
+          "F4"
+        ],
+        [
+          "E2",
+          "F5"
+        ]
+      ],
+      "rationale": "Legacy Windows cmd.exe lacks POSIX signal trap propagation; issuing Ctrl+C or kill signals without ConPTY forcibly terminates the parent console process rather than allowing graceful signal handling."
+    },
+    {
+      "id": "C-03",
+      "name": "Mid-Stream Interruption on Non-Streaming / Headless JSON",
+      "description": "Mid-stream cancellation (F4) cannot be performed against non-streaming headless json commands (B14) because output is returned atomically at process completion without an SSE stream.",
+      "dimensions": [
+        "B",
+        "F"
+      ],
+      "prohibited_pairs": [
+        [
+          "B14",
+          "F4"
+        ]
+      ],
+      "rationale": "In headless atomic json mode (--output-format json), tokens are accumulated internally and emitted in a single write at exit. There is no progressive token stream to cancel mid-flight."
+    },
+    {
+      "id": "C-04",
+      "name": "Key Revocation Tests on Single-Key Local Configs",
+      "description": "Key revocation and 401 pool rollover tests (F2) require a redundant multi-key pool or failover routing (D1/D2). They are invalid against single-key isolated configurations (D5) where no secondary key exists.",
+      "dimensions": [
+        "D",
+        "F"
+      ],
+      "prohibited_pairs": [
+        [
+          "D5",
+          "F2"
+        ]
+      ],
+      "rationale": "Testing automatic key pool rotation against a profile configured with exactly one non-pooled key is logically invalid; it tests profile isolation rather than pool rollover."
+    },
+    {
+      "id": "C-05",
+      "name": "High-Concurrency Tests on Rate-Limited Free Tiers Without Fallback",
+      "description": "High-concurrency load testing (D4) cannot be tested against rate-limited free-tier providers (Groq C2) without failover routing (D1).",
+      "dimensions": [
+        "C",
+        "D"
+      ],
+      "prohibited_pairs": [
+        [
+          "C2",
+          "D4"
+        ]
+      ],
+      "rationale": "Free-tier API quotas enforce aggressive per-minute rate limits. Concurrency bursts against an isolated free tier result in deterministic 429 drops rather than valid concurrency throughput testing."
+    }
+  ]
+}

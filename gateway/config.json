@@ -243,7 +243,7 @@
     {
       "name": "gemini",
       "base_url": "https://generativelanguage.googleapis.com/v1beta/openai",
-      "privacy_policy": "public_data_only",
+      "privacy_policy": "zero_retention",
       "adapter": {
         "tool_images": "text"
       },
@@ -281,19 +281,9 @@
     "github_models_fallback_only": true,
     "selection": "thompson_sampling"
   },
-  "model_aliases": {
-    "opus": "ministral-8b-latest",
-    "sonnet": "ministral-8b-latest",
-    "haiku": "ministral-8b-latest",
-    "fable": "ministral-8b-latest",
-    "default": "ministral-8b-latest"
-  },
-  "roles": {
-    "main": "ministral-8b-latest",
-    "fast": "ministral-8b-latest",
-    "subagent": "ministral-8b-latest",
-    "summarizer": "ministral-8b-latest"
-  },
+  "model_aliases": {},
+  "roles": {},
+  "tool_rescue_enabled": true,
   "logging": {
     "requests_dir": "logs/claude-traffic",
     "max_body_bytes": 4096

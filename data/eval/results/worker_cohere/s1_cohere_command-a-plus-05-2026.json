@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:command-a-plus-05-2026",
+  "route_id": "cohere:command-a-plus-05-2026",
+  "canonical_id": "cohere/command-a-plus-05-2026",
+  "provider": "cohere",
+  "provider_model_id": "command-a-plus-05-2026",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257530.0018358,
+  "duration_seconds": 7.23,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 752.77,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"646e1c22-913d-40af-9dfb-34d76ecc50fa\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user asks: \\\"Compute 7 * 6. Return ONLY the answer enclosed in tags like: \\u003canswer\\u003e42\\u003c/answer\\u003e.\\\"\\n\\nWe just need to compute 7 * 6 = 42. Return answer enclosed in tags: \\u003canswer\\u003e42\\u003c/answer\\u003e. No extra text.\"},{\"type\":\"text\",\"text\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\""
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1173.17,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"9d7c42cd-a694-4d52-a909-0e8424b8a31c\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user wants me to check the health of the database service. I have a function called `check_status` that can check the status of an infrastructure service. The function requires a \\\"service\\\" parameter, and the user specified \\\"database service\\\" as the service to check.\\n\\nI should call the check_status function with \\\"database\\\" as the service parameter.\"}],\"tool_calls\":[{\"id"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1298.56,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"41902b5c-08a3-48e0-a9c8-e1958b7addf8\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user wants to check the status of both 'database' and 'redis' services simultaneously. I have access to the check_status function which takes a service parameter. I need to call this function twice - once for 'database' and once for 'redis'. Since the user wants them done simultaneously, I should make both function calls in parallel.\"}],\"tool_calls\":[{\"id\":\"check_status_7n175b"
+    }
+  }
+}

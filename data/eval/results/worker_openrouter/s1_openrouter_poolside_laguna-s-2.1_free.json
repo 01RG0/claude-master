@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:poolside/laguna-s-2.1:free",
+  "route_id": "openrouter:poolside/laguna-s-2.1:free",
+  "canonical_id": "poolside/laguna-s-2.1-20260720",
+  "provider": "openrouter",
+  "provider_model_id": "poolside/laguna-s-2.1:free",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257802.5174692,
+  "duration_seconds": 9.88,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 2653.04,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "\n         \n\n         \n{\"id\":\"gen-1792257798-NWcYcMbxezBfJGk94U2E\",\"object\":\"chat.completion\",\"created\":1792257798,\"model\":\"poolside/laguna-s-2.1:free\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\",\"refusal\":null,\"reasoning\":null}}],\"usage\":{\"prompt_tokens\":67,\"completion_tokens\":9,\"total_tokens\":76,\"cost\":0,\"is_byok\":false,"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1100.65,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257804-Z5f0K8xd52VjPKwnLWeW\",\"object\":\"chat.completion\",\"created\":1792257804,\"model\":\"poolside/laguna-s-2.1:free\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":null,\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"chatcmpl-tool-3441789937124a45be85bb4492db1bba\",\"function\":{\"na"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 429,
+      "latency_ms": 306.95,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"poolside/laguna-s-2.1:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Poolside\",\"is_byok\":false,\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider rout"
+    }
+  }
+}

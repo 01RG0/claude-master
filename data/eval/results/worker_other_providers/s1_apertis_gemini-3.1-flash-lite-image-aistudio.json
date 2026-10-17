@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_apertis:gemini-3.1-flash-lite-image-aistudio",
+  "route_id": "apertis:gemini-3.1-flash-lite-image-aistudio",
+  "canonical_id": "google/gemini-3.1-flash",
+  "provider": "apertis",
+  "provider_model_id": "gemini-3.1-flash-lite-image-aistudio",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_503",
+  "timestamp": 1792257776.9422784,
+  "duration_seconds": 1.24,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 503,
+      "latency_ms": 1238.53,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"This model is not available, please try another model. (request id: 2026101801230231402465956320088)\",\"type\":\"api_error\"}}"
+    }
+  }
+}

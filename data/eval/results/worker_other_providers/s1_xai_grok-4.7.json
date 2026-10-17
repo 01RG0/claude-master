@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_xai:grok-4.7",
+  "route_id": "xai:grok-4.7",
+  "canonical_id": "xai/grok-4.7",
+  "provider": "xai",
+  "provider_model_id": "grok-4.7",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_400_invalid_key",
+  "timestamp": 1792257748.0557127,
+  "duration_seconds": 0.31,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 400,
+      "latency_ms": 307.79,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"code\":\"invalid-argument\",\"error\":\"Incorrect API key provided. You can obtain an API key from https://console.x.ai.\"}"
+    }
+  }
+}

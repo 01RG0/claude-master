@@ -16,6 +16,7 @@ from brain.api.services.config_service import (
     read_gateway_config,
     get_capabilities_path,
 )
+from brain.routing.privacy_policy import has_valid_zero_retention_evidence
 
 
 _LITELLM_PRICES_CACHE: Optional[Dict[str, Any]] = None
@@ -36,6 +37,24 @@ def load_litellm_prices() -> Dict[str, Any]:
     return _LITELLM_PRICES_CACHE
 
 
+_CATALOG_ROUTES_CACHE: Optional[Dict[str, Any]] = None
+
+
+def load_catalog_routes() -> Dict[str, Any]:
+    global _CATALOG_ROUTES_CACHE
+    if _CATALOG_ROUTES_CACHE is not None:
+        return _CATALOG_ROUTES_CACHE
+    p = get_repo_root() / "data" / "catalog" / "routes.json"
+    if p.exists():
+        try:
+            _CATALOG_ROUTES_CACHE = json.loads(p.read_text(encoding="utf-8"))
+            return _CATALOG_ROUTES_CACHE
+        except Exception:
+            pass
+    _CATALOG_ROUTES_CACHE = {}
+    return _CATALOG_ROUTES_CACHE
+
+
 def get_model_pricing(model_id: str) -> Dict[str, float]:
     prices = load_litellm_prices()
     # Direct lookup or clean prefix lookup
@@ -52,6 +71,18 @@ def get_model_pricing(model_id: str) -> Dict[str, float]:
             "input_per_million": round(in_cost * 1_000_000, 4),
             "output_per_million": round(out_cost * 1_000_000, 4),
         }
+
+    # Catalog routes fallback
+    routes = load_catalog_routes()
+    for r in routes.values():
+        if r.get("provider_model_id") == model_id or r.get("canonical_id") == model_id or model_id in r.get("route_id", ""):
+            pr = r.get("pricing", {})
+            if pr and (pr.get("prompt_per_m", 0.0) > 0 or pr.get("completion_per_m", 0.0) > 0):
+                return {
+                    "input_per_million": round(float(pr.get("prompt_per_m", 0.0)), 4),
+                    "output_per_million": round(float(pr.get("completion_per_m", 0.0)), 4),
+                }
+
     return {"input_per_million": 0.0, "output_per_million": 0.0}
 
 
@@ -93,6 +124,8 @@ def get_all_models(conn: Optional[sqlite3.Connection] = None) -> List[ModelInfo]
     # 1. Models from config.json
     for p in config.get("providers", []):
         prov_name = p.get("name", "unknown")
+        p_privacy = p.get("privacy_policy", "zero_retention")
+        p_compliant = has_valid_zero_retention_evidence(prov_name) if p_privacy == "zero_retention" else False
         for m in p.get("models", []):
             st = stats_map.get(m, {})
             succ = st.get("successes", 0)
@@ -100,9 +133,11 @@ def get_all_models(conn: Optional[sqlite3.Connection] = None) -> List[ModelInfo]
             total_calls = succ + fail
             lat = round(st.get("total_latency_ms", 0.0) / total_calls, 1) if total_calls > 0 else 0.0
 
+            # Determine tool calling support: gemma models on OpenRouter do not support function calling, and embedding/reranking models do not support tools
+            has_tools = "gemma" not in m.lower() and "embed" not in m.lower() and "rerank" not in m.lower()
             caps = {
                 "vision": "vision" in m.lower() or "gemini" in m.lower(),
-                "tools": True,
+                "tools": has_tools,
                 "streaming": True,
                 "reasoning": "r1" in m.lower() or "reasoning" in m.lower() or "thinking" in m.lower(),
             }
@@ -120,16 +155,21 @@ def get_all_models(conn: Optional[sqlite3.Connection] = None) -> List[ModelInfo]
                 latency_p50_ms=lat,
                 is_pinned=m in pinned_banned.get("pinned", []),
                 is_banned=m in pinned_banned.get("banned", []),
+                privacy_policy=p_privacy,
+                zero_retention_compliant=p_compliant,
             )
 
     # 2. Add models from capabilities.json
     for prov_name, prov_info in caps_data.items():
+        p_privacy = "zero_retention"
+        p_compliant = has_valid_zero_retention_evidence(prov_name)
         for m in prov_info.get("models", []):
             if m == "*" or m in models_dict:
                 continue
+            has_tools = "gemma" not in m.lower() and "embed" not in m.lower() and "rerank" not in m.lower()
             caps = {
                 "vision": "vision" in m.lower() or "omni" in m.lower(),
-                "tools": True,
+                "tools": has_tools,
                 "streaming": True,
                 "reasoning": "think" in m.lower() or "r1" in m.lower(),
             }
@@ -147,6 +187,8 @@ def get_all_models(conn: Optional[sqlite3.Connection] = None) -> List[ModelInfo]
                 latency_p50_ms=0.0,
                 is_pinned=m in pinned_banned.get("pinned", []),
                 is_banned=m in pinned_banned.get("banned", []),
+                privacy_policy=p_privacy,
+                zero_retention_compliant=p_compliant,
             )
 
     return list(models_dict.values())

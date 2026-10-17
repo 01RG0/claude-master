@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_groq:openai/gpt-oss-20b",
+  "route_id": "groq:openai/gpt-oss-20b",
+  "canonical_id": "openai/gpt-oss-20b",
+  "provider": "groq",
+  "provider_model_id": "openai/gpt-oss-20b",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257491.6682634,
+  "duration_seconds": 5.69,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 513.59,
+      "output_text": "<answer",
+      "passed": false,
+      "raw_response": "{\"id\":\"chatcmpl-fdea8ae5-9ce9-4d0b-9c45-46a94657bfb1\",\"object\":\"chat.completion\",\"created\":1792257492,\"model\":\"openai/gpt-oss-20b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\\u003canswer\",\"reasoning\":\"The user wants the result of 7 * 6, which is 42. They want the answer enclosed in tags like: \\u003canswer\\u003e42\\u003c/answer\\u003e. So we output exactly that.\"},\"logprobs\":null,\"finish_reason\":\"length\"}],\"usage\":{\"queue_time\":0.046820889,\"prompt_tokens\":94,\"prompt_time\":0.0053"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 414.62,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-5682092e-a71f-4805-9f13-fb79d4cb0716\",\"object\":\"chat.completion\",\"created\":1792257494,\"model\":\"openai/gpt-oss-20b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"reasoning\":\"We need to use the function check_status.\",\"tool_calls\":[{\"id\":\"fc_d553ea74-a7f7-4358-a74c-28012ac14673\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}}]},\"logprobs\":null,\"finish_reason\":\"tool_calls\"}],\"usage\":{\"queue_time\":0.027034218,\"prompt_tokens\":130,\""
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 756.42,
+      "tool_count": 1,
+      "passed": false,
+      "raw_response": "{\"id\":\"chatcmpl-2b2f299e-8325-4996-8e57-2b3c03aa7428\",\"object\":\"chat.completion\",\"created\":1792257497,\"model\":\"openai/gpt-oss-20b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"reasoning\":\"We need to check status of two services: database and redis. The function is check_status. It expects a single argument with service string. It doesn't support multiple services at once. We should call it twice. But the instruction: \\\"Check the status of both 'database' AND 'redis' services simultaneous"
+    }
+  }
+}

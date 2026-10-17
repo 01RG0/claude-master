@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_openrouter:prism-ml/ternary-bonsai-2-27b",
+  "route_id": "openrouter:prism-ml/ternary-bonsai-2-27b",
+  "canonical_id": "prism-ml/ternary-bonsai-2-27b-20260918",
+  "provider": "openrouter",
+  "provider_model_id": "prism-ml/ternary-bonsai-2-27b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_402",
+  "timestamp": 1792257852.6417,
+  "duration_seconds": 1.16,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 402,
+      "latency_ms": 158.84,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits\",\"code\":402,\"metadata\":{\"limit_source\":\"openrouter_credits\",\"remedy_hint\":\"Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.\"}}}"
+    }
+  }
+}

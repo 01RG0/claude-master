@@ -27,23 +27,31 @@ type toolStreamState struct {
 
 // StreamTranslator accumulates one upstream streaming response.
 type StreamTranslator struct {
-	mu            sync.Mutex
-	model         string
-	msgID         string
-	started       bool
-	textStarted   bool
-	textStopped   bool
-	textIndex     int
+	mu              sync.Mutex
+	model           string
+	msgID           string
+	started         bool
+	textStarted     bool
+	textStopped     bool
+	textIndex       int
 	thinkingStarted bool
 	thinkingStopped bool
 	thinkingIndex   int
-	nextIndex     int
-	tools         map[int]*toolStreamState // upstream tool index → state
-	finished      bool
-	finishStop    string
-	promptTokens  int
-	completionTok int
-	cachedTokens  int
+	nextIndex       int
+	tools           map[int]*toolStreamState // upstream tool index → state
+	finished        bool
+	finishStop      string
+	promptTokens    int
+	completionTok   int
+	cachedTokens    int
+	accumulatedText strings.Builder
+	rescueEnabled   bool
+	toolsDeclared   []AnthropicTool
+	RepairsApplied  []string
+	// rescueLayer receives every rescue log. Defaults to DefaultToolRescue;
+	// server wires its per-instance layer via SetRescueLayer so
+	// GET /admin/toolrescue reflects streaming rescues (CORRECTION 5: log every rescue).
+	rescueLayer *ToolRescueEmulation
 }
 
 // NewStreamTranslator creates a translator for one response.
@@ -54,7 +62,31 @@ func NewStreamTranslator(model, msgID string) *StreamTranslator {
 	return &StreamTranslator{
 		model: model, msgID: msgID,
 		tools: make(map[int]*toolStreamState),
+		rescueLayer: DefaultToolRescue,
 	}
+}
+
+// SetRescue configures streaming tool rescue emulation.
+func (t *StreamTranslator) SetRescue(enabled bool, tools []AnthropicTool) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.rescueEnabled = enabled
+	t.toolsDeclared = tools
+	if t.rescueLayer == nil {
+		t.rescueLayer = DefaultToolRescue
+	}
+}
+
+// SetRescueLayer wires the metrics/logging sink for streaming rescues.
+// When nil, DefaultToolRescue is used. Server calls this so streaming
+// rescues appear in its GET /admin/toolrescue snapshot (log every rescue).
+func (t *StreamTranslator) SetRescueLayer(e *ToolRescueEmulation) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	if e == nil {
+		e = DefaultToolRescue
+	}
+	t.rescueLayer = e
 }
 
 // Translate consumes one parsed OpenAI chunk and returns Anthropic SSE events.
@@ -122,6 +154,9 @@ func (t *StreamTranslator) Translate(chunk *StreamChunk) []AnthropicSSEEvent {
 		// first so Anthropic order (thinking → text) holds when reasoning
 		// streams before content.
 		if d.Content != "" {
+			if t.rescueEnabled && isAssistantRescueSource(d.Role) {
+				t.accumulatedText.WriteString(d.Content)
+			}
 			if t.thinkingStarted && !t.thinkingStopped {
 				t.thinkingStopped = true
 				emit(AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
@@ -254,6 +289,51 @@ func (t *StreamTranslator) Finish(promptTokens, completionTokens, cachedTokens i
 		events = append(events, AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
 			"type": "content_block_stop", "index": t.textIndex,
 		}})
+	}
+	// Fenced tool call rescue: when no native tool calls arrived and tool rescue is enabled.
+	// CORRECTION 5 gating: t.accumulatedText holds ONLY assistant-produced
+	// deltas (d.Content appended in Translate; tool/file/web results never
+	// enter this buffer), so rescue provably fires only on the model's own
+	// assistant-turn text. extractFencedToolCalls enforces declared-tool
+	// allowlist + input_schema validation; poisoned fences for undeclared
+	// tools or invalid args are dropped (stay as text, never tool_use).
+	if t.rescueEnabled && len(t.tools) == 0 && len(t.toolsDeclared) > 0 {
+		raw := t.accumulatedText.String()
+		if rescued := extractFencedToolCalls(raw, t.toolsDeclared); len(rescued) > 0 {
+			layer := t.rescueLayer
+			if layer == nil {
+				layer = DefaultToolRescue
+			}
+			for _, tc := range rescued {
+				idx := t.nextIndex
+				t.nextIndex++
+				t.tools[idx] = &toolStreamState{
+					blockIndex: idx,
+					id:         tc.ID,
+					name:       tc.Function.Name,
+					started:    true,
+				}
+				events = append(events, AnthropicSSEEvent{"content_block_start", map[string]interface{}{
+					"type": "content_block_start", "index": idx,
+					"content_block": map[string]interface{}{
+						"type": "tool_use", "id": tc.ID,
+						"name": tc.Function.Name, "input": map[string]interface{}{},
+					},
+				}})
+				events = append(events, AnthropicSSEEvent{"content_block_delta", map[string]interface{}{
+					"type": "content_block_delta", "index": idx,
+					"delta": map[string]interface{}{"type": "input_json_delta", "partial_json": tc.Function.Arguments},
+				}})
+				events = append(events, AnthropicSSEEvent{"content_block_stop", map[string]interface{}{
+					"type": "content_block_stop", "index": idx,
+				}})
+				// Log every rescue: attempt + repair with diff/summary.
+				layer.RecordAttempt(t.model)
+				layer.RecordRescue(t.model, tc.Function.Name, []string{"fenced_markdown_json"}, raw, tc.Function.Arguments)
+			}
+			t.RepairsApplied = append(t.RepairsApplied, "fenced_markdown_json")
+			t.finishStop = "tool_use"
+		}
 	}
 	// Tool blocks with no args still need start/stop (provider sent call with {}).
 	for idx, st := range t.tools {

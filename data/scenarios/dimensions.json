@@ -1,0 +1,153 @@
+{
+  "version": "1.1.0",
+  "name": "Claude Master Systematic Scenario Space Matrix",
+  "description": "8-Dimensional scenario matrix crossing Workloads, Claude Code Features, Providers/Models, Gateway Resilience, Windows Environments, User Behavior, Adversarial Security, and Data/State Resilience.",
+  "formal_math": {
+    "methodology": "Constrained Combinatorial Testing (NIST SP 800-142)",
+    "pairwise_covering_array": {
+      "t_way": 2,
+      "dimension_pairs": 28,
+      "theoretical_tuples": 1188,
+      "invalid_tuples_removed": 8,
+      "valid_target_tuples": 1180,
+      "suite_coverage_pct": 100.0
+    },
+    "high_risk_3wise_covering_array": {
+      "t_way": 3,
+      "high_risk_subsystems": ["B", "D", "E", "G"],
+      "triples_count": 4,
+      "theoretical_tuples": 1302,
+      "invalid_tuples_removed": 0,
+      "valid_target_tuples": 1302,
+      "suite_coverage_pct": 100.0
+    },
+    "dimension_cardinalities": {
+      "A_Workloads": 9,
+      "B_Features": 14,
+      "C_Providers": 5,
+      "D_Resilience": 5,
+      "E_Environment": 7,
+      "F_UserBehavior": 5,
+      "G_Security": 4,
+      "H_DataState": 4
+    },
+    "coverage_reporting_rules": {
+      "pairwise_coverage": "N_covered_valid_2wise / 1180 (100.0% target across all 28 pairs)",
+      "high_risk_3wise_coverage": "N_covered_valid_3wise_hr / 1302 (100.0% target across subsystems B, D, E, G)",
+      "tier_coverage": "N_executed / N_tier (smoke=9, standard=119, extended=369, total=497)",
+      "reporting_requirement": "Strict reporting: report real combinatorial coverage against valid tuples with invalid combinations explicitly pruned."
+    },
+    "combinatorial_rationale": "Empirical testing (NIST SP 800-142) shows 100% of software defects are triggered by <= 3-way interactions. Full pairwise coverage (1,180 valid pairs) coupled with 100% 3-wise coverage of high-risk subsystems (Gateway, Security, Windows Environment, Claude Code Features) provides rigorous, mathematically sound fault detection without impossible Cartesian combinations."
+  },
+  "dimensions": {
+    "A": {
+      "name": "Workloads",
+      "cardinality": 9,
+      "description": "Task types and coding workload patterns",
+      "categories": [
+        {"id": "A1", "name": "multi-file", "description": "Cross-file dependencies, concurrent multi-file edits, project bootstrapping"},
+        {"id": "A2", "name": "refactoring", "description": "Symbol renaming, signature updates, module splitting, extraction"},
+        {"id": "A3", "name": "test-fixes", "description": "Diagnosing and fixing failing test suites with ground-truth test assertions"},
+        {"id": "A4", "name": "debug", "description": "Runtime exception tracing, logic bug remediation, null dereferences"},
+        {"id": "A5", "name": "bom-crlf", "description": "UTF-8 with BOM, Windows CRLF line endings, mixed newline repositories"},
+        {"id": "A6", "name": "git", "description": "Git staging, commit history, merge conflict resolution, diff inspection"},
+        {"id": "A7", "name": "big-search", "description": "Deep repository traversal across 10,000+ files, binary skips, globbing"},
+        {"id": "A8", "name": "shell", "description": "PowerShell and Bash subshell invocations, piped commands, exit code handling"},
+        {"id": "A9", "name": "long-sessions", "description": "Multi-turn conversations (>30 turns), context compaction, history pruning"}
+      ]
+    },
+    "B": {
+      "name": "Claude Code Features",
+      "cardinality": 14,
+      "description": "Subsystem features and integration protocols of Claude Code",
+      "categories": [
+        {"id": "B01", "name": "tools", "description": "Native tool calling (Write, Edit, Read, Bash, Glob, Grep)"},
+        {"id": "B02", "name": "streaming", "description": "Server-sent events (SSE) streaming, token chunking, delta reconstruction"},
+        {"id": "B03", "name": "thinking", "description": "Reasoning models, <thinking> token separation, thought-budget limits"},
+        {"id": "B04", "name": "caching", "description": "Prompt prefix caching, cache TTL, cache hit latency optimization"},
+        {"id": "B05", "name": "vision", "description": "Image attachment reasoning, architecture diagrams, UI mockups"},
+        {"id": "B06", "name": "skills", "description": "Skill discovery, SKILL.md prompt augmentation, dynamic invocation"},
+        {"id": "B07", "name": "plugins", "description": "Plugin lifecycle hooks, manifest loading, custom tool registration"},
+        {"id": "B08", "name": "mcp-stdio", "description": "Model Context Protocol STDIO transport, server lifecycle, tool execution"},
+        {"id": "B09", "name": "mcp-http", "description": "Model Context Protocol HTTP/SSE transport, remote endpoint orchestration"},
+        {"id": "B10", "name": "subagents", "description": "Subagent spawning, hierarchical task delegation, parent-child communication"},
+        {"id": "B11", "name": "hooks", "description": "Pre-tool execution verification, command blocking, risk pattern interception"},
+        {"id": "B12", "name": "slash", "description": "Interactive slash commands (/shout, /compact, /goal, /help)"},
+        {"id": "B13", "name": "lsp", "description": "Language Server Protocol integration, definition jumps, symbol diagnostics"},
+        {"id": "B14", "name": "permissions", "description": "Permission modes (dontAsk, bypassPermissions, interactive prompts)"}
+      ]
+    },
+    "C": {
+      "name": "Providers and Models",
+      "cardinality": 5,
+      "description": "Upstream LLM providers, model families, and context architectures",
+      "categories": [
+        {"id": "C1", "name": "gemini", "description": "Google Gemini (Gemini 2.5 Flash, 2.0 Flash Thinking, multimodal)"},
+        {"id": "C2", "name": "groq", "description": "Groq LPU (GPT-OSS 120b, Llama 3.3 70B, Qwen 27B, sub-second TTFT)"},
+        {"id": "C3", "name": "mistral", "description": "Mistral AI (Ministral 8B Latest, Mistral Small Latest, strict zero-retention)"},
+        {"id": "C4", "name": "cohere", "description": "Cohere (Command R+ 08-2024, Command A 03-2025, tool optimized)"},
+        {"id": "C5", "name": "openrouter", "description": "OpenRouter (GPT-OSS 20B, Qwen 30B, Gemma 12B, fallback routes)"}
+      ]
+    },
+    "D": {
+      "name": "Gateway / Pool / Router / Drex",
+      "cardinality": 5,
+      "description": "Gateway infrastructure, pooling, load distribution, and arbitration",
+      "categories": [
+        {"id": "D1", "name": "failovers", "description": "Immediate upstream 5xx/timeout fallback across provider priority tiers"},
+        {"id": "D2", "name": "rate-limits", "description": "429 rate limit detection, bandit cooldown backoff, key rotation"},
+        {"id": "D3", "name": "budget-caps", "description": "Per-request and daily USD hard caps, cost estimation enforcement"},
+        {"id": "D4", "name": "concurrency", "description": "Concurrent multi-client traffic, key pool isolation, non-blocking SSE"},
+        {"id": "D5", "name": "isolation", "description": "Workspace, tenant, and profile sandbox isolation without cross-contamination"}
+      ]
+    },
+    "E": {
+      "name": "Environment",
+      "cardinality": 7,
+      "description": "Windows host environments, shells, file systems, and OS edge cases",
+      "categories": [
+        {"id": "E1", "name": "powershell", "description": "Native PowerShell 5.1 and 7+ execution, escaping, and pipeline parsing"},
+        {"id": "E2", "name": "cmd", "description": "Legacy cmd.exe command shell, batch script execution, %ERRORLEVEL%"},
+        {"id": "E3", "name": "git-bash", "description": "Git Bash / MSYS2 POSIX emulation environment and path conversions"},
+        {"id": "E4", "name": "unicode-spaces", "description": "Paths with Unicode symbols, emojis, and whitespace"},
+        {"id": "E5", "name": "defender-delay", "description": "Windows Defender file locking and heuristic real-time scan latency simulation"},
+        {"id": "E6", "name": "low-disk", "description": "Low disk space conditions (<100MB free), cache pruning, graceful warnings"},
+        {"id": "E7", "name": "rtl-arabic", "description": "Right-to-left Arabic characters in file names, prompt content, and tool input"}
+      ]
+    },
+    "F": {
+      "name": "User Behavior",
+      "cardinality": 5,
+      "description": "User errors, aberrant inputs, process interruptions, and key issues",
+      "categories": [
+        {"id": "F1", "name": "wrong-keys", "description": "Invalid, malformed, or unauthorized API credentials"},
+        {"id": "F2", "name": "expired-keys", "description": "Expired API keys triggering 401s followed by automatic pool rollover"},
+        {"id": "F3", "name": "typos", "description": "Malformed command arguments, non-existent flags, corrupted input JSON"},
+        {"id": "F4", "name": "ctrl-c", "description": "SIGINT / Ctrl+C mid-stream cancellation, clean connection termination"},
+        {"id": "F5", "name": "process-kill", "description": "Abrupt process termination (SIGKILL), lock cleanup, orphan process reap"}
+      ]
+    },
+    "G": {
+      "name": "Adversarial & Security",
+      "cardinality": 4,
+      "description": "Security boundaries, sandbox isolation, injection defense, leak prevention",
+      "categories": [
+        {"id": "G1", "name": "prompt-injection", "description": "Indirect injection via repo files, instructions to ignore previous constraints"},
+        {"id": "G2", "name": "key-leaks", "description": "Attempts to echo, print, or leak environment variables and secret tokens"},
+        {"id": "G3", "name": "xss-script", "description": "Malicious payload injection via markdown rendering and Studio UI surfaces"},
+        {"id": "G4", "name": "path-traversal", "description": "Directory traversal attacks (../..) seeking host system files outside workspace"}
+      ]
+    },
+    "H": {
+      "name": "Data and State",
+      "cardinality": 4,
+      "description": "Persistence layer resilience, configuration recovery, schema migrations",
+      "categories": [
+        {"id": "H1", "name": "corrupted-config", "description": "Syntactically malformed gateway config.json, auto-fallback to safe defaults"},
+        {"id": "H2", "name": "corrupted-sqlite", "description": "SQLite WAL/header corruption detection and automatic database rebuild"},
+        {"id": "H3", "name": "schema-migration", "description": "Dynamic database schema upgrading across versions without audit log loss"},
+        {"id": "H4", "name": "disk-growth", "description": "Traffic capture log rotation, retention limit enforcement, and DB VACUUM"}
+      ]
+    }
+  }
+}

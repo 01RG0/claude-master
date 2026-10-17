@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_groq:allam-2-7b",
+  "route_id": "groq:allam-2-7b",
+  "canonical_id": "sdaia/allam-2-7b",
+  "provider": "groq",
+  "provider_model_id": "allam-2-7b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257475.3184845,
+  "duration_seconds": 5.25,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 529.22,
+      "output_text": "<answer>42</answer> ",
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-ceb1a134-3e1e-4b60-9311-94e8635998d4\",\"object\":\"chat.completion\",\"created\":1792257476,\"model\":\"allam-2-7b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e \"},\"logprobs\":null,\"finish_reason\":\"stop\"}],\"usage\":{\"queue_time\":0.089584761,\"prompt_tokens\":36,\"prompt_time\":0.001673275,\"completion_tokens\":12,\"completion_time\":0.008668091,\"total_tokens\":48,\"total_time\":0.010341366},\"usage_breakdown\":null,\"system_fingerprint\":\"fp_ff744b"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 400,
+      "latency_ms": 369.9,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"`tool calling` is not supported with this model\",\"type\":\"invalid_request_error\",\"param\":\"tool calling\"}}\n"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 350.91,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"`tool calling` is not supported with this model\",\"type\":\"invalid_request_error\",\"param\":\"tool calling\"}}\n"
+    }
+  }
+}

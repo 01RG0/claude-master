@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_groq:qwen/qwen3.8-27b",
+  "route_id": "groq:qwen/qwen3.8-27b",
+  "canonical_id": "qwen/qwen3.8-27b-20260814",
+  "provider": "groq",
+  "provider_model_id": "qwen/qwen3.8-27b",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257376.4718766,
+  "duration_seconds": 3.27,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 385.9,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-da9daa2c-4e9a-441e-870f-edf22281968f\",\"object\":\"chat.completion\",\"created\":1792257379,\"model\":\"qwen/qwen3.8-27b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"},\"logprobs\":null,\"finish_reason\":\"stop\"}],\"usage\":{\"queue_time\":0.01803225,\"prompt_tokens\":36,\"prompt_time\":0.002282064,\"completion_tokens\":9,\"completion_time\":0.017257473,\"total_tokens\":45,\"total_time\":0.019539537},\"usage_breakdown\":null,\"system_fingerprint\":\"fp_899"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 416.94,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-af8f5e44-e599-4358-8e86-c254bc084845\",\"object\":\"chat.completion\",\"created\":1792257380,\"model\":\"qwen/qwen3.8-27b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"n7f2z1vbb\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}}]},\"logprobs\":null,\"finish_reason\":\"tool_calls\"}],\"usage\":{\"queue_time\":0.132201445,\"prompt_tokens\":284,\"prompt_time\":0.025509512,\"completion_tokens\":27,\"completion_time\":0.07159146,\"total_toke"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 468.34,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-d00303a1-a500-464d-b837-b0dbcfdeb3b6\",\"object\":\"chat.completion\",\"created\":1792257382,\"model\":\"qwen/qwen3.8-27b\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"I'll check the status of both the database and redis services simultaneously.\\n\\n\",\"tool_calls\":[{\"id\":\"yweg4ebsb\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\"}},{\"id\":\"bgv303g7k\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\":\\\""
+    }
+  }
+}

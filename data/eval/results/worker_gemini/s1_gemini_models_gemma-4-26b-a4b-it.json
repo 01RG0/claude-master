@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_gemini:models/gemma-4-26b-a4b-it",
+  "route_id": "gemini:models/gemma-4-26b-a4b-it",
+  "canonical_id": "google/gemma-4-26b-instruct",
+  "provider": "gemini",
+  "provider_model_id": "models/gemma-4-26b-a4b-it",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257560.0801358,
+  "duration_seconds": 15.53,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1670.77,
+      "output_text": "<thought>The user wants to multiply 7 by 6.\n7 * 6 = 42.\nThe result should be enclosed in <answer> tags.</thought><answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"<thought>The user wants to multiply 7 by 6.\\n7 * 6 = 42.\\nThe result should be enclosed in <answer> tags.</thought><answer>42</answer>\",\"extra_content\":{\"google\":{\"thought\":true}},\"role\":\"assistant\"}}],\"created\":1792257551,\"id\":\"Dq7Tao-RIr2hvdIP2q-SwQU\",\"model\":\"models/gemma-4-26b-a4b-it\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":8,\"prompt_tokens\":25,\"total_tokens\":66}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 2301.63,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"content\":\"<thought>The user is asking to check the health of a \\\"database service\\\".\\nI have a tool `check_status` which takes a `service` name as an argument.\\nI should call `check_status` with `service='database'`.</thought>\",\"extra_content\":{\"google\":{\"thought\":true}},\"role\":\"assistant\",\"tool_calls\":[{\"extra_content\":{\"google\":{\"thought_signature\":\"EiYKJGUyNDgzMGE3LTVjZDYtNDJmZS05OThiLWVlNTM5ZTcyYjljMw==\"}},\"function\":{\"arguments"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 3559.43,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"content\":\"<thought>The user wants to check the status of two services, 'database' and 'redis', simultaneously.\\nLooking at the available tool `check_status`, it takes a single `service` parameter.\\nTo check both services, I should call `check_status` twice, once for 'database' and once for 'redis'.\\nThe tool definitions do not allow for multiple services in a single call.\\nTherefore, I will initiate two tool calls.</thought>\",\"extra"
+    }
+  }
+}

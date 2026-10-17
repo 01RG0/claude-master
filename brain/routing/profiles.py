@@ -19,6 +19,7 @@ class HardConstraints(BaseModel):
     vision: bool = False
     max_budget_usd: float = 0.50
     privacy: str = "zero_retention"
+    require_zero_retention: bool = False
 
 
 class SoftObjectives(BaseModel):
@@ -154,6 +155,54 @@ _DEFAULT_PROFILES: Dict[str, Dict[str, Any]] = {
             "ttft": 0.10,
             "cost": 0.10,
             "reliability": 0.20,
+        },
+    },
+    "opus": {
+        "description": "High-complexity reasoning, deep architecture, multi-file refactoring, and hard debugging",
+        "hard_constraints": {
+            "tool_calling": True,
+            "min_context": 65536,
+            "vision": False,
+            "max_budget_usd": 0.20,
+            "privacy": "zero_retention",
+        },
+        "soft_objectives": {
+            "quality": 0.60,
+            "ttft": 0.10,
+            "cost": 0.10,
+            "reliability": 0.20,
+        },
+    },
+    "sonnet": {
+        "description": "Primary agentic coding, multi-turn tool calling and reasoning",
+        "hard_constraints": {
+            "tool_calling": True,
+            "min_context": 32768,
+            "vision": False,
+            "max_budget_usd": 0.10,
+            "privacy": "zero_retention",
+        },
+        "soft_objectives": {
+            "quality": 0.45,
+            "ttft": 0.20,
+            "cost": 0.15,
+            "reliability": 0.20,
+        },
+    },
+    "haiku": {
+        "description": "Ultra-fast lightweight queries, simple completions, and rapid triage",
+        "hard_constraints": {
+            "tool_calling": False,
+            "min_context": 8192,
+            "vision": False,
+            "max_budget_usd": 0.01,
+            "privacy": "zero_retention",
+        },
+        "soft_objectives": {
+            "quality": 0.15,
+            "ttft": 0.50,
+            "cost": 0.20,
+            "reliability": 0.15,
         },
     },
 }

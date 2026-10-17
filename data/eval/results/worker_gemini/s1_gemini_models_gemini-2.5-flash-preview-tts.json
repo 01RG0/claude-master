@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_gemini:models/gemini-2.5-flash-preview-tts",
+  "route_id": "gemini:models/gemini-2.5-flash-preview-tts",
+  "canonical_id": "google/gemini-2.5-flash",
+  "provider": "gemini",
+  "provider_model_id": "models/gemini-2.5-flash-preview-tts",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257526.9832406,
+  "duration_seconds": 9.35,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 400,
+      "latency_ms": 425.71,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "[{\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"The requested combination of response modalities (TEXT) is not supported by the model. models/gemini-2.5-flash-preview-tts accepts the following combination of response modalities:\\n* AUDIO\\n\",\n    \"status\": \"INVALID_ARGUMENT\"\n  }\n}\n]"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 400,
+      "latency_ms": 338.26,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "[{\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"The requested combination of response modalities (TEXT) is not supported by the model. models/gemini-2.5-flash-preview-tts accepts the following combination of response modalities:\\n* AUDIO\\n\",\n    \"status\": \"INVALID_ARGUMENT\"\n  }\n}\n]"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 589.59,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "[{\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"The requested combination of response modalities (TEXT) is not supported by the model. models/gemini-2.5-flash-preview-tts accepts the following combination of response modalities:\\n* AUDIO\\n\",\n    \"status\": \"INVALID_ARGUMENT\"\n  }\n}\n]"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_pooled:kimi-k2.5-fallback",
+  "route_id": "pooled:kimi-k2.5-fallback",
+  "canonical_id": "pooled/kimi-k-2.5-instruct",
+  "provider": "pooled",
+  "provider_model_id": "kimi-k2.5-fallback",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:network_dns_failure",
+  "timestamp": 1792257808.1510584,
+  "duration_seconds": 0.04,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 0,
+      "latency_ms": 40.24,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "<urlopen error [Errno 11001] getaddrinfo failed>"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:poolside/laguna-xs-2.1:free",
+  "route_id": "openrouter:poolside/laguna-xs-2.1:free",
+  "canonical_id": "poolside/laguna-xs-2.1-20260625",
+  "provider": "openrouter",
+  "provider_model_id": "poolside/laguna-xs-2.1:free",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257845.6387548,
+  "duration_seconds": 7.0,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 455.88,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257844-Lc89aovLDob8zwEFcg7F\",\"object\":\"chat.completion\",\"created\":1792257844,\"model\":\"poolside/laguna-xs-2.1:free\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"Okay, so I need to compute 7 multiplied by 6. Let me think. Hmm, 7 times 6... I remember that multiplication is basically r"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 443.51,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257846-oZTmTPmElRfUIu62dzZu\",\"object\":\"chat.completion\",\"created\":1792257846,\"model\":\"poolside/laguna-xs-2.1:free\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":\"I'll check the health of the database service for you.\",\"refusal\":null,\"reasoning\":null,\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"chatcmpl-t"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 396.8,
+      "tool_count": 1,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257848-rOFm7xtU8WI3LB6UbAAc\",\"object\":\"chat.completion\",\"created\":1792257848,\"model\":\"poolside/laguna-xs-2.1:free\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":\"I'll check both services for you right away. Let me query the status of 'database' and 'redis' simultaneously.\",\"refusal\":null,\"reasoning\":null,\"to"
+    }
+  }
+}

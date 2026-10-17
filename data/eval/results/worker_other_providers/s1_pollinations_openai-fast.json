@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_pollinations:openai-fast",
+  "route_id": "pollinations:openai-fast",
+  "canonical_id": "pollinations/openai-fast",
+  "provider": "pollinations",
+  "provider_model_id": "openai-fast",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257528.4544137,
+  "duration_seconds": 32.85,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 4470.81,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"pllns_c523880b365248990f009d2fe28e787a\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\",\"reasoning\":\"The user wants the multiplication 7 * 6. That's 42. They want the answer enclosed in tags like <answer>42</answer>. So output exactly that.\",\"tool_calls\":[]},\"finish_reason\":\"stop\"}],\"created\":1792257504,\"model\":\"gpt-oss-20b\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":331,\"completion_tokens\":52,\"total_tokens\":383},\"user_tier\":\"anonymous\"}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 0,
+      "latency_ms": 12181.64,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "The read operation timed out"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 0,
+      "latency_ms": 12200.06,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "The read operation timed out"
+    }
+  }
+}

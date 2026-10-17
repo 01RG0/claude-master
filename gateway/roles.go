@@ -10,7 +10,7 @@ import "strings"
 
 // RoleMapping maps task roles to upstream "provider/model" or bare model ids.
 type RoleMapping struct {
-	Main       string `json:"main"`
+	Main       string `json:"main,omitempty"`
 	Fast       string `json:"fast,omitempty"`
 	Subagent   string `json:"subagent,omitempty"`
 	Vision     string `json:"vision,omitempty"`
@@ -50,11 +50,15 @@ func ResolveModel(requested string, aliases map[string]string, roles *RoleMappin
 			}
 		}
 	}
-	// 4. Role default, then first candidate. Never empty.
+	// 4. Role default (if configured)
 	if roles != nil && roles.Main != "" {
 		if r := firstExisting([]string{roles.Main}, candidates); r != "" {
 			return r
 		}
+	}
+	// 5. Dynamic resolution for Claude names / roles when not explicitly overridden
+	if dyn := DynamicRoleCandidate(requested, candidates); dyn != "" {
+		return dyn
 	}
 	return candidates[0]
 }
@@ -79,6 +83,9 @@ func firstExisting(want []string, candidates []string) string {
 
 // roleForClaudeName maps Claude families/aliases to a role model id.
 func roleForClaudeName(name string, roles *RoleMapping) string {
+	if roles == nil {
+		return ""
+	}
 	n := strings.ToLower(name)
 	isClaude := strings.Contains(n, "claude") || n == "opus" || n == "sonnet" ||
 		n == "haiku" || n == "fable" || strings.HasPrefix(n, "opus") ||
@@ -98,34 +105,69 @@ func roleForClaudeName(name string, roles *RoleMapping) string {
 	return ""
 }
 
-// RoleForTask picks a role model for internal routing (summaries, vision).
-func RoleForTask(task string, roles *RoleMapping, candidates []string) string {
-	if roles == nil {
-		if len(candidates) > 0 {
-			return candidates[0]
-		}
+// DynamicRoleCandidate searches candidates for a model best fitting the role or Claude alias.
+func DynamicRoleCandidate(roleOrAlias string, candidates []string) string {
+	if len(candidates) == 0 {
 		return ""
 	}
-	var want string
-	switch strings.ToLower(task) {
-	case "vision":
-		want = roles.Vision
-	case "summarize", "summarizer", "fast", "small":
-		want = roles.Summarizer
-		if want == "" {
-			want = roles.Fast
+	n := strings.ToLower(roleOrAlias)
+	var keywords []string
+	switch {
+	case strings.Contains(n, "haiku") || n == "fast" || n == "small":
+		keywords = []string{"flash", "small", "mini", "8b", "7b", "haiku", "fast"}
+	case strings.Contains(n, "opus") || n == "complex_reasoning" || n == "reasoning":
+		keywords = []string{"opus", "pro", "plus", "120b", "72b", "70b", "large"}
+	case strings.Contains(n, "vision"):
+		keywords = []string{"vision", "flash"}
+	case strings.Contains(n, "summarizer") || strings.Contains(n, "summary"):
+		keywords = []string{"flash", "small", "mini", "8b"}
+	case strings.Contains(n, "subagent"):
+		keywords = []string{"flash", "instruct", "code"}
+	case strings.Contains(n, "sonnet") || n == "main" || strings.Contains(n, "claude") || n == "default" || n == "fable":
+		keywords = []string{"sonnet", "ministral", "qwen", "gpt-oss", "flash", "code", "instruct", "27b", "30b"}
+	default:
+		return ""
+	}
+
+	for _, kw := range keywords {
+		for _, c := range candidates {
+			if strings.Contains(strings.ToLower(c), kw) {
+				return c
+			}
 		}
-	case "subagent":
-		want = roles.Subagent
 	}
-	if want == "" {
-		want = roles.Main
+	return ""
+}
+
+// RoleForTask picks a role model for internal routing (summaries, vision).
+func RoleForTask(task string, roles *RoleMapping, candidates []string) string {
+	if len(candidates) == 0 {
+		return ""
 	}
-	if r := firstExisting([]string{want}, candidates); r != "" {
-		return r
+	if roles != nil {
+		var want string
+		switch strings.ToLower(task) {
+		case "vision":
+			want = roles.Vision
+		case "summarize", "summarizer", "fast", "small":
+			want = roles.Summarizer
+			if want == "" {
+				want = roles.Fast
+			}
+		case "subagent":
+			want = roles.Subagent
+		default:
+			want = roles.Main
+		}
+		if want != "" {
+			if r := firstExisting([]string{want}, candidates); r != "" {
+				return r
+			}
+		}
 	}
-	if len(candidates) > 0 {
-		return candidates[0]
+	// Fall back to dynamic candidate selection
+	if dyn := DynamicRoleCandidate(task, candidates); dyn != "" {
+		return dyn
 	}
-	return want
+	return candidates[0]
 }

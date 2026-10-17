@@ -1,0 +1,2305 @@
+[
+  {
+    "canonical_id": "openai/gpt-oss-120b",
+    "display_name": "Openai Gpt Oss 120B",
+    "vendor": "openai",
+    "total_routes": 5,
+    "routes": [
+      {
+        "route_id": "groq:openai/gpt-oss-120b",
+        "provider": "groq",
+        "provider_model_id": "openai/gpt-oss-120b",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.075
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "cerebras:gpt-oss-120b",
+        "provider": "cerebras",
+        "provider_model_id": "gpt-oss-120b",
+        "pricing": {
+          "prompt_per_m": 0.35,
+          "completion_per_m": 0.75,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "provider_model_id": "openai/gpt-oss-120b",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.075
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:gpt-oss-120b",
+        "provider": "aihubmix",
+        "provider_model_id": "gpt-oss-120b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:gpt-oss-120b",
+        "provider": "apertis",
+        "provider_model_id": "gpt-oss-120b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "qwen/qwen3.8-27b-20260814",
+    "display_name": "Qwen Qwen3.8 27B 20260814",
+    "vendor": "qwen",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "groq:qwen/qwen3.8-27b",
+        "provider": "groq",
+        "provider_model_id": "qwen/qwen3.8-27b",
+        "pricing": {
+          "prompt_per_m": 0.04,
+          "completion_per_m": 2.3,
+          "cache_read_per_m": 0.0198
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:qwen/qwen3.8-27b",
+        "provider": "openrouter",
+        "provider_model_id": "qwen/qwen3.8-27b",
+        "pricing": {
+          "prompt_per_m": 0.04,
+          "completion_per_m": 2.3,
+          "cache_read_per_m": 0.0198
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:qwen/qwen3.8-27b",
+        "provider": "zenmux",
+        "provider_model_id": "qwen/qwen3.8-27b",
+        "pricing": {
+          "prompt_per_m": 0.04,
+          "completion_per_m": 2.3,
+          "cache_read_per_m": 0.0198
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "openai/gpt-oss-safeguard-20b",
+    "display_name": "Openai Gpt Oss Safeguard 20B",
+    "vendor": "openai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "groq:openai/gpt-oss-safeguard-20b",
+        "provider": "groq",
+        "provider_model_id": "openai/gpt-oss-safeguard-20b",
+        "pricing": {
+          "prompt_per_m": 0.075,
+          "completion_per_m": 0.3,
+          "cache_read_per_m": 0.0375
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:openai/gpt-oss-safeguard-20b",
+        "provider": "openrouter",
+        "provider_model_id": "openai/gpt-oss-safeguard-20b",
+        "pricing": {
+          "prompt_per_m": 0.075,
+          "completion_per_m": 0.3,
+          "cache_read_per_m": 0.0375
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "canopy/orpheus",
+    "display_name": "Canopy Orpheus",
+    "vendor": "canopy",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "groq:canopylabs/orpheus-v1-english",
+        "provider": "groq",
+        "provider_model_id": "canopylabs/orpheus-v1-english",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "groq:canopylabs/orpheus-arabic-saudi",
+        "provider": "groq",
+        "provider_model_id": "canopylabs/orpheus-arabic-saudi",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "openai/whisper-instruct",
+    "display_name": "Openai Whisper Instruct",
+    "vendor": "openai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "groq:whisper-large-v3-turbo",
+        "provider": "groq",
+        "provider_model_id": "whisper-large-v3-turbo",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:whisper-large-v3-turbo",
+        "provider": "apertis",
+        "provider_model_id": "whisper-large-v3-turbo",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "openai/whisper",
+    "display_name": "Openai Whisper",
+    "vendor": "openai",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "groq:whisper-large-v3",
+        "provider": "groq",
+        "provider_model_id": "whisper-large-v3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:whisper-large-v3",
+        "provider": "apertis",
+        "provider_model_id": "whisper-large-v3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:whisper-1",
+        "provider": "apertis",
+        "provider_model_id": "whisper-1",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "openai/gpt-oss-20b",
+    "display_name": "Openai Gpt Oss 20B",
+    "vendor": "openai",
+    "total_routes": 5,
+    "routes": [
+      {
+        "route_id": "groq:openai/gpt-oss-20b",
+        "provider": "groq",
+        "provider_model_id": "openai/gpt-oss-20b",
+        "pricing": {
+          "prompt_per_m": 0.018,
+          "completion_per_m": 0.09,
+          "cache_read_per_m": 0.009
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:openai/gpt-oss-20b",
+        "provider": "openrouter",
+        "provider_model_id": "openai/gpt-oss-20b",
+        "pricing": {
+          "prompt_per_m": 0.018,
+          "completion_per_m": 0.09,
+          "cache_read_per_m": 0.009
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:gpt-oss-20b",
+        "provider": "aihubmix",
+        "provider_model_id": "gpt-oss-20b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:GPT-OSS-20B",
+        "provider": "aihubmix",
+        "provider_model_id": "GPT-OSS-20B",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:gpt-oss-20b",
+        "provider": "apertis",
+        "provider_model_id": "gpt-oss-20b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "meta/llama-3.3-70b-instruct",
+    "display_name": "Meta Llama 3.3 70B Instruct",
+    "vendor": "meta",
+    "total_routes": 9,
+    "routes": [
+      {
+        "route_id": "groq:llama-3.3-70b-versatile",
+        "provider": "groq",
+        "provider_model_id": "llama-3.3-70b-versatile",
+        "pricing": {
+          "prompt_per_m": 0.59,
+          "completion_per_m": 0.79,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:meta-llama/llama-3.3-70b-instruct",
+        "provider": "openrouter",
+        "provider_model_id": "meta-llama/llama-3.3-70b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.59,
+          "completion_per_m": 0.79,
+          "cache_read_per_m": 0.295
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:llama-3.3-70b",
+        "provider": "aihubmix",
+        "provider_model_id": "llama-3.3-70b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:llama-3.3-70b-instruct",
+        "provider": "aihubmix",
+        "provider_model_id": "llama-3.3-70b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:groq-llama-3.3-70b-versatile",
+        "provider": "aihubmix",
+        "provider_model_id": "groq-llama-3.3-70b-versatile",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:cerebras-llama-3.3-70b",
+        "provider": "aihubmix",
+        "provider_model_id": "cerebras-llama-3.3-70b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:deepinfra-llama-3.3-70b-instant-turbo",
+        "provider": "aihubmix",
+        "provider_model_id": "deepinfra-llama-3.3-70b-instant-turbo",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:llama-3.3-70b-instruct",
+        "provider": "apertis",
+        "provider_model_id": "llama-3.3-70b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:meta/llama-3.3-70b-instruct",
+        "provider": "zenmux",
+        "provider_model_id": "meta/llama-3.3-70b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "meta/llama-3.1-8b-instruct",
+    "display_name": "Meta Llama 3.1 8B Instruct",
+    "vendor": "meta",
+    "total_routes": 8,
+    "routes": [
+      {
+        "route_id": "groq:llama-3.1-8b-instant",
+        "provider": "groq",
+        "provider_model_id": "llama-3.1-8b-instant",
+        "pricing": {
+          "prompt_per_m": 0.05,
+          "completion_per_m": 0.08,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:meta-llama/llama-3.1-8b-instruct",
+        "provider": "openrouter",
+        "provider_model_id": "meta-llama/llama-3.1-8b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.05,
+          "completion_per_m": 0.08,
+          "cache_read_per_m": 0.025
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:llama3.1-8b",
+        "provider": "aihubmix",
+        "provider_model_id": "llama3.1-8b",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:llama-3.1-8b-instant",
+        "provider": "aihubmix",
+        "provider_model_id": "llama-3.1-8b-instant",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:meta-llama/llama-3.1-8b-instruct:free",
+        "provider": "aihubmix",
+        "provider_model_id": "meta-llama/llama-3.1-8b-instruct:free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:groq-llama-3.1-8b-instant",
+        "provider": "aihubmix",
+        "provider_model_id": "groq-llama-3.1-8b-instant",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:deepinfra-llama-3.1-8b-instant",
+        "provider": "aihubmix",
+        "provider_model_id": "deepinfra-llama-3.1-8b-instant",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:llama-3.1-8b-instruct",
+        "provider": "apertis",
+        "provider_model_id": "llama-3.1-8b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "qwen/qwen3.6-27b-20260422",
+    "display_name": "Qwen Qwen3.6 27B 20260422",
+    "vendor": "qwen",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "groq:qwen/qwen3.6-27b",
+        "provider": "groq",
+        "provider_model_id": "qwen/qwen3.6-27b",
+        "pricing": {
+          "prompt_per_m": 0.32,
+          "completion_per_m": 3.2,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:qwen/qwen3.6-27b",
+        "provider": "openrouter",
+        "provider_model_id": "qwen/qwen3.6-27b",
+        "pricing": {
+          "prompt_per_m": 0.32,
+          "completion_per_m": 3.2,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-small-instruct",
+    "display_name": "Mistralai Mistral Small Instruct",
+    "vendor": "mistralai",
+    "total_routes": 5,
+    "routes": [
+      {
+        "route_id": "mistral:mistral-small-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-small-latest",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.015
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-small-2603",
+        "provider": "mistral",
+        "provider_model_id": "mistral-small-2603",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.015
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-small-2506",
+        "provider": "mistral",
+        "provider_model_id": "mistral-small-2506",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.3,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-small-creative",
+        "provider": "apertis",
+        "provider_model_id": "mistral-small-creative",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-small-2603",
+        "provider": "apertis",
+        "provider_model_id": "mistral-small-2603",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/codestral-2508",
+    "display_name": "Mistralai Codestral 2508",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:codestral-2508",
+        "provider": "mistral",
+        "provider_model_id": "codestral-2508",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 0.9,
+          "cache_read_per_m": 0.03
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:mistralai/codestral-2508",
+        "provider": "openrouter",
+        "provider_model_id": "mistralai/codestral-2508",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 0.9,
+          "cache_read_per_m": 0.03
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/codestral-coder",
+    "display_name": "Mistralai Codestral Coder",
+    "vendor": "mistralai",
+    "total_routes": 7,
+    "routes": [
+      {
+        "route_id": "mistral:codestral-latest",
+        "provider": "mistral",
+        "provider_model_id": "codestral-latest",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 0.9,
+          "cache_read_per_m": 0.03
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:codestral-embed",
+        "provider": "mistral",
+        "provider_model_id": "codestral-embed",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:codestral-embed-2505",
+        "provider": "mistral",
+        "provider_model_id": "codestral-embed-2505",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:codestral-latest",
+        "provider": "aihubmix",
+        "provider_model_id": "codestral-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:aihubmix-Codestral-2501",
+        "provider": "aihubmix",
+        "provider_model_id": "aihubmix-Codestral-2501",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:codestral-2508",
+        "provider": "apertis",
+        "provider_model_id": "codestral-2508",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:codestral-2501",
+        "provider": "apertis",
+        "provider_model_id": "codestral-2501",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-coder",
+    "display_name": "Mistralai Mistral Coder",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:mistral-code-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-code-latest",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 0.9,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-code-fim-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-code-fim-latest",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 0.9,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/labs-leanstral",
+    "display_name": "Mistralai Labs Leanstral",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:labs-leanstral-1-5-1",
+        "provider": "mistral",
+        "provider_model_id": "labs-leanstral-1-5-1",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:labs-leanstral-1-5",
+        "provider": "mistral",
+        "provider_model_id": "labs-leanstral-1-5",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-instruct",
+    "display_name": "Mistralai Mistral Instruct",
+    "vendor": "mistralai",
+    "total_routes": 23,
+    "routes": [
+      {
+        "route_id": "mistral:mistral-medium",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-medium-3-5",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium-3-5",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-medium-3",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium-3",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-medium-2604",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium-2604",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.15
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-vibe-cli-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-vibe-cli-latest",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-vibe-cli-with-tools",
+        "provider": "mistral",
+        "provider_model_id": "mistral-vibe-cli-with-tools",
+        "pricing": {
+          "prompt_per_m": 1.5,
+          "completion_per_m": 7.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-vibe-cli-fast",
+        "provider": "mistral",
+        "provider_model_id": "mistral-vibe-cli-fast",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-moderation-2603",
+        "provider": "mistral",
+        "provider_model_id": "mistral-moderation-2603",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-2512",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-2512",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-3-0",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-3-0",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-3",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-4-0",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-4-0",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-4",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-4",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-ocr-4-1",
+        "provider": "mistral",
+        "provider_model_id": "mistral-ocr-4-1",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:open-mistral-nemo",
+        "provider": "mistral",
+        "provider_model_id": "open-mistral-nemo",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.15,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-nemo",
+        "provider": "mistral",
+        "provider_model_id": "mistral-nemo",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.15,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-medium-2508",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium-2508",
+        "pricing": {
+          "prompt_per_m": 0.4,
+          "completion_per_m": 2.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-medium-2505",
+        "provider": "mistral",
+        "provider_model_id": "mistral-medium-2505",
+        "pricing": {
+          "prompt_per_m": 0.4,
+          "completion_per_m": 2.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:AiHubmix-mistral-medium",
+        "provider": "aihubmix",
+        "provider_model_id": "AiHubmix-mistral-medium",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-medium-3-5",
+        "provider": "apertis",
+        "provider_model_id": "mistral-medium-3-5",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-medium-3",
+        "provider": "apertis",
+        "provider_model_id": "mistral-medium-3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-saba",
+        "provider": "apertis",
+        "provider_model_id": "mistral-saba",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-embed-embedding",
+    "display_name": "Mistralai Mistral Embed Embedding",
+    "vendor": "mistralai",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "mistral:mistral-embed-2312",
+        "provider": "mistral",
+        "provider_model_id": "mistral-embed-2312",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-embed",
+        "provider": "mistral",
+        "provider_model_id": "mistral-embed",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-embed-2312",
+        "provider": "apertis",
+        "provider_model_id": "mistral-embed-2312",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/voxtral-mini",
+    "display_name": "Mistralai Voxtral Mini",
+    "vendor": "mistralai",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "mistral:voxtral-mini-2602",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-2602",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:voxtral-mini-transcribe-realtime-2602",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-transcribe-realtime-2602",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:voxtral-mini-realtime-2602",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-realtime-2602",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/voxtral-mini-instruct",
+    "display_name": "Mistralai Voxtral Mini Instruct",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:voxtral-mini-latest",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:voxtral-mini-realtime-latest",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-realtime-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/voxtral-mini-tts",
+    "display_name": "Mistralai Voxtral Mini Tts",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:voxtral-mini-tts-2603",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-tts-2603",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:voxtral-mini-tts-latest",
+        "provider": "mistral",
+        "provider_model_id": "voxtral-mini-tts-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-large-instruct",
+    "display_name": "Mistralai Mistral Large Instruct",
+    "vendor": "mistralai",
+    "total_routes": 12,
+    "routes": [
+      {
+        "route_id": "mistral:mistral-large-latest",
+        "provider": "mistral",
+        "provider_model_id": "mistral-large-latest",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.05
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:mistral-large-2512",
+        "provider": "mistral",
+        "provider_model_id": "mistral-large-2512",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.05
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:mistral-large-4-0",
+        "provider": "aihubmix",
+        "provider_model_id": "mistral-large-4-0",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:mistral-large-3",
+        "provider": "aihubmix",
+        "provider_model_id": "mistral-large-3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:aihubmix-Mistral-Large-2411",
+        "provider": "aihubmix",
+        "provider_model_id": "aihubmix-Mistral-Large-2411",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:aihubmix-Mistral-large-2407",
+        "provider": "aihubmix",
+        "provider_model_id": "aihubmix-Mistral-large-2407",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:Mistral-large-2407",
+        "provider": "aihubmix",
+        "provider_model_id": "Mistral-large-2407",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:aihubmix-Mistral-large",
+        "provider": "aihubmix",
+        "provider_model_id": "aihubmix-Mistral-large",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-large-2512",
+        "provider": "apertis",
+        "provider_model_id": "mistral-large-2512",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-large-2411",
+        "provider": "apertis",
+        "provider_model_id": "mistral-large-2411",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-large-2407",
+        "provider": "apertis",
+        "provider_model_id": "mistral-large-2407",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:mistralai/mistral-large-4",
+        "provider": "zenmux",
+        "provider_model_id": "mistralai/mistral-large-4",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "zhipu/glm-5.2",
+    "display_name": "Zhipu Glm 5.2",
+    "vendor": "zhipu",
+    "total_routes": 8,
+    "routes": [
+      {
+        "route_id": "mistral:zai-glm-5-2",
+        "provider": "mistral",
+        "provider_model_id": "zai-glm-5-2",
+        "pricing": {
+          "prompt_per_m": 1.4,
+          "completion_per_m": 4.4,
+          "cache_read_per_m": 0.14
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:glm-5-2",
+        "provider": "mistral",
+        "provider_model_id": "glm-5-2",
+        "pricing": {
+          "prompt_per_m": 1.4,
+          "completion_per_m": 4.4,
+          "cache_read_per_m": 0.14
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:glm-5.2",
+        "provider": "aihubmix",
+        "provider_model_id": "glm-5.2",
+        "pricing": {
+          "prompt_per_m": 1.1268,
+          "completion_per_m": 3.9438,
+          "cache_read_per_m": 0.2817
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:coding-glm-5.2-free",
+        "provider": "aihubmix",
+        "provider_model_id": "coding-glm-5.2-free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:coding-glm-5.2",
+        "provider": "aihubmix",
+        "provider_model_id": "coding-glm-5.2",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:cloudflare-glm-5.2",
+        "provider": "aihubmix",
+        "provider_model_id": "cloudflare-glm-5.2",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:glm-5.2",
+        "provider": "apertis",
+        "provider_model_id": "glm-5.2",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "alibaba:glm-5.2",
+        "provider": "alibaba",
+        "provider_model_id": "glm-5.2",
+        "pricing": {
+          "prompt_per_m": 1.4,
+          "completion_per_m": 4.4,
+          "cache_read_per_m": 0.28
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/devstral-small",
+    "display_name": "Mistralai Devstral Small",
+    "vendor": "mistralai",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "mistral:devstral-small-2505",
+        "provider": "mistral",
+        "provider_model_id": "devstral-small-2505",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.3,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "mistral:devstral-small-2507",
+        "provider": "mistral",
+        "provider_model_id": "devstral-small-2507",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.3,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "zhipu/glm-5.3",
+    "display_name": "Zhipu Glm 5.3",
+    "vendor": "zhipu",
+    "total_routes": 5,
+    "routes": [
+      {
+        "route_id": "mistral:zai-glm-5-3",
+        "provider": "mistral",
+        "provider_model_id": "zai-glm-5-3",
+        "pricing": {
+          "prompt_per_m": 1.4,
+          "completion_per_m": 4.4,
+          "cache_read_per_m": 0.14
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:glm-5.3",
+        "provider": "aihubmix",
+        "provider_model_id": "glm-5.3",
+        "pricing": {
+          "prompt_per_m": 1.1268,
+          "completion_per_m": 3.9438,
+          "cache_read_per_m": 0.2817
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:coding-glm-5.3",
+        "provider": "aihubmix",
+        "provider_model_id": "coding-glm-5.3",
+        "pricing": {
+          "prompt_per_m": 0.06,
+          "completion_per_m": 0.22,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:coding-glm-5.3-free",
+        "provider": "aihubmix",
+        "provider_model_id": "coding-glm-5.3-free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:glm-5.3",
+        "provider": "apertis",
+        "provider_model_id": "glm-5.3",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "mistralai/mistral-7b-instruct",
+    "display_name": "Mistralai Mistral 7B Instruct",
+    "vendor": "mistralai",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "mistral:open-mistral-7b",
+        "provider": "mistral",
+        "provider_model_id": "open-mistral-7b",
+        "pricing": {
+          "prompt_per_m": 0.25,
+          "completion_per_m": 0.25,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "aihubmix:mistralai/mistral-7b-instruct:free",
+        "provider": "aihubmix",
+        "provider_model_id": "mistralai/mistral-7b-instruct:free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "apertis:mistral-7b-instruct",
+        "provider": "apertis",
+        "provider_model_id": "mistral-7b-instruct",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/command-r-plus-08-2024",
+    "display_name": "Cohere Command R Plus 08 2024",
+    "vendor": "cohere",
+    "total_routes": 3,
+    "routes": [
+      {
+        "route_id": "cohere:command-r-plus-08-2024",
+        "provider": "cohere",
+        "provider_model_id": "command-r-plus-08-2024",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:cohere/command-r-plus-08-2024",
+        "provider": "openrouter",
+        "provider_model_id": "cohere/command-r-plus-08-2024",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "anyapi:cohere/command-r-plus-08-2024",
+        "provider": "anyapi",
+        "provider_model_id": "cohere/command-r-plus-08-2024",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/command-a-03-2025",
+    "display_name": "Cohere Command A 03 2025",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:command-a-03-2025",
+        "provider": "cohere",
+        "provider_model_id": "command-a-03-2025",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:cohere/command-a",
+        "provider": "openrouter",
+        "provider_model_id": "cohere/command-a",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/command-a-plus-05-2026",
+    "display_name": "Cohere Command A Plus 05 2026",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:command-a-plus-05-2026",
+        "provider": "cohere",
+        "provider_model_id": "command-a-plus-05-2026",
+        "pricing": {
+          "prompt_per_m": 2.5,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:cohere/command-a-plus",
+        "provider": "openrouter",
+        "provider_model_id": "cohere/command-a-plus",
+        "pricing": {
+          "prompt_per_m": 0.3,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.15
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/command-r-08-2024",
+    "display_name": "Cohere Command R 08 2024",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:command-r-08-2024",
+        "provider": "cohere",
+        "provider_model_id": "command-r-08-2024",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:cohere/command-r-08-2024",
+        "provider": "openrouter",
+        "provider_model_id": "cohere/command-r-08-2024",
+        "pricing": {
+          "prompt_per_m": 0.15,
+          "completion_per_m": 0.6,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/command-r7b-12-2024",
+    "display_name": "Cohere Command R7B 12 2024",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:command-r7b-12-2024",
+        "provider": "cohere",
+        "provider_model_id": "command-r7b-12-2024",
+        "pricing": {
+          "prompt_per_m": 0.0375,
+          "completion_per_m": 0.15,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:cohere/command-r7b-12-2024",
+        "provider": "openrouter",
+        "provider_model_id": "cohere/command-r7b-12-2024",
+        "pricing": {
+          "prompt_per_m": 0.0375,
+          "completion_per_m": 0.15,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/embed-english-3.0-embedding",
+    "display_name": "Cohere Embed English 3.0 Embedding",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:embed-english-light-v3.0",
+        "provider": "cohere",
+        "provider_model_id": "embed-english-light-v3.0",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "cohere:embed-english-v3.0",
+        "provider": "cohere",
+        "provider_model_id": "embed-english-v3.0",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/embed-english-3.0-image",
+    "display_name": "Cohere Embed English 3.0 Image",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:embed-english-light-v3.0-image",
+        "provider": "cohere",
+        "provider_model_id": "embed-english-light-v3.0-image",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "cohere:embed-english-v3.0-image",
+        "provider": "cohere",
+        "provider_model_id": "embed-english-v3.0-image",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/embed-multilingual-3.0-embedding",
+    "display_name": "Cohere Embed Multilingual 3.0 Embedding",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:embed-multilingual-light-v3.0",
+        "provider": "cohere",
+        "provider_model_id": "embed-multilingual-light-v3.0",
+        "pricing": {
+          "prompt_per_m": 100.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "cohere:embed-multilingual-v3.0",
+        "provider": "cohere",
+        "provider_model_id": "embed-multilingual-v3.0",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "cohere/embed-multilingual-3.0-image",
+    "display_name": "Cohere Embed Multilingual 3.0 Image",
+    "vendor": "cohere",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "cohere:embed-multilingual-light-v3.0-image",
+        "provider": "cohere",
+        "provider_model_id": "embed-multilingual-light-v3.0-image",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "cohere:embed-multilingual-v3.0-image",
+        "provider": "cohere",
+        "provider_model_id": "embed-multilingual-v3.0-image",
+        "pricing": {
+          "prompt_per_m": 0.5,
+          "completion_per_m": 1.5,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "poolside/laguna-s-2.1-20260720",
+    "display_name": "Poolside Laguna S 2.1 20260720",
+    "vendor": "poolside",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:poolside/laguna-s-2.1:free",
+        "provider": "openrouter",
+        "provider_model_id": "poolside/laguna-s-2.1:free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:poolside/laguna-s-2.1",
+        "provider": "openrouter",
+        "provider_model_id": "poolside/laguna-s-2.1",
+        "pricing": {
+          "prompt_per_m": 0.09,
+          "completion_per_m": 0.18,
+          "cache_read_per_m": 0.009
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "poolside/laguna-xs-2.1-20260625",
+    "display_name": "Poolside Laguna Xs 2.1 20260625",
+    "vendor": "poolside",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:poolside/laguna-xs-2.1:free",
+        "provider": "openrouter",
+        "provider_model_id": "poolside/laguna-xs-2.1:free",
+        "pricing": {
+          "prompt_per_m": 0.0,
+          "completion_per_m": 0.0,
+          "cache_read_per_m": 0.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "openrouter:poolside/laguna-xs-2.1",
+        "provider": "openrouter",
+        "provider_model_id": "poolside/laguna-xs-2.1",
+        "pricing": {
+          "prompt_per_m": 0.06,
+          "completion_per_m": 0.12,
+          "cache_read_per_m": 0.03
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.1-opus-20250805",
+    "display_name": "Anthropic Claude 4.1 Opus 20250805",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-4.1",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-4.1",
+        "pricing": {
+          "prompt_per_m": 15.0,
+          "completion_per_m": 75.0,
+          "cache_read_per_m": 1.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-4.1",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-4.1",
+        "pricing": {
+          "prompt_per_m": 15.0,
+          "completion_per_m": 75.0,
+          "cache_read_per_m": 1.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.5-opus-20251124",
+    "display_name": "Anthropic Claude 4.5 Opus 20251124",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-4.5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-4.5",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-4.5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-4.5",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.6-opus-20260205",
+    "display_name": "Anthropic Claude 4.6 Opus 20260205",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-4.6",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-4.6",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-4.6",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-4.6",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.7-opus-20260416",
+    "display_name": "Anthropic Claude 4.7 Opus 20260416",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-4.7",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-4.7",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-4.7",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-4.7",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-haiku-5.5-20261007",
+    "display_name": "Anthropic Claude Haiku 5.5 20261007",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-haiku-5.5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-haiku-5.5",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.5,
+          "cache_read_per_m": 0.01
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-haiku-5.5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-haiku-5.5",
+        "pricing": {
+          "prompt_per_m": 0.1,
+          "completion_per_m": 0.5,
+          "cache_read_per_m": 0.01
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.8-opus-20260528",
+    "display_name": "Anthropic Claude 4.8 Opus 20260528",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-4.8",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-4.8",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-4.8",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-4.8",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.5-haiku-20251001",
+    "display_name": "Anthropic Claude 4.5 Haiku 20251001",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-haiku-4.5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-haiku-4.5",
+        "pricing": {
+          "prompt_per_m": 1.0,
+          "completion_per_m": 5.0,
+          "cache_read_per_m": 0.1
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-haiku-4.5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-haiku-4.5",
+        "pricing": {
+          "prompt_per_m": 1.0,
+          "completion_per_m": 5.0,
+          "cache_read_per_m": 0.1
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-opus-5-20260723",
+    "display_name": "Anthropic Claude Opus 5 20260723",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-opus-5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-opus-5",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-opus-5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-opus-5",
+        "pricing": {
+          "prompt_per_m": 5.0,
+          "completion_per_m": 25.0,
+          "cache_read_per_m": 0.5
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-sonnet-5.5-20260928",
+    "display_name": "Anthropic Claude Sonnet 5.5 20260928",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-sonnet-5.5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-sonnet-5.5",
+        "pricing": {
+          "prompt_per_m": 2.0,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.1
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-sonnet-5.5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-sonnet-5.5",
+        "pricing": {
+          "prompt_per_m": 2.0,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.1
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-fable-5.1-20260831",
+    "display_name": "Anthropic Claude Fable 5.1 20260831",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-fable-5.1",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-fable-5.1",
+        "pricing": {
+          "prompt_per_m": 10.0,
+          "completion_per_m": 50.0,
+          "cache_read_per_m": 0.25
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-fable-5.1",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-fable-5.1",
+        "pricing": {
+          "prompt_per_m": 10.0,
+          "completion_per_m": 50.0,
+          "cache_read_per_m": 0.25
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4.5-sonnet-20250929",
+    "display_name": "Anthropic Claude 4.5 Sonnet 20250929",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-sonnet-4.5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-sonnet-4.5",
+        "pricing": {
+          "prompt_per_m": 3.0,
+          "completion_per_m": 15.0,
+          "cache_read_per_m": 0.3
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-sonnet-4.5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-sonnet-4.5",
+        "pricing": {
+          "prompt_per_m": 3.0,
+          "completion_per_m": 15.0,
+          "cache_read_per_m": 0.3
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-5-fable-20260609",
+    "display_name": "Anthropic Claude 5 Fable 20260609",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-fable-5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-fable-5",
+        "pricing": {
+          "prompt_per_m": 10.0,
+          "completion_per_m": 50.0,
+          "cache_read_per_m": 1.0
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-fable-5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-fable-5",
+        "pricing": {
+          "prompt_per_m": 10.0,
+          "completion_per_m": 50.0,
+          "cache_read_per_m": 1.0
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-4-sonnet-20250522",
+    "display_name": "Anthropic Claude 4 Sonnet 20250522",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-sonnet-4",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-sonnet-4",
+        "pricing": {
+          "prompt_per_m": 3.0,
+          "completion_per_m": 15.0,
+          "cache_read_per_m": 0.3
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-sonnet-4",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-sonnet-4",
+        "pricing": {
+          "prompt_per_m": 3.0,
+          "completion_per_m": 15.0,
+          "cache_read_per_m": 0.3
+        },
+        "is_alias": false
+      }
+    ]
+  },
+  {
+    "canonical_id": "anthropic/claude-sonnet-5-20260630",
+    "display_name": "Anthropic Claude Sonnet 5 20260630",
+    "vendor": "anthropic",
+    "total_routes": 2,
+    "routes": [
+      {
+        "route_id": "openrouter:anthropic/claude-sonnet-5",
+        "provider": "openrouter",
+        "provider_model_id": "anthropic/claude-sonnet-5",
+        "pricing": {
+          "prompt_per_m": 2.0,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.2
+        },
+        "is_alias": false
+      },
+      {
+        "route_id": "zenmux:anthropic/claude-sonnet-5",
+        "provider": "zenmux",
+        "provider_model_id": "anthropic/claude-sonnet-5",
+        "pricing": {
+          "prompt_per_m": 2.0,
+          "completion_per_m": 10.0,
+          "cache_read_per_m": 0.2
+        },
+        "is_alias": false
+      }
+    ]
+  }
+]

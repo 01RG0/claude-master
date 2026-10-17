@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_gemini:models/gemini-flash-lite-latest",
+  "route_id": "gemini:models/gemini-flash-lite-latest",
+  "canonical_id": "google/gemini-flash",
+  "provider": "gemini",
+  "provider_model_id": "models/gemini-flash-lite-latest",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257665.840801,
+  "duration_seconds": 10.17,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 911.9,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"<answer>42</answer>\",\"extra_content\":{\"google\":{\"thought_signature\":\"EmAKXgFpFH0TjsbaDoWghl7ytXuDTr9G08nLQII0/hXVppu+v0t5u9XFjnJD5ZQMRR9+U4U4/b6ff9VCAo+RppOI5ckJrsNiixlNewt9BE9no5rVc32urd9sMfSZ1Y09U1s=\"}},\"role\":\"assistant\"}}],\"created\":1792257662,\"id\":\"fa7TatPwJ7n-vdIPpYHMsAQ\",\"model\":\"models/gemini-flash-lite-latest\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":8,\"prompt_tokens\":25,\"total_tokens\":33}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 634.65,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"extra_content\":{\"google\":{\"thought_signature\":\"EmAKXgFpFH0T0Dw2kVgewqeBp6ohUpFFIVFN/Ri2boG3CTOs0kteG/Zupca5pFb/KInNNGdBSbVBATcwv8joimr878+8jBIpCPcBMjJLJJ2rxlPdzKDwOls58nQczN320Vg=\"}},\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"call_4180553\",\"type\":\"function\"}]}}],\"created\":1792257666,\"id\":\"gq7Tauv1HrfPvdIP-7vg4Ag\",\"model\":\"models/gemini-flash-lite-latest\",\"objec"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 611.28,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"extra_content\":{\"google\":{\"thought_signature\":\"EmAKXgFpFH0TD4CERIgGTNu4AxzQFmixYimJcH+Y8AyQ5YDgbTS/44cicRly1tryvRQyCZ0rgfIDsSkhC3f6OK6oxceKeIC3OW0yFOtk1/m9DQjtYCEgw5YkYXcBmtua/XQ=\"}},\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"call_2762890\",\"type\":\"function\"},{\"function\":{\"arguments\":\"{\\\"service\\\":\\\"redis\\\"}\",\"name\":\"check_status\"},\"id\":\"call_2762891\",\"type\":\"fu"
+    }
+  }
+}

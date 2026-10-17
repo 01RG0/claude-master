@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_xai:grok-3-mini",
+  "route_id": "xai:grok-3-mini",
+  "canonical_id": "xai/grok",
+  "provider": "xai",
+  "provider_model_id": "grok-3-mini",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_400_invalid_key",
+  "timestamp": 1792257746.5421612,
+  "duration_seconds": 0.6,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 400,
+      "latency_ms": 602.15,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"code\":\"invalid-argument\",\"error\":\"Incorrect API key provided. You can obtain an API key from https://console.x.ai.\"}"
+    }
+  }
+}

@@ -1,0 +1,184 @@
+[
+  {
+    "id": "SCN-D01-FAILOVER",
+    "dimension": "D",
+    "category": "failovers",
+    "cross_dimensions": [
+      "D",
+      "C"
+    ],
+    "tier": "smoke",
+    "title": "Instantaneous Upstream 500 Outage Fallback",
+    "description": "Simulate primary provider returning HTTP 500 error; gateway automatically fails over to secondary route with zero client error.",
+    "setup": {
+      "mock_upstream_error": {
+        "provider": "groq",
+        "status": 500
+      }
+    },
+    "input": {
+      "prompt": "Create failover_test.txt with 'FAILOVER_SUCCESS'."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "failover_test.txt"
+        ],
+        "file_contains": {
+          "failover_test.txt": [
+            "FAILOVER_SUCCESS"
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "resilience",
+      "failover",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-D02-RATELIMIT",
+    "dimension": "D",
+    "category": "rate-limits",
+    "cross_dimensions": [
+      "D",
+      "C"
+    ],
+    "tier": "standard",
+    "title": "429 Rate Limit Backoff & Bandit Cooldown Transition",
+    "description": "Inject HTTP 429 response; verify gateway router transitions candidate to cooldown state and switches key pool.",
+    "setup": {
+      "mock_upstream_error": {
+        "provider": "groq",
+        "status": 429
+      }
+    },
+    "input": {
+      "prompt": "Echo 'RATE_LIMIT_HANDLED'."
+    },
+    "expected_oracle": {
+      "type": "db_audit",
+      "spec": {
+        "audit_event_logged": "cooldown_activated",
+        "returncode": 0
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "resilience",
+      "rate-limit",
+      "cooldown"
+    ]
+  },
+  {
+    "id": "SCN-D03-BUDGETCAPS",
+    "dimension": "D",
+    "category": "budget-caps",
+    "cross_dimensions": [
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Per-Request and Daily USD Budget Cap Enforcement",
+    "description": "Configure max_budget_usd = 0.001; verify expensive query triggers graceful Drex rejection or downgrade instead of cost overrun.",
+    "setup": {
+      "hard_constraints": {
+        "max_budget_usd": 0.0001
+      }
+    },
+    "input": {
+      "prompt": "Write a 10,000 token analysis of compiler optimization passes."
+    },
+    "expected_oracle": {
+      "type": "budget_oracle",
+      "spec": {
+        "enforced_budget_cap": true,
+        "total_cost_usd_lte": 0.0001
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "resilience",
+      "budget",
+      "cost"
+    ]
+  },
+  {
+    "id": "SCN-D04-CONCURRENCY",
+    "dimension": "D",
+    "category": "concurrency",
+    "cross_dimensions": [
+      "D",
+      "E"
+    ],
+    "tier": "extended",
+    "title": "Concurrent Multi-Client Load (10 Parallel Sessions)",
+    "description": "Dispatch 10 simultaneous Claude Code agent requests to the gateway, verifying key pool non-interference and thread safety.",
+    "setup": {
+      "concurrency": 10
+    },
+    "input": {
+      "parallel_prompts": [
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100",
+        "Calculate prime numbers up to 100"
+      ]
+    },
+    "expected_oracle": {
+      "type": "concurrency_oracle",
+      "spec": {
+        "success_count": 10,
+        "zero_cross_talk": true
+      }
+    },
+    "timeout_s": 120,
+    "tags": [
+      "resilience",
+      "concurrency"
+    ]
+  },
+  {
+    "id": "SCN-D05-ISOLATION",
+    "dimension": "D",
+    "category": "isolation",
+    "cross_dimensions": [
+      "D",
+      "E",
+      "G"
+    ],
+    "tier": "standard",
+    "title": "Profile Sandbox & Working Directory State Isolation",
+    "description": "Verify two parallel sessions in different working directories cannot inspect or overwrite each other's files.",
+    "setup": {
+      "workspaces": [
+        "ws_alpha",
+        "ws_beta"
+      ]
+    },
+    "input": {
+      "action_alpha": "write secret_a.txt in ws_alpha",
+      "action_beta": "read secret_a.txt in ws_beta"
+    },
+    "expected_oracle": {
+      "type": "isolation_oracle",
+      "spec": {
+        "access_denied_in_beta": true
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "resilience",
+      "isolation",
+      "sandbox"
+    ]
+  }
+]

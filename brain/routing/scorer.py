@@ -33,13 +33,20 @@ class CandidateMetrics(BaseModel):
     capabilities: Dict[str, bool] = Field(default_factory=dict)
     privacy_policy: str = "zero_retention"
     measured_quality: float = 0.70  # Empirical quality benchmark [0.0, 1.0]
-    measured_ttft_ms: float = 400.0  # Empirical TTFT in ms
+    measured_ttft_ms: float = 3758.0  # Empirical TTFT in ms (observed empirical network TTFT)
     success_count: int = 10
     failure_count: int = 0
     is_pinned: bool = False
     is_banned: bool = False
     is_cooldown: bool = False
     cooldown_remaining_s: float = 0.0
+    is_measured: Optional[bool] = None
+
+    @property
+    def measured(self) -> bool:
+        if self.is_measured is not None:
+            return self.is_measured
+        return (self.success_count + self.failure_count) > 0
 
 
 class ScoredCandidate(BaseModel):
@@ -107,35 +114,54 @@ class ExpectedUtilityScorer:
     ) -> ScoredCandidate:
         weights: SoftObjectives = profile.soft_objectives.normalized()
 
-        # 1. Bayesian Quality with Beta prior (alpha=2*q, beta=2*(1-q))
         total_trials = candidate.success_count + candidate.failure_count
-        prior_alpha = 2.0 * candidate.measured_quality
-        prior_beta = 2.0 * (1.0 - candidate.measured_quality)
-        post_alpha = prior_alpha + candidate.success_count
-        post_beta = prior_beta + candidate.failure_count
-        post_total = post_alpha + post_beta
+        is_measured = candidate.measured
 
-        q_mean = post_alpha / post_total if post_total > 0 else candidate.measured_quality
-        variance = (post_alpha * post_beta) / ((post_total ** 2) * (post_total + 1.0))
-        std_err = math.sqrt(max(1e-6, variance))
+        if is_measured:
+            # 1. Bayesian Quality with Beta prior (alpha=2*q, beta=2*(1-q))
+            prior_alpha = 2.0 * candidate.measured_quality
+            prior_beta = 2.0 * (1.0 - candidate.measured_quality)
+            post_alpha = prior_alpha + candidate.success_count
+            post_beta = prior_beta + candidate.failure_count
+            post_total = post_alpha + post_beta
 
-        ci_lower = max(0.0, round(q_mean - 1.96 * std_err, 4))
-        ci_upper = min(1.0, round(q_mean + 1.96 * std_err, 4))
-        confidence = max(0.1, min(1.0, round(1.0 - 2.0 * std_err, 4)))
+            q_mean = post_alpha / post_total if post_total > 0 else candidate.measured_quality
+            variance = (post_alpha * post_beta) / ((post_total ** 2) * (post_total + 1.0))
+            std_err = math.sqrt(max(1e-6, variance))
+
+            ci_lower = max(0.0, round(q_mean - 1.96 * std_err, 4))
+            ci_upper = min(1.0, round(q_mean + 1.96 * std_err, 4))
+            confidence = max(0.1, min(1.0, round(1.0 - 2.0 * std_err, 4)))
+            rel_score = round(candidate.success_count / total_trials, 4) if total_trials > 0 else 0.90
+        else:
+            # Directive 3: Pessimistic Beta prior for unmeasured routes (low expected quality ~0.10)
+            prior_alpha = 0.4
+            prior_beta = 3.6
+            post_total = prior_alpha + prior_beta
+            q_mean = prior_alpha / post_total  # 0.10
+            variance = (prior_alpha * prior_beta) / ((post_total ** 2) * (post_total + 1.0))
+            std_err = math.sqrt(max(1e-6, variance))
+
+            ci_lower = 0.0
+            ci_upper = 0.30
+            confidence = 0.10
+            rel_score = 0.30  # Pessimistic reliability for unproven routes
 
         # 2. TTFT score: normalized exponential or linear decay
-        ttft = max(10.0, candidate.measured_ttft_ms)
-        ttft_score = max(0.0, min(1.0, round(1.0 - (ttft / self.target_max_ttft_ms), 4)))
+        # Measured TTFT: observed empirical network latency ~3,758ms if unmeasured or default
+        raw_ttft = candidate.measured_ttft_ms if (is_measured and candidate.measured_ttft_ms > 0) else 3758.0
+        ttft = max(10.0, raw_ttft)
+        target_ttft = max(self.target_max_ttft_ms, 5000.0)
+        ttft_score = max(0.0, min(1.0, round(1.0 - (ttft / target_ttft), 4)))
 
         # 3. Cost score: normalized non-linear decay
         est_cost = self.estimate_cost(candidate, prompt_tokens=prompt_tokens)
-        cost_score = round(1.0 / (1.0 + est_cost * 100.0), 4)
-
-        # 4. Reliability score
-        if total_trials > 0:
-            rel_score = round(candidate.success_count / total_trials, 4)
+        if not is_measured and est_cost <= 0.0:
+            # Unmeasured routes with missing/zero pricing must NOT receive 1.0 cost score
+            cost_score = 0.50
         else:
-            rel_score = 0.90
+            cost_score = round(1.0 / (1.0 + est_cost * 100.0), 4)
+
         if candidate.is_cooldown:
             rel_score = 0.0
 

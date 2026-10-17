@@ -1,0 +1,1893 @@
+{
+  "job_id": "s2_groq:qwen/qwen3.8-27b",
+  "route_id": "groq:qwen/qwen3.8-27b",
+  "canonical_id": "qwen/qwen3.8-27b-20260814",
+  "provider": "groq",
+  "provider_model_id": "qwen/qwen3.8-27b",
+  "stage": 2,
+  "state": "done",
+  "timestamp": 1792258492.4695473,
+  "s1": {
+    "reps": 10,
+    "successes": 9,
+    "pass_rate": 0.9,
+    "ci_95": [
+      0.5959,
+      0.9821
+    ],
+    "mean_latency_ms": 19578.1,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 13981.86,
+        "num_turns": 7,
+        "total_cost_usd": 0.30404,
+        "session_id": "7aa41ecb-1e68-437c-ab38-2db598cd344b",
+        "cli_output": {
+          "duration_api_ms": 12082,
+          "stop_reason": "end_turn",
+          "session_id": "7aa41ecb-1e68-437c-ab38-2db598cd344b",
+          "total_cost_usd": 0.30404,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 396,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 73998,
+              "outputTokens": 396,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.30404,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` contains: `alpha-done`\n- `b.txt` contains: `beta-done`\n- `c.txt` contains: `gamma-done`",
+          "ttft_ms": 5952,
+          "type": "result",
+          "duration_ms": 12787,
+          "uuid": "c7b6d048-9000-4cd7-82b8-c4b5ef3f2589",
+          "ttft_stream_ms": 5915,
+          "time_to_request_ms": 519,
+          "first_content_frame_ms": 5928,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 11003.8,
+        "num_turns": 7,
+        "total_cost_usd": 0.3041,
+        "session_id": "c9c3d284-2bab-4366-918f-bc153f1a88e0",
+        "cli_output": {
+          "duration_api_ms": 9294,
+          "stop_reason": "end_turn",
+          "session_id": "c9c3d284-2bab-4366-918f-bc153f1a88e0",
+          "total_cost_usd": 0.3041,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 73998,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.3041,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been created and updated successfully:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 4640,
+          "type": "result",
+          "duration_ms": 9865,
+          "uuid": "97d2c92b-6abb-4265-a38a-e4d8be5bb961",
+          "ttft_stream_ms": 4631,
+          "time_to_request_ms": 397,
+          "first_content_frame_ms": 4636,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9435.28,
+        "num_turns": 7,
+        "total_cost_usd": 0.30890799999999996,
+        "session_id": "1afcc5ab-8d7e-4fed-bf38-975415ddae86",
+        "cli_output": {
+          "duration_api_ms": 7496,
+          "stop_reason": "end_turn",
+          "session_id": "1afcc5ab-8d7e-4fed-bf38-975415ddae86",
+          "total_cost_usd": 0.30890799999999996,
+          "usage": {
+            "input_tokens": 73989,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24960,
+            "output_tokens": 398,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 73989,
+              "outputTokens": 398,
+              "cacheReadInputTokens": 24960,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.30890799999999996,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as requested:\n\n- `alpha.txt` contains: `alpha-done`\n- `beta.txt` contains: `beta-done`\n- `gamma.txt` contains: `gamma-done`",
+          "ttft_ms": 3371,
+          "type": "result",
+          "duration_ms": 8035,
+          "uuid": "bfec57a7-e3e8-4ba1-a45d-1d374452dbc8",
+          "ttft_stream_ms": 3335,
+          "time_to_request_ms": 351,
+          "first_content_frame_ms": 3343,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 11472.51,
+        "num_turns": 7,
+        "total_cost_usd": 0.30435599999999996,
+        "session_id": "f336b7f2-d401-44ac-bef5-9d3e1a49b20a",
+        "cli_output": {
+          "duration_api_ms": 9823,
+          "stop_reason": "end_turn",
+          "session_id": "f336b7f2-d401-44ac-bef5-9d3e1a49b20a",
+          "total_cost_usd": 0.30435599999999996,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1920,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 73998,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 1920,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.30435599999999996,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3893,
+          "type": "result",
+          "duration_ms": 10356,
+          "uuid": "78b516f9-66b9-4140-b83c-bf11783d2971",
+          "ttft_stream_ms": 3890,
+          "time_to_request_ms": 365,
+          "first_content_frame_ms": 3891,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9473.99,
+        "num_turns": 7,
+        "total_cost_usd": 0.3091176,
+        "session_id": "27a4eb96-a979-4153-b5ad-61f666bc4e74",
+        "cli_output": {
+          "duration_api_ms": 7926,
+          "stop_reason": "end_turn",
+          "session_id": "27a4eb96-a979-4153-b5ad-61f666bc4e74",
+          "total_cost_usd": 0.3091176,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 25728,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 73998,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 25728,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.3091176,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3095,
+          "type": "result",
+          "duration_ms": 8457,
+          "uuid": "d2047612-1a34-4623-bd1c-2b5d2b7dfb2a",
+          "ttft_stream_ms": 3093,
+          "time_to_request_ms": 362,
+          "first_content_frame_ms": 3094,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10794.69,
+        "num_turns": 7,
+        "total_cost_usd": 0.20314,
+        "session_id": "0ad5fd01-8b9f-439d-946f-8517ea4bbe91",
+        "cli_output": {
+          "duration_api_ms": 9189,
+          "stop_reason": "end_turn",
+          "session_id": "0ad5fd01-8b9f-439d-946f-8517ea4bbe91",
+          "total_cost_usd": 0.20314,
+          "usage": {
+            "input_tokens": 48971,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 350,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48971,
+              "outputTokens": 350,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.20314,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "I have created `a.txt` with 'alpha', `b.txt` with 'beta', and `c.txt` with 'gamma'. Then I appended '-done' to each of those files.",
+          "ttft_ms": 3618,
+          "type": "result",
+          "duration_ms": 9764,
+          "uuid": "5571abbb-f7ec-40ec-a1f0-73d00f2db21c",
+          "ttft_stream_ms": 3615,
+          "time_to_request_ms": 415,
+          "first_content_frame_ms": 3616,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10371.48,
+        "num_turns": 7,
+        "total_cost_usd": 0.20314,
+        "session_id": "4415618c-2722-4366-81bb-98b5ba1afecb",
+        "cli_output": {
+          "duration_api_ms": 8608,
+          "stop_reason": "end_turn",
+          "session_id": "4415618c-2722-4366-81bb-98b5ba1afecb",
+          "total_cost_usd": 0.20314,
+          "usage": {
+            "input_tokens": 48971,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 350,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48971,
+              "outputTokens": 350,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.20314,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "I have created `a.txt` with 'alpha', `b.txt` with 'beta', and `c.txt` with 'gamma'. Then I appended '-done' to each of them, so they now contain 'alpha-done', 'beta-done', and 'gamma-done' respectively.",
+          "ttft_ms": 4060,
+          "type": "result",
+          "duration_ms": 9136,
+          "uuid": "acbc4828-c894-451d-91c2-67e833612635",
+          "ttft_stream_ms": 4046,
+          "time_to_request_ms": 371,
+          "first_content_frame_ms": 4054,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 8,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 19406.43,
+        "num_turns": 10,
+        "total_cost_usd": 0.41960240000000004,
+        "session_id": "63f94ea4-2a36-485d-97aa-100c37fedd92",
+        "cli_output": {
+          "duration_api_ms": 12549,
+          "stop_reason": "end_turn",
+          "session_id": "63f94ea4-2a36-485d-97aa-100c37fedd92",
+          "total_cost_usd": 0.41960240000000004,
+          "usage": {
+            "input_tokens": 100233,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 26752,
+            "output_tokens": 666,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 100233,
+              "outputTokens": 666,
+              "cacheReadInputTokens": 26752,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.41960240000000004,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "qMchUAjiH",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_2_ffha6f5h\\s1_9\\a.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to a.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "gtF8Uu23q",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_2_ffha6f5h\\s1_9\\b.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to b.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "PpjRrEEfP",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_2_ffha6f5h\\s1_9\\c.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to c.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 10,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The task is complete. The three files now contain the following content:\n\n- `a.txt`: `alpha-done`\n- `b.txt`: `beta-done`\n- `c.txt`: `gamma-done`",
+          "ttft_ms": 3159,
+          "type": "result",
+          "duration_ms": 18322,
+          "uuid": "11ed7328-2f03-4b38-8541-651e8fe9b22c",
+          "ttft_stream_ms": 3154,
+          "time_to_request_ms": 374,
+          "first_content_frame_ms": 3154,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9841.01,
+        "num_turns": 7,
+        "total_cost_usd": 0.304584,
+        "session_id": "1655ea73-5368-4178-84fc-2628501e86eb",
+        "cli_output": {
+          "duration_api_ms": 8112,
+          "stop_reason": "end_turn",
+          "session_id": "1655ea73-5368-4178-84fc-2628501e86eb",
+          "total_cost_usd": 0.304584,
+          "usage": {
+            "input_tokens": 74025,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1920,
+            "output_tokens": 405,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 74025,
+              "outputTokens": 405,
+              "cacheReadInputTokens": 1920,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.304584,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3329,
+          "type": "result",
+          "duration_ms": 8663,
+          "uuid": "f4b9ce66-efc6-4500-9984-e39d00333546",
+          "ttft_stream_ms": 3327,
+          "time_to_request_ms": 390,
+          "first_content_frame_ms": 3328,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  },
+  "s2": {
+    "reps": 10,
+    "successes": 10,
+    "pass_rate": 1.0,
+    "ci_95": [
+      0.7225,
+      1.0
+    ],
+    "mean_latency_ms": 6538.76,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5299.72,
+        "num_turns": 2,
+        "total_cost_usd": 0.2004344,
+        "session_id": "ebf9fcee-4a9f-4f55-8e11-5d35ba07ff83",
+        "cli_output": {
+          "duration_api_ms": 3122,
+          "stop_reason": "end_turn",
+          "session_id": "ebf9fcee-4a9f-4f55-8e11-5d35ba07ff83",
+          "total_cost_usd": 0.2004344,
+          "usage": {
+            "input_tokens": 48619,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24192,
+            "output_tokens": 56,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48619,
+              "outputTokens": 56,
+              "cacheReadInputTokens": 24192,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.2004344,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2178,
+          "type": "result",
+          "duration_ms": 4294,
+          "uuid": "a802d272-29f0-43de-8b0d-1266bad39e79",
+          "ttft_stream_ms": 2175,
+          "time_to_request_ms": 366,
+          "first_content_frame_ms": 2176,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6058.55,
+        "num_turns": 2,
+        "total_cost_usd": 0.19557200000000002,
+        "session_id": "39bfe119-37c7-4607-ab3d-fd08a9bbd8a0",
+        "cli_output": {
+          "duration_api_ms": 3806,
+          "stop_reason": "end_turn",
+          "session_id": "39bfe119-37c7-4607-ab3d-fd08a9bbd8a0",
+          "total_cost_usd": 0.19557200000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19557200000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2320,
+          "type": "result",
+          "duration_ms": 4916,
+          "uuid": "602fcef1-8bf3-4d03-9501-861d36bc9d39",
+          "ttft_stream_ms": 2318,
+          "time_to_request_ms": 372,
+          "first_content_frame_ms": 2319,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 7844.61,
+        "num_turns": 2,
+        "total_cost_usd": 0.19557200000000002,
+        "session_id": "1799dbca-78d4-4aaf-9f01-ee6a280d9be3",
+        "cli_output": {
+          "duration_api_ms": 5721,
+          "stop_reason": "end_turn",
+          "session_id": "1799dbca-78d4-4aaf-9f01-ee6a280d9be3",
+          "total_cost_usd": 0.19557200000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19557200000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2186,
+          "type": "result",
+          "duration_ms": 6829,
+          "uuid": "0c85a798-aa4f-4281-8468-6a7c06e66a23",
+          "ttft_stream_ms": 2184,
+          "time_to_request_ms": 365,
+          "first_content_frame_ms": 2184,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6976.45,
+        "num_turns": 2,
+        "total_cost_usd": 0.195828,
+        "session_id": "f6b85777-b8cb-4e27-90a8-9edd4c139077",
+        "cli_output": {
+          "duration_api_ms": 4713,
+          "stop_reason": "end_turn",
+          "session_id": "f6b85777-b8cb-4e27-90a8-9edd4c139077",
+          "total_cost_usd": 0.195828,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195828,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 3297,
+          "type": "result",
+          "duration_ms": 5959,
+          "uuid": "79195ffe-56e9-4e15-9937-409f68b78d7b",
+          "ttft_stream_ms": 3296,
+          "time_to_request_ms": 462,
+          "first_content_frame_ms": 3296,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6041.18,
+        "num_turns": 2,
+        "total_cost_usd": 0.19557200000000002,
+        "session_id": "d6ed441b-3c9b-452c-a6e2-f4672bd47fab",
+        "cli_output": {
+          "duration_api_ms": 3770,
+          "stop_reason": "end_turn",
+          "session_id": "d6ed441b-3c9b-452c-a6e2-f4672bd47fab",
+          "total_cost_usd": 0.19557200000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19557200000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2293,
+          "type": "result",
+          "duration_ms": 4982,
+          "uuid": "60f34bb3-e883-4814-b2d2-1bddb324e0d8",
+          "ttft_stream_ms": 2285,
+          "time_to_request_ms": 436,
+          "first_content_frame_ms": 2285,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6857.13,
+        "num_turns": 2,
+        "total_cost_usd": 0.196268,
+        "session_id": "10c5d7d6-5746-4946-b033-e7a19085f576",
+        "cli_output": {
+          "duration_api_ms": 4553,
+          "stop_reason": "end_turn",
+          "session_id": "10c5d7d6-5746-4946-b033-e7a19085f576",
+          "total_cost_usd": 0.196268,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 77,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 77,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.196268,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```\n\nWould you like to investigate further, such as checking the contents of `check.py` or running additional tests?",
+          "ttft_ms": 2674,
+          "type": "result",
+          "duration_ms": 5728,
+          "uuid": "bac41546-5d5a-4fe7-98b8-4861a17a4a74",
+          "ttft_stream_ms": 2673,
+          "time_to_request_ms": 428,
+          "first_content_frame_ms": 2673,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5801.47,
+        "num_turns": 2,
+        "total_cost_usd": 0.1957,
+        "session_id": "a4f9a64a-22be-4f68-becc-06d49db71f0d",
+        "cli_output": {
+          "duration_api_ms": 3630,
+          "stop_reason": "end_turn",
+          "session_id": "a4f9a64a-22be-4f68-becc-06d49db71f0d",
+          "total_cost_usd": 0.1957,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.1957,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2255,
+          "type": "result",
+          "duration_ms": 4787,
+          "uuid": "b7cdc5e6-9ed4-4a2a-bb3b-5a1ae4c06e3d",
+          "ttft_stream_ms": 2252,
+          "time_to_request_ms": 392,
+          "first_content_frame_ms": 2253,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 8,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6081.84,
+        "num_turns": 2,
+        "total_cost_usd": 0.19557200000000002,
+        "session_id": "a24845a8-e6df-44c3-9bca-ad533ba72f54",
+        "cli_output": {
+          "duration_api_ms": 3876,
+          "stop_reason": "end_turn",
+          "session_id": "a24845a8-e6df-44c3-9bca-ad533ba72f54",
+          "total_cost_usd": 0.19557200000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19557200000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2295,
+          "type": "result",
+          "duration_ms": 4978,
+          "uuid": "b5e32f76-fc66-46e4-97b8-8bba6c44d7a8",
+          "ttft_stream_ms": 2286,
+          "time_to_request_ms": 363,
+          "first_content_frame_ms": 2286,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 8611.21,
+        "num_turns": 2,
+        "total_cost_usd": 0.1957,
+        "session_id": "d34bb3c1-f9df-4242-b030-720290966007",
+        "cli_output": {
+          "duration_api_ms": 6398,
+          "stop_reason": "end_turn",
+          "session_id": "d34bb3c1-f9df-4242-b030-720290966007",
+          "total_cost_usd": 0.1957,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.1957,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2119,
+          "type": "result",
+          "duration_ms": 7499,
+          "uuid": "95304e34-031b-437d-a639-8dffd24f3f52",
+          "ttft_stream_ms": 2117,
+          "time_to_request_ms": 352,
+          "first_content_frame_ms": 2118,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5815.44,
+        "num_turns": 2,
+        "total_cost_usd": 0.196092,
+        "session_id": "4e737ae6-d1d2-4221-a802-84ade34db27c",
+        "cli_output": {
+          "duration_api_ms": 3642,
+          "stop_reason": "end_turn",
+          "session_id": "4e737ae6-d1d2-4221-a802-84ade34db27c",
+          "total_cost_usd": 0.196092,
+          "usage": {
+            "input_tokens": 48624,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 67,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "qwen/qwen3.8-27b": {
+              "inputTokens": 48624,
+              "outputTokens": 67,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.196092,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "qwen/qwen3.8-27b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```\n\nWould you like me to investigate further or perform additional actions?",
+          "ttft_ms": 2139,
+          "type": "result",
+          "duration_ms": 4784,
+          "uuid": "5b9ac7be-3565-4980-b75e-f9f860cf91aa",
+          "ttft_stream_ms": 2137,
+          "time_to_request_ms": 393,
+          "first_content_frame_ms": 2138,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  }
+}

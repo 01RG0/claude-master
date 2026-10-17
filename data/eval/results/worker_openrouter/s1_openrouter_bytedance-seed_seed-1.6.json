@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:bytedance-seed/seed-1.6",
+  "route_id": "openrouter:bytedance-seed/seed-1.6",
+  "canonical_id": "bytedance-seed/seed-1.6-20250625",
+  "provider": "openrouter",
+  "provider_model_id": "bytedance-seed/seed-1.6",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257782.9042134,
+  "duration_seconds": 9.55,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 893.23,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257779-QA62gF5Me1PHqVJBP1z9\",\"object\":\"chat.completion\",\"created\":1792257779,\"model\":\"bytedance-seed/seed-1.6\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"\\nGot it, let's see. The problem is 7 multiplied by 6. I remember that 7*6 is 42. Yeah, that's a basic multiplication fact. So"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 749.09,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257782-OKT7SRZTd90T52oKBAPH\",\"object\":\"chat.completion\",\"created\":1792257782,\"model\":\"bytedance-seed/seed-1.6\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":\"[{\\\"\",\"refusal\":null,\"reasoning\":\"\\nGot it, let's see. The user wants to check the health of the database service. The available tool is check_status, which r"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 686.22,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257785-3hAQ6rhxDQEQYMxNSJAu\",\"object\":\"chat.completion\",\"created\":1792257785,\"model\":\"bytedance-seed/seed-1.6\",\"provider\":\"Seed\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"\\nGot it, let's see. The user wants to check the status of both database and redis services at the same time. So I need to do "
+    }
+  }
+}

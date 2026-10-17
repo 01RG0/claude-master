@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_alibaba:qwen2.5-72b-instruct",
+  "route_id": "alibaba:qwen2.5-72b-instruct",
+  "canonical_id": "qwen/qwen-2.5-72b-instruct",
+  "provider": "alibaba",
+  "provider_model_id": "qwen2.5-72b-instruct",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_403",
+  "timestamp": 1792257750.6311522,
+  "duration_seconds": 1.36,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 403,
+      "latency_ms": 1361.52,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"Access denied\",\"id\":\"6b7c9856-7b80-9758-815b-d6c90e44d624\",\"type\":\"access_denied\",\"code\":\"access_denied\"}}"
+    }
+  }
+}

@@ -1,0 +1,124 @@
+[
+  {
+    "id": "SCN-H01-CORRUPTCONFIG",
+    "dimension": "H",
+    "category": "corrupted-config",
+    "cross_dimensions": [
+      "H",
+      "D"
+    ],
+    "tier": "chaos",
+    "title": "Malformed gateway config.json Auto-Recovery",
+    "description": "Write invalid syntax JSON into config.json; verify gateway recovers using backup or safe default configuration without crash.",
+    "setup": {
+      "corrupt_config": true
+    },
+    "input": {
+      "prompt": "Check gateway status."
+    },
+    "expected_oracle": {
+      "type": "resilience_oracle",
+      "spec": {
+        "safe_fallback_active": true,
+        "service_healthy": true
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "data-state",
+      "config",
+      "chaos"
+    ]
+  },
+  {
+    "id": "SCN-H02-CORRUPTSQLITE",
+    "dimension": "H",
+    "category": "corrupted-sqlite",
+    "cross_dimensions": [
+      "H",
+      "D"
+    ],
+    "tier": "chaos",
+    "title": "SQLite Database WAL Corruption Auto-Rebuild",
+    "description": "Corrupt SQLite header bytes; gateway detects corruption, moves damaged file to .corrupted.<timestamp>, and re-initializes fresh DB.",
+    "setup": {
+      "corrupt_sqlite_db": true
+    },
+    "input": {
+      "prompt": "Verify audit log recording."
+    },
+    "expected_oracle": {
+      "type": "db_audit",
+      "spec": {
+        "sqlite_integrity_check": "ok",
+        "corrupted_backup_created": true
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "data-state",
+      "sqlite",
+      "chaos"
+    ]
+  },
+  {
+    "id": "SCN-H03-MIGRATION",
+    "dimension": "H",
+    "category": "schema-migration",
+    "cross_dimensions": [
+      "H"
+    ],
+    "tier": "standard",
+    "title": "Zero-Downtime SQLite Schema Migration",
+    "description": "Verify migration from legacy schema v1 to current schema v2 preserves existing model rating metrics and audit history.",
+    "setup": {
+      "legacy_schema_fixture": "data/backups/schema_v1.sql"
+    },
+    "input": {
+      "prompt": "Run migration check."
+    },
+    "expected_oracle": {
+      "type": "db_audit",
+      "spec": {
+        "schema_version": 2,
+        "zero_data_loss": true
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "data-state",
+      "migration"
+    ]
+  },
+  {
+    "id": "SCN-H04-DISKGROWTH",
+    "dimension": "H",
+    "category": "disk-growth",
+    "cross_dimensions": [
+      "H",
+      "D"
+    ],
+    "tier": "extended",
+    "title": "Traffic Log Auto-Rotation & Database Compaction (VACUUM)",
+    "description": "Generate 1,000 synthetic request logs; verify log rotation triggers and SQLite VACUUM executes cleanly.",
+    "setup": {
+      "synthetic_logs_count": 1000
+    },
+    "input": {
+      "prompt": "Trigger housekeeping and log compaction."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "log_files_rotated": true,
+        "vacuum_succeeded": true
+      }
+    },
+    "timeout_s": 90,
+    "tags": [
+      "data-state",
+      "compaction",
+      "vacuum"
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_anyapi:google/gemma-4-26b-a4b-it:free",
+  "route_id": "anyapi:google/gemma-4-26b-a4b-it:free",
+  "canonical_id": "google/gemma-4-26b-a4b-it-20260403",
+  "provider": "anyapi",
+  "provider_model_id": "google/gemma-4-26b-a4b-it:free",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_429_rate_limited",
+  "timestamp": 1792257782.1630733,
+  "duration_seconds": 1.73,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 429,
+      "latency_ms": 1726.43,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"You are being rate limited\",\"type\":\"throttling_error\",\"param\":null,\"code\":\"429\"}}"
+    }
+  }
+}

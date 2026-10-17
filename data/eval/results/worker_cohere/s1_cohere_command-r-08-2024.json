@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:command-r-08-2024",
+  "route_id": "cohere:command-r-08-2024",
+  "canonical_id": "cohere/command-r-08-2024",
+  "provider": "cohere",
+  "provider_model_id": "command-r-08-2024",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257592.071563,
+  "duration_seconds": 31.34,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 3123.07,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"df130a0b-6bab-432c-a7a5-6fb12d91abcb\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":24,\"output_tokens\":8},\"tokens\":{\"input_tokens\":224,\"output_tokens\":9},\"cached_tokens\":192}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 0,
+      "latency_ms": 12106.87,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "The read operation timed out"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 0,
+      "latency_ms": 12110.13,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "The read operation timed out"
+    }
+  }
+}

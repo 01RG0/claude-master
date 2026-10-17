@@ -1,0 +1,1832 @@
+{
+  "job_id": "s2_groq:openai/gpt-oss-120b",
+  "route_id": "groq:openai/gpt-oss-120b",
+  "canonical_id": "openai/gpt-oss-120b",
+  "provider": "groq",
+  "provider_model_id": "openai/gpt-oss-120b",
+  "stage": 2,
+  "state": "done",
+  "timestamp": 1792258566.1545362,
+  "s1": {
+    "reps": 10,
+    "successes": 9,
+    "pass_rate": 0.9,
+    "ci_95": [
+      0.5959,
+      0.9821
+    ],
+    "mean_latency_ms": 22788.31,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 15728.27,
+        "num_turns": 8,
+        "total_cost_usd": 0.3092336,
+        "session_id": "538023b7-a132-40a6-a271-814b2a961b9f",
+        "cli_output": {
+          "duration_api_ms": 13726,
+          "stop_reason": "end_turn",
+          "session_id": "538023b7-a132-40a6-a271-814b2a961b9f",
+          "total_cost_usd": 0.3092336,
+          "usage": {
+            "input_tokens": 74111,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24448,
+            "output_tokens": 395,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 74111,
+              "outputTokens": 395,
+              "cacheReadInputTokens": 24448,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.3092336,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 8,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The three files have been successfully created and updated:\n\n- `alpha.txt` → `alpha-done`\n- `beta.txt` → `beta-done`\n- `gamma.txt` → `gamma-done`",
+          "ttft_ms": 4902,
+          "type": "result",
+          "duration_ms": 14440,
+          "uuid": "0a3913ef-1c8c-4e6b-b7cc-01b60972b172",
+          "ttft_stream_ms": 4860,
+          "time_to_request_ms": 510,
+          "first_content_frame_ms": 4875,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 13943.92,
+        "num_turns": 4,
+        "total_cost_usd": 0.398728,
+        "session_id": "b914bb4e-3c8e-4bff-b855-f6d63ebc06cc",
+        "cli_output": {
+          "duration_api_ms": 11669,
+          "stop_reason": "end_turn",
+          "session_id": "b914bb4e-3c8e-4bff-b855-f6d63ebc06cc",
+          "total_cost_usd": 0.398728,
+          "usage": {
+            "input_tokens": 97973,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 329,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 97973,
+              "outputTokens": 329,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.398728,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 4,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` contains: `alpha-done`\n- `b.txt` contains: `beta-done`\n- `c.txt` contains: `gamma-done`",
+          "ttft_ms": 2819,
+          "type": "result",
+          "duration_ms": 12874,
+          "uuid": "b41864bb-a687-4b0e-b58a-e200ba76dd63",
+          "ttft_stream_ms": 2785,
+          "time_to_request_ms": 359,
+          "first_content_frame_ms": 2796,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 20216.51,
+        "num_turns": 10,
+        "total_cost_usd": 0.4205344,
+        "session_id": "8669a443-d682-4ad1-9960-ce5926fc6785",
+        "cli_output": {
+          "duration_api_ms": 13040,
+          "stop_reason": "end_turn",
+          "session_id": "8669a443-d682-4ad1-9960-ce5926fc6785",
+          "total_cost_usd": 0.4205344,
+          "usage": {
+            "input_tokens": 100268,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 26112,
+            "output_tokens": 712,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 100268,
+              "outputTokens": 712,
+              "cacheReadInputTokens": 26112,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.4205344,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "a7RX3VKFH",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_3\\a.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to a.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "x63UlGMNc",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_3\\b.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to b.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "od2GXeaRM",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_3\\c.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to c.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 10,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The task is now complete. The three files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3223,
+          "type": "result",
+          "duration_ms": 19080,
+          "uuid": "49c6d3e1-5320-4bbb-b75a-2d1cf67a7b76",
+          "ttft_stream_ms": 3218,
+          "time_to_request_ms": 362,
+          "first_content_frame_ms": 3218,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 13715.22,
+        "num_turns": 8,
+        "total_cost_usd": 0.40636800000000006,
+        "session_id": "e24cf04c-f53b-4499-99fb-8eedfc2c30cd",
+        "cli_output": {
+          "duration_api_ms": 12052,
+          "stop_reason": "end_turn",
+          "session_id": "e24cf04c-f53b-4499-99fb-8eedfc2c30cd",
+          "total_cost_usd": 0.40636800000000006,
+          "usage": {
+            "input_tokens": 99144,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2560,
+            "output_tokens": 464,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 99144,
+              "outputTokens": 464,
+              "cacheReadInputTokens": 2560,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.40636800000000006,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 8,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3507,
+          "type": "result",
+          "duration_ms": 12602,
+          "uuid": "f3e1489a-b963-4153-ae78-9c3e8bcafdd3",
+          "ttft_stream_ms": 3505,
+          "time_to_request_ms": 365,
+          "first_content_frame_ms": 3505,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10221.13,
+        "num_turns": 7,
+        "total_cost_usd": 0.304044,
+        "session_id": "5a3e1c16-603c-4563-97df-61cc427d9953",
+        "cli_output": {
+          "duration_api_ms": 8603,
+          "stop_reason": "end_turn",
+          "session_id": "5a3e1c16-603c-4563-97df-61cc427d9953",
+          "total_cost_usd": 0.304044,
+          "usage": {
+            "input_tokens": 73989,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 398,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 73989,
+              "outputTokens": 398,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.304044,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as requested:\n\n- `alpha.txt` contains: `alpha-done`\n- `beta.txt` contains: `beta-done`\n- `gamma.txt` contains: `gamma-done`",
+          "ttft_ms": 3197,
+          "type": "result",
+          "duration_ms": 9138,
+          "uuid": "08fd078c-394a-4275-bf3f-91b7b314d0d4",
+          "ttft_stream_ms": 3195,
+          "time_to_request_ms": 358,
+          "first_content_frame_ms": 3195,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10119.13,
+        "num_turns": 7,
+        "total_cost_usd": 0.304228,
+        "session_id": "583f1ee1-1706-4092-bdc9-6ecf6ad7e7fd",
+        "cli_output": {
+          "duration_api_ms": 8225,
+          "stop_reason": "end_turn",
+          "session_id": "583f1ee1-1706-4092-bdc9-6ecf6ad7e7fd",
+          "total_cost_usd": 0.304228,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 73998,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.304228,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been created and updated successfully:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3148,
+          "type": "result",
+          "duration_ms": 8785,
+          "uuid": "7b165353-0ff2-4a4d-8500-cb02a4e04d81",
+          "ttft_stream_ms": 3146,
+          "time_to_request_ms": 384,
+          "first_content_frame_ms": 3147,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 8,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 9803.19,
+        "num_turns": 7,
+        "total_cost_usd": 0.304268,
+        "session_id": "c751bd0e-4181-4931-99a5-338de6a6e504",
+        "cli_output": {
+          "duration_api_ms": 8106,
+          "stop_reason": "end_turn",
+          "session_id": "c751bd0e-4181-4931-99a5-338de6a6e504",
+          "total_cost_usd": 0.304268,
+          "usage": {
+            "input_tokens": 73998,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 401,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 73998,
+              "outputTokens": 401,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.304268,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as requested:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3369,
+          "type": "result",
+          "duration_ms": 8624,
+          "uuid": "2fe8ae2a-125b-4bd4-bf11-62bbbcfbb6c5",
+          "ttft_stream_ms": 3366,
+          "time_to_request_ms": 350,
+          "first_content_frame_ms": 3366,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 23180.76,
+        "num_turns": 10,
+        "total_cost_usd": 0.6248328000000001,
+        "session_id": "c711a89e-a9eb-41e3-bd5c-00fc48f29aba",
+        "cli_output": {
+          "duration_api_ms": 16292,
+          "stop_reason": "end_turn",
+          "session_id": "c711a89e-a9eb-41e3-bd5c-00fc48f29aba",
+          "total_cost_usd": 0.6248328000000001,
+          "usage": {
+            "input_tokens": 151515,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 27264,
+            "output_tokens": 666,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 151515,
+              "outputTokens": 666,
+              "cacheReadInputTokens": 27264,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.6248328000000001,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "avZbVQspz",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\b.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to b.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "oM0Bvku6j",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\c.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to c.txt"
+              }
+            },
+            {
+              "tool_name": "PowerShell",
+              "tool_use_id": "8CNF0sQxj",
+              "tool_input": {
+                "command": "Add-Content -Path \"C:\\Users\\hamad\\AppData\\Local\\Temp\\cm_cli_worker_cli_1_ri3yy98z\\s1_9\\a.txt\" -Value \"-done\"",
+                "description": "Appends '-done' to a.txt"
+              }
+            }
+          ],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 10,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as follows:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3262,
+          "type": "result",
+          "duration_ms": 22055,
+          "uuid": "c7bfa09d-5bac-4e04-b40e-b23a2ede40f2",
+          "ttft_stream_ms": 3259,
+          "time_to_request_ms": 386,
+          "first_content_frame_ms": 3260,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 20954.94,
+        "num_turns": 7,
+        "total_cost_usd": 0.503396,
+        "session_id": "b72dbf57-1e76-4924-bdef-c0b0d61b8ccb",
+        "cli_output": {
+          "duration_api_ms": 19222,
+          "stop_reason": "end_turn",
+          "session_id": "b72dbf57-1e76-4924-bdef-c0b0d61b8ccb",
+          "total_cost_usd": 0.503396,
+          "usage": {
+            "input_tokens": 123716,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2560,
+            "output_tokens": 401,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 123716,
+              "outputTokens": 401,
+              "cacheReadInputTokens": 2560,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.503396,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been created and updated successfully:\n\n- `alpha.txt` → `alpha-done`\n- `beta.txt` → `beta-done`\n- `gamma.txt` → `gamma-done`",
+          "ttft_ms": 3199,
+          "type": "result",
+          "duration_ms": 19805,
+          "uuid": "43886a5c-a433-4a3b-8cb4-59124ecc5209",
+          "ttft_stream_ms": 3197,
+          "time_to_request_ms": 375,
+          "first_content_frame_ms": 3197,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  },
+  "s2": {
+    "reps": 10,
+    "successes": 9,
+    "pass_rate": 0.9,
+    "ci_95": [
+      0.5959,
+      0.9821
+    ],
+    "mean_latency_ms": 11581.54,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6383.89,
+        "num_turns": 2,
+        "total_cost_usd": 0.097864,
+        "session_id": "5dc79163-5491-40ec-b2ba-ce94a3ca8e8c",
+        "cli_output": {
+          "duration_api_ms": 4105,
+          "stop_reason": "end_turn",
+          "session_id": "5dc79163-5491-40ec-b2ba-ce94a3ca8e8c",
+          "total_cost_usd": 0.097864,
+          "usage": {
+            "input_tokens": 24289,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 29,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 24289,
+              "outputTokens": 29,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.097864,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "`CHECK-OK-123`",
+          "ttft_ms": 2352,
+          "type": "result",
+          "duration_ms": 5260,
+          "uuid": "b719e2e8-da79-45ed-bbe0-04e07f98e77d",
+          "ttft_stream_ms": 2349,
+          "time_to_request_ms": 366,
+          "first_content_frame_ms": 2349,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5351.8,
+        "num_turns": 2,
+        "total_cost_usd": 0,
+        "session_id": "8c6b2eac-1988-4fd1-b8c7-ecc11ad3f352",
+        "cli_output": {
+          "duration_api_ms": 3103,
+          "stop_reason": "end_turn",
+          "session_id": "8c6b2eac-1988-4fd1-b8c7-ecc11ad3f352",
+          "total_cost_usd": 0,
+          "usage": {
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` ran successfully and returned the output `CHECK-OK-123`.",
+          "ttft_ms": 2081,
+          "type": "result",
+          "duration_ms": 4239,
+          "uuid": "c596c06c-7d77-40ba-bba9-bdc0e75b782d",
+          "ttft_stream_ms": 2073,
+          "time_to_request_ms": 358,
+          "first_content_frame_ms": 2073,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5388.94,
+        "num_turns": 2,
+        "total_cost_usd": 0,
+        "session_id": "53695639-4df8-4ff1-bbd3-3073d9d06def",
+        "cli_output": {
+          "duration_api_ms": 3261,
+          "stop_reason": "end_turn",
+          "session_id": "53695639-4df8-4ff1-bbd3-3073d9d06def",
+          "total_cost_usd": 0,
+          "usage": {
+            "input_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 0,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The `check.py` script ran successfully and returned the output `CHECK-OK-123`.",
+          "ttft_ms": 1906,
+          "type": "result",
+          "duration_ms": 4384,
+          "uuid": "72b42c94-f0f6-486d-89df-a50dcd6ab342",
+          "ttft_stream_ms": 1900,
+          "time_to_request_ms": 378,
+          "first_content_frame_ms": 1901,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 4,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 60000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 5,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6161.41,
+        "num_turns": 2,
+        "total_cost_usd": 0.195828,
+        "session_id": "6a0acc89-499e-4d31-8369-e5819335d04b",
+        "cli_output": {
+          "duration_api_ms": 4012,
+          "stop_reason": "end_turn",
+          "session_id": "6a0acc89-499e-4d31-8369-e5819335d04b",
+          "total_cost_usd": 0.195828,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195828,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2521,
+          "type": "result",
+          "duration_ms": 5160,
+          "uuid": "8a86c43b-42ae-41c7-8b89-9655d8f67ae1",
+          "ttft_stream_ms": 2517,
+          "time_to_request_ms": 366,
+          "first_content_frame_ms": 2519,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 6,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5950.26,
+        "num_turns": 2,
+        "total_cost_usd": 0.19628800000000002,
+        "session_id": "9fa7986f-48b0-430b-980e-3a6b3deb734b",
+        "cli_output": {
+          "duration_api_ms": 3723,
+          "stop_reason": "end_turn",
+          "session_id": "9fa7986f-48b0-430b-980e-3a6b3deb734b",
+          "total_cost_usd": 0.19628800000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 78,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48618,
+              "outputTokens": 78,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19628800000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```\n\nWould you like me to investigate further, such as checking the contents of `check.py` or running additional tests?",
+          "ttft_ms": 2038,
+          "type": "result",
+          "duration_ms": 4823,
+          "uuid": "1f7e441a-6d4b-4e69-ad3e-1a07e7d5253a",
+          "ttft_stream_ms": 2036,
+          "time_to_request_ms": 350,
+          "first_content_frame_ms": 2036,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 7,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5475.04,
+        "num_turns": 2,
+        "total_cost_usd": 0.20057840000000002,
+        "session_id": "e5ab8dc3-b248-4e44-9567-ad022e96a35f",
+        "cli_output": {
+          "duration_api_ms": 3305,
+          "stop_reason": "end_turn",
+          "session_id": "e5ab8dc3-b248-4e44-9567-ad022e96a35f",
+          "total_cost_usd": 0.20057840000000002,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 24832,
+            "output_tokens": 57,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48618,
+              "outputTokens": 57,
+              "cacheReadInputTokens": 24832,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.20057840000000002,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` was run successfully, and its output was:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2246,
+          "type": "result",
+          "duration_ms": 4450,
+          "uuid": "6ce08464-264d-4ef8-a7c7-504700a0f04c",
+          "ttft_stream_ms": 2244,
+          "time_to_request_ms": 368,
+          "first_content_frame_ms": 2244,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 8,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 6586.87,
+        "num_turns": 2,
+        "total_cost_usd": 0.19594,
+        "session_id": "0064db07-2aa5-41aa-9d99-bd894f3a488d",
+        "cli_output": {
+          "duration_api_ms": 4217,
+          "stop_reason": "end_turn",
+          "session_id": "0064db07-2aa5-41aa-9d99-bd894f3a488d",
+          "total_cost_usd": 0.19594,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 67,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48618,
+              "outputTokens": 67,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.19594,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```\n\nWould you like me to investigate further or perform additional actions?",
+          "ttft_ms": 2282,
+          "type": "result",
+          "duration_ms": 5392,
+          "uuid": "192da7d2-4c2e-47fe-8257-fe9332dd1d5a",
+          "ttft_stream_ms": 2280,
+          "time_to_request_ms": 383,
+          "first_content_frame_ms": 2280,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 9,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 5914.38,
+        "num_turns": 2,
+        "total_cost_usd": 0.195828,
+        "session_id": "bb2b2f4a-fe96-4781-8e80-272044acf78a",
+        "cli_output": {
+          "duration_api_ms": 3683,
+          "stop_reason": "end_turn",
+          "session_id": "bb2b2f4a-fe96-4781-8e80-272044acf78a",
+          "total_cost_usd": 0.195828,
+          "usage": {
+            "input_tokens": 48618,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48618,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195828,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 2174,
+          "type": "result",
+          "duration_ms": 4817,
+          "uuid": "f5e299f0-23a5-4e6f-b421-9be1a164cf0a",
+          "ttft_stream_ms": 2172,
+          "time_to_request_ms": 366,
+          "first_content_frame_ms": 2172,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 10,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 8602.84,
+        "num_turns": 2,
+        "total_cost_usd": 0.195724,
+        "session_id": "da071f0f-efc5-49de-a546-8d8326a2ba8e",
+        "cli_output": {
+          "duration_api_ms": 5890,
+          "stop_reason": "end_turn",
+          "session_id": "da071f0f-efc5-49de-a546-8d8326a2ba8e",
+          "total_cost_usd": 0.195724,
+          "usage": {
+            "input_tokens": 48624,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 640,
+            "output_tokens": 55,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "openai/gpt-oss-120b": {
+              "inputTokens": 48624,
+              "outputTokens": 55,
+              "cacheReadInputTokens": 640,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.195724,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "openai/gpt-oss-120b",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 2,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The script `check.py` executed successfully and returned the output:\n\n```\nCHECK-OK-123\n```",
+          "ttft_ms": 4336,
+          "type": "result",
+          "duration_ms": 7459,
+          "uuid": "471a9b96-34a3-46e8-93b1-c7a9e657c212",
+          "ttft_stream_ms": 4334,
+          "time_to_request_ms": 373,
+          "first_content_frame_ms": 4334,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      }
+    ]
+  }
+}

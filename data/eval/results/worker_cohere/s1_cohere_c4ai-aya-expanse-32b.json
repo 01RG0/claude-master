@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:c4ai-aya-expanse-32b",
+  "route_id": "cohere:c4ai-aya-expanse-32b",
+  "canonical_id": "cohere/c4ai-aya-expanse-32b",
+  "provider": "cohere",
+  "provider_model_id": "c4ai-aya-expanse-32b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257505.5412042,
+  "duration_seconds": 5.48,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 522.74,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"250b74b4-52d4-45b6-8643-076d050ae6cb\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":24,\"output_tokens\":8},\"tokens\":{\"input_tokens\":103,\"output_tokens\":9},\"cached_tokens\":64}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 400,
+      "latency_ms": 470.47,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"error_type\":\"TOOL_USE_NOT_SUPPORTED\",\"id\":\"62be295a-251e-4988-a38b-e7da30b8f1d1\",\"message\":\"invalid request: tool use is not supported by the provided model: c4ai-aya-expanse-32b\"}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 484.59,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error_type\":\"TOOL_USE_NOT_SUPPORTED\",\"id\":\"5160ac40-a176-4aa7-811d-861ce2c695b8\",\"message\":\"invalid request: tool use is not supported by the provided model: c4ai-aya-expanse-32b\"}"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:command-a-vision-07-2025",
+  "route_id": "cohere:command-a-vision-07-2025",
+  "canonical_id": "cohere/command-a-vision-07-2025",
+  "provider": "cohere",
+  "provider_model_id": "command-a-vision-07-2025",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257558.4402392,
+  "duration_seconds": 5.47,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 826.26,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"873d02e8-feaf-481e-a53e-4813848f08a0\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"\\u003canswer\\u003e42\\u003c/answer\\u003e\"}]},\"finish_reason\":\"COMPLETE\",\"usage\":{\"billed_units\":{\"input_tokens\":24,\"output_tokens\":8},\"tokens\":{\"input_tokens\":519,\"output_tokens\":9},\"cached_tokens\":480}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 429,
+      "latency_ms": 356.59,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"id\":\"a141a99f-6796-4e9e-8a46-2f7495170347\",\"message\":\"You are using a Trial key, which is limited to 20 API calls / minute. You can continue to use the Trial key for free or upgrade to a Production key with higher rate limits at 'https://dashboard.cohere.com/api-keys'. Contact us on 'https://discord.gg/XW44jPfYJu' or email us at support@cohere.com with any questions\"}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 400,
+      "latency_ms": 285.38,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error_type\":\"TOOL_USE_NOT_SUPPORTED\",\"id\":\"72fd4f30-52e2-46cd-a747-15121c52512c\",\"message\":\"invalid request: tool use is not supported by the provided model: command-a-vision-07-2025\"}"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_mistral:mistral-small-latest",
+  "route_id": "mistral:mistral-small-latest",
+  "canonical_id": "mistralai/mistral-small-instruct",
+  "provider": "mistral",
+  "provider_model_id": "mistral-small-latest",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257485.8094757,
+  "duration_seconds": 5.4,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 429,
+      "latency_ms": 492.7,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 429,
+      "latency_ms": 431.74,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 429,
+      "latency_ms": 471.12,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:poolside/laguna-s-2.1",
+  "route_id": "openrouter:poolside/laguna-s-2.1",
+  "canonical_id": "poolside/laguna-s-2.1-20260720",
+  "provider": "openrouter",
+  "provider_model_id": "poolside/laguna-s-2.1",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257807.6523995,
+  "duration_seconds": 3.92,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 402.81,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257809-wk94pA2JnmVO3Ovt0xbc\",\"object\":\"chat.completion\",\"created\":1792257809,\"model\":\"poolside/laguna-s-2.1\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"Okay, let's see. I need to compute 7 multiplied by 6. Hmm, multiplication. So, 7 times 6. Let me think. I remember that multiplic"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 411.91,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257811-hxmXMEi1rCWeDVfT1lwc\",\"object\":\"chat.completion\",\"created\":1792257811,\"model\":\"poolside/laguna-s-2.1\",\"provider\":\"Poolside\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":\"I'll check the health of the database service for you.\",\"refusal\":null,\"reasoning\":null,\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"chatcmpl-tool-87"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 402,
+      "latency_ms": 299.67,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 150 tokens, but can only afford 126. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account\",\"code\":402,\"metadata\":{\"limit_source\":\"openrouter_credits\",\"remedy_hint\":\"Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.\",\"provider_name\":null}},\"user_id\":\"user_2y4DdZJAZQpx6abWetINH1V8QEH\"}"
+    }
+  }
+}

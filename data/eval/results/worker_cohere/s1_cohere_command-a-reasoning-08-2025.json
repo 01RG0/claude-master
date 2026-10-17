@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_cohere:command-a-reasoning-08-2025",
+  "route_id": "cohere:command-a-reasoning-08-2025",
+  "canonical_id": "cohere/command-a-reasoning-08-2025",
+  "provider": "cohere",
+  "provider_model_id": "command-a-reasoning-08-2025",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257541.7980795,
+  "duration_seconds": 9.59,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 2312.4,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"dfb6f8a6-27a7-4b95-8b69-952e6a4a6953\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Okay, so I need to compute 7 multiplied by 6. Let me think. Hmm, 7 times 6. Let me count. 7 added six times: 7 + 7 is 14, plus another 7 is 21, then 28, 35, 42. Wait, that's adding seven six times. Alternatively, maybe I can recall the multiplication table. The 7 times table: 7x1=7, 7x2=14, 7x3=21, 7x4=28, 7x5=35, 7x6=42. Yeah, that's right. So 7 multiplied by 6 is definitely 42. "
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1491.2,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"79846584-e6cd-4794-9c44-6d29a7ac11d1\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Okay, the user wants to check the health of the database service. Let me look at the available tools. There's only one tool called \\\"check_status\\\" which takes a service name. The description says it's for checking the status of an infrastructure service. So, I need to use this tool. The parameter required is \\\"service\\\", which in this case should be \\\"database\\\". I need to make s"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1781.29,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"f9fd5470-0488-4042-a770-47b2b8ec7478\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Okay, the user wants to check the status of both the 'database' and 'redis' services at the same time. Let me look at the available tools. There's a tool called check_status that takes a service name as a parameter. Each service check is independent, so I can call the tool twice with each service. That way, I can execute them in parallel. I need to generate unique tool_call_ids, m"
+    }
+  }
+}

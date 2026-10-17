@@ -36,6 +36,7 @@ from brain.routing.bandit import BanditRouter
 from brain.routing.drex_router import DrexRouter, DrexRoutingResult
 from brain.routing.escalation import EscalationManager, FailureType
 from brain.routing.hyperparameters import get_hyperparameter
+from brain.routing.privacy_policy import has_valid_zero_retention_evidence
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +68,8 @@ class RouteRequest:
     request_id: Optional[str] = None
     force_explore: bool = False                          # force bandit exploration on this request
     custom_candidates: Optional[List[Any]] = None       # override the router's internal pool
+    require_zero_retention: bool = False
+    privacy_policy: Optional[str] = None
 
     def __post_init__(self):
         if self.request_id is None:
@@ -126,7 +129,7 @@ class TaskClassifier:
     _SUMM_RE = re.compile(r'\b(summarize|summary|tldr|tl;dr|recap|condense|brief)\b', re.I)
     _MULTI_RE = re.compile(r'\b(then|next|step\s+\d|after that|finally|first)\b', re.I)
 
-    def classify(self, prompt: str) -> TaskContext:
+    def classify(self, prompt: str, prompt_tokens: int = 0) -> TaskContext:
         text = prompt.strip()
         vision_needed = bool(self._VISION_RE.search(text))
         language = "ar" if self._ARABIC_RE.search(text) else ("code" if self._CODE_RE.search(text) else "en")
@@ -151,6 +154,8 @@ class TaskClassifier:
             complexity = "low"
 
         multi_step = bool(self._MULTI_RE.search(text))
+        if prompt_tokens <= 0:
+            prompt_tokens = len(text) // 4
 
         return TaskContext(
             task_type=task_type,
@@ -158,7 +163,7 @@ class TaskClassifier:
             complexity=complexity,
             vision_needed=vision_needed,
             tools_needed=True,
-            prompt_tokens=len(text) // 4,
+            prompt_tokens=prompt_tokens,
             multi_step=multi_step,
         )
 
@@ -166,6 +171,23 @@ class TaskClassifier:
 # ──────────────────────────────────────────────────────────────────────────────
 # Candidate Filter
 # ──────────────────────────────────────────────────────────────────────────────
+
+def is_verifiable_model_identity(provider: str, model_id: str) -> bool:
+    """Strictly filter out wildcard and synthetic aliases like aihubmix/auto, pooled/*, *."""
+    if not model_id or not provider:
+        return False
+    p = str(provider).lower().strip()
+    m = str(model_id).lower().strip()
+    if p in ("pooled", "aihorde", "pollinations") or p.startswith("pooled"):
+        return False
+    if m == "*" or "*" in m or m.startswith("*/") or m.endswith("/*"):
+        return False
+    if m == "auto" or m.startswith("auto/") or m.endswith("/auto") or "/auto" in m or "auto/" in m:
+        return False
+    if m in ("default", "none", "unknown"):
+        return False
+    return True
+
 
 class CandidateFilter:
     """Applies hard constraints from a RequirementProfile against CandidateMetrics."""
@@ -184,6 +206,10 @@ class CandidateFilter:
         hc = profile.hard_constraints
 
         for c in candidates:
+            # Directive 3: strictly filter out wildcard and synthetic aliases
+            if not is_verifiable_model_identity(c.provider, c.model_id):
+                rejections[c.route_id] = "unverifiable_alias"
+                continue
             if c.is_banned:
                 rejections[c.route_id] = "banned"
                 continue
@@ -193,13 +219,21 @@ class CandidateFilter:
             if hc.tool_calling and not c.capabilities.get("tools", False):
                 rejections[c.route_id] = "no_tool_calling"
                 continue
-            if task.vision_needed and not c.capabilities.get("vision", False):
+            if (task.vision_needed or hc.vision) and not c.capabilities.get("vision", False):
                 rejections[c.route_id] = "no_vision"
                 continue
             if c.context_window < hc.min_context:
                 rejections[c.route_id] = f"context_too_small:{c.context_window}<{hc.min_context}"
                 continue
-            if hc.privacy and c.privacy_policy not in (hc.privacy, "zero_retention"):
+            # Directive 6: Strict zero-retention policy and provenance enforcement
+            if hc.privacy == "zero_retention" or getattr(hc, "require_zero_retention", False):
+                if c.privacy_policy != "zero_retention":
+                    rejections[c.route_id] = f"privacy_mismatch:{c.privacy_policy}"
+                    continue
+                if not has_valid_zero_retention_evidence(c.provider):
+                    rejections[c.route_id] = f"zero_retention_unverified:{c.provider}"
+                    continue
+            elif hc.privacy and c.privacy_policy not in (hc.privacy, "zero_retention"):
                 rejections[c.route_id] = f"privacy_mismatch:{c.privacy_policy}"
                 continue
             passed.append(c)
@@ -232,6 +266,7 @@ class DynamicRouter:
     ):
         self.classifier = TaskClassifier()
         self.candidate_filter = CandidateFilter()
+        self.filter_engine = self.candidate_filter
         self.scorer = scorer or ExpectedUtilityScorer()
         self.bandit = bandit or BanditRouter()
         self.drex = drex_router or DrexRouter()
@@ -287,15 +322,21 @@ class DynamicRouter:
         except Exception:
             profile = RequirementProfile(name=req.profile_name)
 
+        if req.require_zero_retention or req.privacy_policy == "zero_retention":
+            profile.hard_constraints.require_zero_retention = True
+            profile.hard_constraints.privacy = "zero_retention"
+
         # ── Stage 3: hard-constraint filter ───────────────────────────────
-        pool = self._candidates or []
+        pool = req.custom_candidates if req.custom_candidates is not None else (self._candidates or [])
         passed, rejections = self.candidate_filter.filter(pool, profile, task)
 
         if not passed:
-            # Emergency fallback: use any non-banned candidate
-            passed = [c for c in pool if not c.is_banned]
-            if not passed:
-                passed = pool  # last resort
+            # If zero retention is strictly mandated, do not fall back to non-compliant candidates
+            if not (profile.hard_constraints.privacy == "zero_retention" or profile.hard_constraints.require_zero_retention):
+                # Emergency fallback: use any non-banned candidate
+                passed = [c for c in pool if not c.is_banned]
+                if not passed:
+                    passed = pool  # last resort
 
         # ── Stage 4: score candidates ──────────────────────────────────────
         session_active = self._session_models.get(req.session_id or "") if req.session_id else None
@@ -313,22 +354,39 @@ class DynamicRouter:
         # Sort descending by utility
         all_scored.sort(key=lambda s: s.utility_score, reverse=True)
 
+        measured_scored = [s for s in all_scored if s.metrics.measured]
+        unmeasured_scored = [s for s in all_scored if not s.metrics.measured]
+
+        # Directive 3 Cold-start exploration gate:
+        # Unmeasured routes can ONLY be selected via capped exploration budget (force_explore or bandit bonus).
+        # In deterministic routing and Drex adjudication, only measured routes are evaluated when available.
+        eval_pool = measured_scored if (measured_scored and not req.force_explore) else all_scored
+
         # ── Stage 5: Drex consultation ─────────────────────────────────────
         drex_result: Optional[DrexRoutingResult] = None
         try:
-            drex_result = self.drex.decide(all_scored, task_summary=req.prompt[:200])
+            drex_result = self.drex.decide(eval_pool, task_summary=req.prompt[:200])
             best_scored = drex_result.selected
             source = drex_result.source
         except Exception:
-            best_scored = all_scored[0]
+            best_scored = eval_pool[0]
             source = "deterministic"
 
         # ── Stage 7: bandit exploration ────────────────────────────────────
         undersampled = self.bandit.get_undersampled_candidates(passed)
-        if undersampled and self.bandit.should_explore(undersampled):
-            # Swap best candidate for an undersampled one occasionally
-            best_scored = self.scorer.score_all([undersampled[0]], profile)[0] or best_scored
-            source = "exploration"
+        if req.force_explore:
+            if unmeasured_scored:
+                best_scored = unmeasured_scored[0]
+                source = "exploration_forced"
+            elif undersampled:
+                best_scored = self.scorer.score_all([undersampled[0]], profile)[0] or best_scored
+                source = "exploration_forced"
+        elif undersampled and self.bandit.should_explore(undersampled):
+            # Capped bandit exploration bonus
+            explore_cand = unmeasured_scored[0] if unmeasured_scored else self.scorer.score_all([undersampled[0]], profile)[0]
+            if explore_cand:
+                best_scored = explore_cand
+                source = "exploration"
 
         # ── Record session model ───────────────────────────────────────────
         if req.session_id:

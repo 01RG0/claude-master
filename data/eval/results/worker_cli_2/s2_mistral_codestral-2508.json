@@ -1,0 +1,336 @@
+{
+  "job_id": "s2_mistral:codestral-2508",
+  "route_id": "mistral:codestral-2508",
+  "canonical_id": "mistralai/codestral-2508",
+  "provider": "mistral",
+  "provider_model_id": "codestral-2508",
+  "stage": 2,
+  "state": "done",
+  "timestamp": 1792259601.766245,
+  "s1": {
+    "reps": 10,
+    "successes": 2,
+    "pass_rate": 0.2,
+    "ci_95": [
+      0.0567,
+      0.5098
+    ],
+    "mean_latency_ms": 74485.68,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 2,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 14779.8,
+        "num_turns": 7,
+        "total_cost_usd": 0.5129824000000001,
+        "session_id": "1acd4c6a-00d1-4093-89d3-e4f5870b1dd1",
+        "cli_output": {
+          "duration_api_ms": 13116,
+          "stop_reason": "end_turn",
+          "session_id": "1acd4c6a-00d1-4093-89d3-e4f5870b1dd1",
+          "total_cost_usd": 0.5129824000000001,
+          "usage": {
+            "input_tokens": 123692,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 51072,
+            "output_tokens": 400,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-2508": {
+              "inputTokens": 123692,
+              "outputTokens": 400,
+              "cacheReadInputTokens": 51072,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.5129824000000001,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-2508",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated as requested:\n\n- `a.txt` contains: `alpha-done`\n- `b.txt` contains: `beta-done`\n- `c.txt` contains: `gamma-done`",
+          "ttft_ms": 2949,
+          "type": "result",
+          "duration_ms": 13704,
+          "uuid": "fc38d6db-3f72-422a-8764-c2c73c34873d",
+          "ttft_stream_ms": 2946,
+          "time_to_request_ms": 347,
+          "first_content_frame_ms": 2947,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 3,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 4,
+        "passed": true,
+        "rc": 0,
+        "latency_ms": 10076.96,
+        "num_turns": 7,
+        "total_cost_usd": 0.30423999999999995,
+        "session_id": "69ff7083-72bf-4c85-b4a9-6c60c0c0ca9d",
+        "cli_output": {
+          "duration_api_ms": 8656,
+          "stop_reason": "end_turn",
+          "session_id": "69ff7083-72bf-4c85-b4a9-6c60c0c0ca9d",
+          "total_cost_usd": 0.30423999999999995,
+          "usage": {
+            "input_tokens": 74001,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 1280,
+            "output_tokens": 399,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_search_requests": 0,
+              "web_fetch_requests": 0
+            },
+            "service_tier": "standard",
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "inference_geo": "",
+            "iterations": [],
+            "speed": "standard",
+            "fallback_credit": null
+          },
+          "modelUsage": {
+            "codestral-2508": {
+              "inputTokens": 74001,
+              "outputTokens": 399,
+              "cacheReadInputTokens": 1280,
+              "cacheCreationInputTokens": 0,
+              "webSearchRequests": 0,
+              "costUSD": 0.30423999999999995,
+              "contextWindow": 200000,
+              "maxOutputTokens": 32000,
+              "thinkingTokens": 0,
+              "canonicalModel": "codestral-2508",
+              "provider": "firstParty",
+              "costBasis": "unknown"
+            }
+          },
+          "permission_denials": [],
+          "terminal_reason": "completed",
+          "fast_mode_state": "off",
+          "fast_mode_disabled_reason": "sdk_opt_in_required",
+          "subagent_stats": {
+            "spawned": 0,
+            "requested": {
+              "background": 0,
+              "foreground": 0,
+              "unset": 0
+            },
+            "started_in_background": 0,
+            "max_depth": 0,
+            "spawned_by_subagents": 0,
+            "completed": 0,
+            "failed": 0,
+            "killed": {
+              "parent": 0,
+              "user": 0,
+              "system": 0
+            },
+            "refused": {
+              "depth_limit": 0,
+              "concurrency_limit": 0,
+              "budget": 0
+            },
+            "by_type": {}
+          },
+          "safety_stops": 0,
+          "is_error": false,
+          "num_turns": 7,
+          "subtype": "success",
+          "api_error_status": null,
+          "result": "The files have been successfully created and updated:\n\n- `a.txt` now contains: `alpha-done`\n- `b.txt` now contains: `beta-done`\n- `c.txt` now contains: `gamma-done`",
+          "ttft_ms": 3701,
+          "type": "result",
+          "duration_ms": 9199,
+          "uuid": "065228dd-fdf9-4d01-af02-72e09ebbf0a9",
+          "ttft_stream_ms": 3693,
+          "time_to_request_ms": 340,
+          "first_content_frame_ms": 3693,
+          "queued_turn_count": 0,
+          "result_index": 0
+        }
+      },
+      {
+        "rep": 5,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 6,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 7,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 8,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 9,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 10,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 90000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      }
+    ]
+  },
+  "s2": {
+    "reps": 3,
+    "successes": 0,
+    "pass_rate": 0.0,
+    "ci_95": [
+      0.0,
+      0.5615
+    ],
+    "mean_latency_ms": 60000.0,
+    "reps_data": [
+      {
+        "rep": 1,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 60000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 2,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 60000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      },
+      {
+        "rep": 3,
+        "passed": false,
+        "rc": -1,
+        "latency_ms": 60000.0,
+        "num_turns": null,
+        "total_cost_usd": null,
+        "session_id": null,
+        "cli_output": "TIMEOUT"
+      }
+    ]
+  }
+}

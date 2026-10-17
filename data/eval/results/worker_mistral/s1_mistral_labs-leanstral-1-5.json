@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_mistral:labs-leanstral-1-5",
+  "route_id": "mistral:labs-leanstral-1-5",
+  "canonical_id": "mistralai/labs-leanstral",
+  "provider": "mistral",
+  "provider_model_id": "labs-leanstral-1-5",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_403",
+  "timestamp": 1792257841.1834629,
+  "duration_seconds": 2.26,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 403,
+      "latency_ms": 257.52,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"object\":\"error\",\"message\":\"Model labs-leanstral-1-5 is a Labs model. To use Labs models, an admin must enable them in your organization settings at https://admin.mistral.ai/plateforme/privacy.\",\"type\":\"labs_not_enabled\",\"param\":null,\"code\":\"1913\",\"raw_status_code\":403}"
+    }
+  }
+}

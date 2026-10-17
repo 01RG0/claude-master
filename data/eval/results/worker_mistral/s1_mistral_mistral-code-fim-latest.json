@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_mistral:mistral-code-fim-latest",
+  "route_id": "mistral:mistral-code-fim-latest",
+  "canonical_id": "mistralai/mistral-coder",
+  "provider": "mistral",
+  "provider_model_id": "mistral-code-fim-latest",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257832.2316184,
+  "duration_seconds": 6.34,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 592.0,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"302971e488414c9dab31085fe8c64594\",\"created\":1792257831,\"model\":\"mistral-code-fim-latest\",\"usage\":{\"prompt_tokens\":27,\"total_tokens\":36,\"completion_tokens\":9,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"tool_calls\":null,\"content\":\"<answer>42</answer>\"}}]}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 495.09,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"46c9fe6e17414153b76b84c21b7373ad\",\"created\":1792257834,\"model\":\"mistral-code-fim-latest\",\"usage\":{\"prompt_tokens\":77,\"total_tokens\":88,\"completion_tokens\":11,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"awXwSZLvz\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"servi"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1253.68,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"id\":\"47ceba253a1a42d28164d35c2cb1efa7\",\"created\":1792257836,\"model\":\"mistral-code-fim-latest\",\"usage\":{\"prompt_tokens\":75,\"total_tokens\":177,\"completion_tokens\":102,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0},\"service_tier\":\"standard\"},\"object\":\"chat.completion\",\"choices\":[{\"index\":0,\"finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"tool_calls\":null,\"content\":\"I'm sorry, but I currently don't have the capability to check the status of serv"
+    }
+  }
+}

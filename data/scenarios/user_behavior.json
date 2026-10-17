@@ -1,0 +1,169 @@
+[
+  {
+    "id": "SCN-F01-WRONGKEYS",
+    "dimension": "F",
+    "category": "wrong-keys",
+    "cross_dimensions": [
+      "F",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Invalid / Unauthorized API Key Rejection",
+    "description": "Provide bogus API key 'sk-invalid-999'; verify gateway reports clear 401 error message without hanging indefinitely.",
+    "setup": {
+      "override_env": {
+        "GROQ_API_KEY": "sk-invalid-bogus-token"
+      }
+    },
+    "input": {
+      "prompt": "Say hello."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains_one_of": [
+          "401",
+          "Unauthorized",
+          "invalid_api_key",
+          "error"
+        ],
+        "hung": false
+      }
+    },
+    "timeout_s": 30,
+    "tags": [
+      "user-behavior",
+      "auth",
+      "error-handling"
+    ]
+  },
+  {
+    "id": "SCN-F02-EXPIREDKEYS",
+    "dimension": "F",
+    "category": "expired-keys",
+    "cross_dimensions": [
+      "F",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Expired Key Automatic Rotation in Key Pool",
+    "description": "Primary key pool token is marked expired (401); gateway automatically switches to standby key in pool and fulfills request.",
+    "setup": {
+      "key_pool": [
+        {
+          "key": "expired_key_1",
+          "priority": 1
+        },
+        {
+          "key": "valid_key_2",
+          "priority": 2
+        }
+      ]
+    },
+    "input": {
+      "prompt": "Echo 'KEY_ROTATION_SUCCESSFUL'."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "KEY_ROTATION_SUCCESSFUL"
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "user-behavior",
+      "keys",
+      "rotation"
+    ]
+  },
+  {
+    "id": "SCN-F03-TYPOS",
+    "dimension": "F",
+    "category": "typos",
+    "cross_dimensions": [
+      "F"
+    ],
+    "tier": "smoke",
+    "title": "CLI Flag Typos & Malformed JSON Payload Resilience",
+    "description": "Send malformed model name '--model sonnet-not-real' and malformed JSON; ensure gateway falls back to dynamic resolution without crash.",
+    "setup": {},
+    "input": {
+      "prompt": "Hello",
+      "model": "claude-sonnet-nonexistent-3.99"
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "returncode": 0,
+        "fallback_triggered": true
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "user-behavior",
+      "typos",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-F04-CTRLC",
+    "dimension": "F",
+    "category": "ctrl-c",
+    "cross_dimensions": [
+      "F",
+      "E"
+    ],
+    "tier": "standard",
+    "title": "Mid-Stream Ctrl+C Cancellation & Socket Teardown",
+    "description": "Send SIGINT (Ctrl+C) mid-generation; verify prompt streaming aborts cleanly, releasing all OS locks and sockets.",
+    "setup": {
+      "abort_after_chunks": 5
+    },
+    "input": {
+      "prompt": "Write a 2000 word poem."
+    },
+    "expected_oracle": {
+      "type": "process_oracle",
+      "spec": {
+        "process_terminated_cleanly": true,
+        "no_dangling_sockets": true
+      }
+    },
+    "timeout_s": 30,
+    "tags": [
+      "user-behavior",
+      "cancellation",
+      "signals"
+    ]
+  },
+  {
+    "id": "SCN-F05-PROCESSKILL",
+    "dimension": "F",
+    "category": "process-kill",
+    "cross_dimensions": [
+      "F",
+      "H"
+    ],
+    "tier": "standard",
+    "title": "Abrupt SIGKILL Termination & SQLite WAL Recovery",
+    "description": "Kill process with SIGKILL while writing audit log; verify SQLite database recovers automatically on next startup without corruption.",
+    "setup": {
+      "simulate_sigkill_during_write": true
+    },
+    "input": {
+      "prompt": "Log audit event"
+    },
+    "expected_oracle": {
+      "type": "db_audit",
+      "spec": {
+        "sqlite_integrity_check": "ok"
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "user-behavior",
+      "recovery",
+      "wal"
+    ]
+  }
+]

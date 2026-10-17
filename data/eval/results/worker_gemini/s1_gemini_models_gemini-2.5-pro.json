@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_gemini:models/gemini-2.5-pro",
+  "route_id": "gemini:models/gemini-2.5-pro",
+  "canonical_id": "google/gemini-2.5-pro",
+  "provider": "gemini",
+  "provider_model_id": "models/gemini-2.5-pro",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_404",
+  "timestamp": 1792257513.3367174,
+  "duration_seconds": 4.34,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 404,
+      "latency_ms": 339.19,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "[{\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-2.5-pro is no longer available to new users. Please update your code to use models/gemini-3.1-pro-preview for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).\",\n    \"status\": \"NOT_FOUND\"\n  }\n}\n]"
+    }
+  }
+}

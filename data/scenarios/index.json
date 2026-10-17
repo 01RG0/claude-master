@@ -1,0 +1,44 @@
+{
+  "title": "Systematic Scenario Space Index",
+  "description": "Registry and summary statistics of scenario definitions across dimensions A through H",
+  "formal_math": {
+    "methodology": "Constrained Combinatorial Testing (NIST SP 800-142)",
+    "pairwise_valid_tuples": 1180,
+    "high_risk_3wise_valid_tuples": 1302,
+    "dimensions": {
+      "A_Workloads": 9,
+      "B_Features": 14,
+      "C_Providers": 5,
+      "D_Resilience": 5,
+      "E_Environment": 7,
+      "F_UserBehavior": 5,
+      "G_Security": 4,
+      "H_DataState": 4
+    },
+    "core_scenarios_count": 53,
+    "coverage_rule": "Report coverage strictly against valid combinatorial tuples: N_covered_valid / N_total_valid"
+  },
+  "scenarios_count": 53,
+  "breakdown": {
+    "Dimension A (Workloads)": 9,
+    "Dimension B (Features)": 14,
+    "Dimension C (Providers)": 5,
+    "Dimension D (Resilience/Gateway)": 5,
+    "Dimension E (Environment)": 7,
+    "Dimension F (User Behavior)": 5,
+    "Dimension G (Security)": 4,
+    "Dimension H (Data & State)": 4
+  },
+  "files": [
+    "dimensions.json",
+    "workloads.json",
+    "features.json",
+    "providers.json",
+    "resilience.json",
+    "environments.json",
+    "user_behavior.json",
+    "security.json",
+    "data_state.json",
+    "matrix.json"
+  ]
+}

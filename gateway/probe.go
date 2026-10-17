@@ -12,7 +12,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -35,19 +37,42 @@ type Capability struct {
 	LatencyMs float64 `json:"latency_ms,omitempty"`
 }
 
+// ModelLimit describes the output token cap and context window for a model,
+// with full provenance tracking of how the limit was determined.
+type ModelLimit struct {
+	MaxOutputTokens int    `json:"max_output_tokens,omitempty"`
+	ContextWindow   int    `json:"context_window,omitempty"`
+	Source          string `json:"source,omitempty"` // measured_probe, declared_spec, adapter_default
+	Detail          string `json:"detail,omitempty"` // e.g. "groq/openai/gpt-oss-120b measured limit"
+}
+
+// Provenance returns the human-readable provenance label for notes and diagnostics.
+func (m ModelLimit) Provenance() string {
+	if m.Detail != "" {
+		return m.Detail
+	}
+	if m.Source != "" {
+		return m.Source
+	}
+	return "adapter_default"
+}
+
 // ModelCapabilities is the per-model matrix row.
 type ModelCapabilities struct {
-	Model          string               `json:"model"`
-	Chat           Capability           `json:"chat"`
-	Streaming      Capability           `json:"streaming"`
-	ToolsSingle    Capability           `json:"tools_single"`
-	ToolsParallel  Capability           `json:"tools_parallel"`
-	ToolsStreamed  Capability           `json:"tools_streamed_args"`
-	Vision         Capability           `json:"vision"`
-	JSONMode       Capability           `json:"json_mode"`
-	TTFTMs         float64              `json:"ttft_ms,omitempty"`
-	TokensPerSec   float64              `json:"tokens_per_sec,omitempty"`
-	ProbedAt       string               `json:"probed_at"`
+	Model           string     `json:"model"`
+	Chat            Capability `json:"chat"`
+	Streaming       Capability `json:"streaming"`
+	ToolsSingle     Capability `json:"tools_single"`
+	ToolsParallel   Capability `json:"tools_parallel"`
+	ToolsStreamed   Capability `json:"tools_streamed_args"`
+	Vision          Capability `json:"vision"`
+	JSONMode        Capability `json:"json_mode"`
+	Limits          ModelLimit `json:"limits,omitempty"`
+	MaxOutputTokens int        `json:"max_output_tokens,omitempty"`
+	ContextWindow   int        `json:"context_window,omitempty"`
+	TTFTMs          float64    `json:"ttft_ms,omitempty"`
+	TokensPerSec    float64    `json:"tokens_per_sec,omitempty"`
+	ProbedAt        string     `json:"probed_at"`
 }
 
 // FingerprintProvider probes base+key and returns the detected dialect.
@@ -241,6 +266,9 @@ func ProbeCapabilities(client *http.Client, base, chatPath, key, model string) M
 	st7, _, _ := do(map[string]interface{}{"messages": visionMsg, "max_tokens": 32}, 60*time.Second)
 	mc.Vision = Capability{Supported: st7 == 200, Source: "measured", Detail: fmt.Sprintf("http %d", st7)}
 	mc.TTFTMs = dt2
+	mc.Limits = ProbeModelLimit(client, base, chatPath, key, model)
+	mc.MaxOutputTokens = mc.Limits.MaxOutputTokens
+	mc.ContextWindow = mc.Limits.ContextWindow
 	return mc
 }
 
@@ -324,3 +352,251 @@ func modelsKey(s string) string {
 	}
 	return s
 }
+
+// --- Model Limit Registry & Probe Lookup -------------------------------------
+
+var (
+	modelLimitMu       sync.RWMutex
+	modelLimitRegistry = make(map[string]ModelLimit)
+)
+
+func init() {
+	// Pre-seed known model limits with provenance
+	// Measured probe limits:
+	RegisterModelLimit("groq/openai/gpt-oss-120b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   131072,
+		Source:          "measured_probe",
+		Detail:          "groq/openai/gpt-oss-120b measured limit",
+	})
+	RegisterModelLimit("openai/gpt-oss-120b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   131072,
+		Source:          "measured_probe",
+		Detail:          "groq/openai/gpt-oss-120b measured limit",
+	})
+	RegisterModelLimit("groq/qwen/qwen3.8-27b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   32768,
+		Source:          "measured_probe",
+		Detail:          "groq/qwen/qwen3.8-27b measured limit",
+	})
+	RegisterModelLimit("qwen/qwen3.8-27b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   32768,
+		Source:          "measured_probe",
+		Detail:          "groq/qwen/qwen3.8-27b measured limit",
+	})
+	RegisterModelLimit("groq/llama-3.3-70b-versatile", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   128000,
+		Source:          "measured_probe",
+		Detail:          "groq/llama-3.3-70b-versatile measured limit",
+	})
+	RegisterModelLimit("llama-3.3-70b-versatile", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   128000,
+		Source:          "measured_probe",
+		Detail:          "groq/llama-3.3-70b-versatile measured limit",
+	})
+	RegisterModelLimit("groq/llama-3.1-8b-instant", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   128000,
+		Source:          "measured_probe",
+		Detail:          "groq/llama-3.1-8b-instant measured limit",
+	})
+	RegisterModelLimit("llama-3.1-8b-instant", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   128000,
+		Source:          "measured_probe",
+		Detail:          "groq/llama-3.1-8b-instant measured limit",
+	})
+
+	// Declared specs:
+	RegisterModelLimit("cerebras/gpt-oss-120b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   131072,
+		Source:          "declared_spec",
+		Detail:          "cerebras/gpt-oss-120b declared spec",
+	})
+	RegisterModelLimit("openrouter/openai/gpt-oss-20b", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   131072,
+		Source:          "declared_spec",
+		Detail:          "openrouter/openai/gpt-oss-20b declared spec",
+	})
+	RegisterModelLimit("claude-3-5-sonnet", ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   200000,
+		Source:          "declared_spec",
+		Detail:          "claude-3-5-sonnet declared spec",
+	})
+	RegisterModelLimit("claude-sonnet-5-5", ModelLimit{
+		MaxOutputTokens: 128000,
+		ContextWindow:   1000000,
+		Source:          "declared_spec",
+		Detail:          "claude-sonnet-5-5 declared spec",
+	})
+}
+
+// RegisterModelLimit adds or updates a ModelLimit in the registry.
+func RegisterModelLimit(key string, limit ModelLimit) {
+	modelLimitMu.Lock()
+	defer modelLimitMu.Unlock()
+	modelLimitRegistry[normalizeModelKey(key)] = limit
+}
+
+// GetModelLimit retrieves a ModelLimit from the registry.
+func GetModelLimit(key string) (ModelLimit, bool) {
+	modelLimitMu.RLock()
+	defer modelLimitMu.RUnlock()
+	lim, ok := modelLimitRegistry[normalizeModelKey(key)]
+	return lim, ok
+}
+
+func normalizeModelKey(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	s = strings.TrimPrefix(s, "models/")
+	return strings.Trim(s, "/")
+}
+
+func deriveContextWindow(model string) int {
+	m := strings.ToLower(model)
+	switch {
+	case strings.Contains(m, "claude-sonnet-5") || strings.Contains(m, "claude-opus-5") || strings.Contains(m, "claude-haiku-5"):
+		return 1000000
+	case strings.Contains(m, "claude-3"):
+		return 200000
+	case strings.Contains(m, "gpt-oss-120b"):
+		return 131072
+	case strings.Contains(m, "gpt-oss-20b"):
+		return 131072
+	case strings.Contains(m, "llama-3") || strings.Contains(m, "llama3"):
+		return 128000
+	case strings.Contains(m, "qwen3.8") || strings.Contains(m, "qwen3"):
+		return 32768
+	case strings.Contains(m, "mistral") || strings.Contains(m, "ministral"):
+		return 128000
+	case strings.Contains(m, "command-r"):
+		return 128000
+	case strings.Contains(m, "gemma-3"):
+		return 131072
+	default:
+		return 40960
+	}
+}
+
+// LookupModelLimit derives MaxOutputTokens and ContextWindow with provenance tracking:
+// 1. Measured probes / probe registry (source: 'measured_probe')
+// 2. Provider model metadata / declared specs (source: 'declared_spec')
+// 3. Adapter explicit MaxTokens cap (source: 'declared_spec')
+// 4. Default adapter fallback (source: 'adapter_default')
+func LookupModelLimit(provider, model string, adapter AdapterSpec) ModelLimit {
+	normModel := normalizeModelKey(model)
+	normProv := normalizeModelKey(provider)
+
+	// 1. Try composite provider/model in registry
+	if normProv != "" {
+		if lim, ok := GetModelLimit(normProv + "/" + normModel); ok {
+			return lim
+		}
+	}
+
+	// 2. Try bare model in registry
+	if lim, ok := GetModelLimit(normModel); ok {
+		return lim
+	}
+
+	// 3. Try stripped model key (e.g. without namespace)
+	base := normModel
+	if idx := strings.LastIndex(base, "/"); idx >= 0 {
+		base = base[idx+1:]
+		if lim, ok := GetModelLimit(base); ok {
+			return lim
+		}
+		if normProv != "" {
+			if lim, ok := GetModelLimit(normProv + "/" + base); ok {
+				return lim
+			}
+		}
+	}
+
+	// 4. Adapter explicit MaxTokens override
+	if adapter.MaxTokens > 0 {
+		return ModelLimit{
+			MaxOutputTokens: adapter.MaxTokens,
+			ContextWindow:   deriveContextWindow(model),
+			Source:          "declared_spec",
+			Detail:          "adapter spec",
+		}
+	}
+
+	// 5. Default fallback
+	return ModelLimit{
+		MaxOutputTokens: 8192,
+		ContextWindow:   40960,
+		Source:          "adapter_default",
+		Detail:          "adapter default",
+	}
+}
+
+// ProbeModelLimit probes or measures a model's limits using a cheap probe call
+// or provider error response analysis.
+func ProbeModelLimit(client *http.Client, base, chatPath, key, model string) ModelLimit {
+	provModel := model
+	if lim, ok := GetModelLimit(provModel); ok && lim.Source == "measured_probe" {
+		return lim
+	}
+
+	if client != nil && base != "" && chatPath != "" {
+		url := strings.TrimRight(base, "/") + chatPath
+		payload := map[string]interface{}{
+			"model":      model,
+			"messages":   []interface{}{map[string]interface{}{"role": "user", "content": "hi"}},
+			"max_tokens": 128000,
+		}
+		b, _ := json.Marshal(payload)
+		req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(b))
+		if err == nil {
+			req.Header.Set("Content-Type", "application/json")
+			if key != "" {
+				req.Header.Set("Authorization", "Bearer "+key)
+			}
+			c := *client
+			c.Timeout = 10 * time.Second
+			resp, err := c.Do(req)
+			if err == nil {
+				defer resp.Body.Close()
+				rb, _ := io.ReadAll(io.LimitReader(resp.Body, 4096))
+				if resp.StatusCode == 400 || resp.StatusCode == 422 {
+					if parsedLimit := extractMaxTokensFromError(string(rb)); parsedLimit > 0 {
+						lim := ModelLimit{
+							MaxOutputTokens: parsedLimit,
+							ContextWindow:   deriveContextWindow(model),
+							Source:          "measured_probe",
+							Detail:          fmt.Sprintf("%s measured limit", model),
+						}
+						RegisterModelLimit(model, lim)
+						return lim
+					}
+				}
+			}
+		}
+	}
+
+	return LookupModelLimit("", model, AdapterSpec{})
+}
+
+var reMaxTokensError = regexp.MustCompile(`(?i)(?:max_tokens|maximum|limit|at most|exceeds|exceeded)[^\d]*(\d{4,6})`)
+
+func extractMaxTokensFromError(msg string) int {
+	matches := reMaxTokensError.FindStringSubmatch(msg)
+	if len(matches) > 1 {
+		var n int
+		if _, err := fmt.Sscanf(matches[1], "%d", &n); err == nil && n >= 1024 && n <= 1000000 {
+			return n
+		}
+	}
+	return 0
+}
+

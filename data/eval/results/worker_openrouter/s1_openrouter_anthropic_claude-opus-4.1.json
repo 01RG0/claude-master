@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_openrouter:anthropic/claude-opus-4.1",
+  "route_id": "openrouter:anthropic/claude-opus-4.1",
+  "canonical_id": "anthropic/claude-4.1-opus-20250805",
+  "provider": "openrouter",
+  "provider_model_id": "anthropic/claude-opus-4.1",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_402",
+  "timestamp": 1792257855.087644,
+  "duration_seconds": 1.16,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 402,
+      "latency_ms": 162.03,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits\",\"code\":402,\"metadata\":{\"limit_source\":\"openrouter_credits\",\"remedy_hint\":\"Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.\"}}}"
+    }
+  }
+}

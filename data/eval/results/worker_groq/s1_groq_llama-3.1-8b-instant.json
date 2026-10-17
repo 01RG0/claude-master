@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_groq:llama-3.1-8b-instant",
+  "route_id": "groq:llama-3.1-8b-instant",
+  "canonical_id": "meta/llama-3.1-8b-instruct",
+  "provider": "groq",
+  "provider_model_id": "llama-3.1-8b-instant",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_404",
+  "timestamp": 1792257500.6652455,
+  "duration_seconds": 2.17,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 404,
+      "latency_ms": 167.93,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"The model `llama-3.1-8b-instant` does not exist or you do not have access to it.\",\"type\":\"invalid_request_error\",\"code\":\"model_not_found\"}}\n"
+    }
+  }
+}

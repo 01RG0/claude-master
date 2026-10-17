@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_anyapi:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "route_id": "anyapi:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "canonical_id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning-20260428",
+  "provider": "anyapi",
+  "provider_model_id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257796.4318044,
+  "duration_seconds": 13.06,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 2095.36,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257789-C159MV7o8kqGAJngbaK9\",\"created\":1792257789,\"model\":\"nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free\",\"object\":\"chat.completion\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"<answer>42</answer>\",\"role\":\"assistant\",\"reasoning_content\":\"We need compute 7 * 6 = 42. Return only answer enclosed in tags like <answer>42</answer>. No extra text. Ensure exactly that.\\n\",\"provider_specific_fields\":{\"refusal\":null,\"reasoning\":\"We need compute 7 * 6 = 42. Return"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 2648.64,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257792-mSmGJehcFi4fq0PRlp77\",\"created\":1792257792,\"model\":\"nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free\",\"object\":\"chat.completion\",\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"call-c19b9636-8645-4d8e-9a5e-e466d64437ac\",\"type\":\"function\"}],\"reasoning_content\":\"Okay, the user wants me to check the health of the database service now. Le"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 6314.16,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257797-9ihFI1StthljDDWGTZYQ\",\"created\":1792257797,\"model\":\"nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free\",\"object\":\"chat.completion\",\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"message\":{\"role\":\"assistant\",\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"service\\\":\\\"database\\\"}\",\"name\":\"check_status\"},\"id\":\"call-e50d5e1e-f632-4650-a8a9-dbf96fb0d804\",\"type\":\"function\"},{\"index\":1,\"function\":{\"arguments\":\"{\\\"service\\\":\\\"redis\\\"}\",\"name\":\"check_status\"},\"id\":\"call-b2"
+    }
+  }
+}

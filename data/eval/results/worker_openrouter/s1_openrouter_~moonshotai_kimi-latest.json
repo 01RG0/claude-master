@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:~moonshotai/kimi-latest",
+  "route_id": "openrouter:~moonshotai/kimi-latest",
+  "canonical_id": "~moonshotai/kimi-latest",
+  "provider": "openrouter",
+  "provider_model_id": "~moonshotai/kimi-latest",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257791.4236228,
+  "duration_seconds": 7.22,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1204.26,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257790-XBstpJhXQFtRq8kvIT05\",\"object\":\"chat.completion\",\"created\":1792257790,\"model\":\"moonshotai/kimi-k3\",\"provider\":\"Sail Research\",\"system_fingerprint\":null,\"service_tier\":\"asap\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\",\"refusal\":null,\"reasoning\":\"The user wants 7*6 = 42, returned only in answer tags.\",\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"Th"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 809.82,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257792-m6B6Nj21zP85ic6bCVxJ\",\"object\":\"chat.completion\",\"created\":1792257792,\"model\":\"moonshotai/kimi-k2.6\",\"provider\":\"Baidu\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"The user wants to check the health of the database service. I have a function called `check_status` that takes a service name"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1204.92,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257794-ttuObmr8gN6XalU5qiIG\",\"object\":\"chat.completion\",\"created\":1792257794,\"model\":\"moonshotai/kimi-k2.6\",\"provider\":\"Baidu\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"The user wants me to check the status of both 'database' and 'redis' services simultaneously. I have a function `check_status"
+    }
+  }
+}

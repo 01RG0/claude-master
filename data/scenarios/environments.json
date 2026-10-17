@@ -1,0 +1,231 @@
+[
+  {
+    "id": "SCN-E01-POWERSHELL",
+    "dimension": "E",
+    "category": "powershell",
+    "cross_dimensions": [
+      "E",
+      "A"
+    ],
+    "tier": "smoke",
+    "title": "Windows Native PowerShell Execution & Escaping",
+    "description": "Execute PowerShell command with single quotes, dollar signs, and pipe redirection without escaping failures.",
+    "setup": {},
+    "input": {
+      "prompt": "Run powershell command: Write-Output '$env:OS and ''quoted''' and report output."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "quoted",
+        "returncode": 0
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "environment",
+      "windows",
+      "powershell",
+      "smoke"
+    ]
+  },
+  {
+    "id": "SCN-E02-CMD",
+    "dimension": "E",
+    "category": "cmd",
+    "cross_dimensions": [
+      "E",
+      "A"
+    ],
+    "tier": "standard",
+    "title": "Windows cmd.exe Shell Batch Scripts & %ERRORLEVEL%",
+    "description": "Execute batch script using cmd.exe, verifying environment variable expansion and return code capture.",
+    "setup": {
+      "files": {
+        "test.bat": "@echo off\r\necho BATCH-SUCCESS-88\r\nexit /b 0\r\n"
+      }
+    },
+    "input": {
+      "prompt": "Run cmd /c test.bat and verify output contains BATCH-SUCCESS-88."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "output_contains": "BATCH-SUCCESS-88",
+        "returncode": 0
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "environment",
+      "windows",
+      "cmd"
+    ]
+  },
+  {
+    "id": "SCN-E03-GITBASH",
+    "dimension": "E",
+    "category": "git-bash",
+    "cross_dimensions": [
+      "E",
+      "A"
+    ],
+    "tier": "standard",
+    "title": "Git Bash / MSYS2 POSIX Path Translation & Symlinks",
+    "description": "Run shell script under Git Bash converting /d/pRoG to Windows drive D:\\ without path corruption.",
+    "setup": {},
+    "input": {
+      "prompt": "Run bash -c 'pwd && which git' and report the detected path format."
+    },
+    "expected_oracle": {
+      "type": "output_oracle",
+      "spec": {
+        "returncode": 0
+      }
+    },
+    "timeout_s": 45,
+    "tags": [
+      "environment",
+      "git-bash",
+      "msys2"
+    ]
+  },
+  {
+    "id": "SCN-E04-UNICODESPACES",
+    "dimension": "E",
+    "category": "unicode-spaces",
+    "cross_dimensions": [
+      "E",
+      "A"
+    ],
+    "tier": "standard",
+    "title": "Paths with Unicode, Non-ASCII Characters, Spaces and Brackets",
+    "description": "Operate inside directory 'C:\\Users\\hamad\\Project [Arabic عرب] {2026} 🚀\\', creating and editing files cleanly.",
+    "setup": {
+      "custom_path_name": "Project [Arabic عرب] {2026} 🚀"
+    },
+    "input": {
+      "prompt": "Create inside current working directory file 'тест file.txt' with text 'Привет World'."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "тест file.txt"
+        ],
+        "file_contains": {
+          "тест file.txt": [
+            "Привет World"
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "environment",
+      "unicode",
+      "spaces",
+      "windows"
+    ]
+  },
+  {
+    "id": "SCN-E05-DEFENDERDELAY",
+    "dimension": "E",
+    "category": "defender-delay",
+    "cross_dimensions": [
+      "E",
+      "D"
+    ],
+    "tier": "standard",
+    "title": "Windows Defender File Locking & Scan Latency Simulation",
+    "description": "Simulate 500ms file lock during write operations; ensure agent retries with exponential backoff rather than failing immediately.",
+    "setup": {
+      "file_lock_delay_ms": 500
+    },
+    "input": {
+      "prompt": "Quickly write 10 sequential log entries into audit_locked.log."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "audit_locked.log"
+        ]
+      }
+    },
+    "timeout_s": 75,
+    "tags": [
+      "environment",
+      "defender",
+      "file-lock"
+    ]
+  },
+  {
+    "id": "SCN-E06-LOWDISK",
+    "dimension": "E",
+    "category": "low-disk",
+    "cross_dimensions": [
+      "E",
+      "H"
+    ],
+    "tier": "extended",
+    "title": "Low Disk Space Condition (<100MB) Handling & Pruning",
+    "description": "Simulate volume space exhaustion; gateway must prune temp request logs and alert without crashing.",
+    "setup": {
+      "simulated_free_disk_mb": 50
+    },
+    "input": {
+      "prompt": "Perform code inspection on sample.py."
+    },
+    "expected_oracle": {
+      "type": "log_oracle",
+      "spec": {
+        "warning_emitted": "low_disk_space",
+        "no_fatal_crash": true
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "environment",
+      "disk",
+      "resilience"
+    ]
+  },
+  {
+    "id": "SCN-E07-RTLARABIC",
+    "dimension": "E",
+    "category": "rtl-arabic",
+    "cross_dimensions": [
+      "E",
+      "A"
+    ],
+    "tier": "standard",
+    "title": "Right-to-Left (RTL) Arabic Code Comments & File Names",
+    "description": "Create python file with Arabic identifier docstrings and comments ('# دالة لحساب المجموع'), verifying bidirectional encoding.",
+    "setup": {},
+    "input": {
+      "prompt": "Create calc_ar.py containing an Arabic comment '# دالة لحساب المجموع' and function sum_vals(a, b)."
+    },
+    "expected_oracle": {
+      "type": "disk_assertion",
+      "spec": {
+        "files_exist": [
+          "calc_ar.py"
+        ],
+        "file_contains": {
+          "calc_ar.py": [
+            "دالة لحساب المجموع",
+            "def sum_vals("
+          ]
+        }
+      }
+    },
+    "timeout_s": 60,
+    "tags": [
+      "environment",
+      "rtl",
+      "arabic",
+      "unicode"
+    ]
+  }
+]

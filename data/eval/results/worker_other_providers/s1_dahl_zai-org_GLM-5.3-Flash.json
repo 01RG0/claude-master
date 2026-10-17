@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_dahl:zai-org/GLM-5.3-Flash",
+  "route_id": "dahl:zai-org/GLM-5.3-Flash",
+  "canonical_id": "zhipu/glm-5.3-flash",
+  "provider": "dahl",
+  "provider_model_id": "zai-org/GLM-5.3-Flash",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_522_cloudflare_timeout",
+  "timestamp": 1792257744.7209752,
+  "duration_seconds": 0.21,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 522,
+      "latency_ms": 211.09,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "error code: 522\n"
+    }
+  }
+}

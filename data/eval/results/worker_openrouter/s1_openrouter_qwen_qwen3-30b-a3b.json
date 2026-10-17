@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:qwen/qwen3-30b-a3b",
+  "route_id": "openrouter:qwen/qwen3-30b-a3b",
+  "canonical_id": "qwen/qwen3-30b-a3b-04-28",
+  "provider": "openrouter",
+  "provider_model_id": "qwen/qwen3-30b-a3b",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257574.576185,
+  "duration_seconds": 5.55,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 607.39,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257575-NZpnXaKrpxo9Bzux9m8S\",\"object\":\"chat.completion\",\"created\":1792257575,\"model\":\"qwen/qwen3-30b-a3b\",\"provider\":\"DeepInfra\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"\\nOkay, let's see. The user wants me to compute 7 multiplied by 6. Hmm, multiplication. Alright, 7 times 6. Let me think. I re"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 379.96,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257576-OLwHqJqwqF3Mge5bFeJo\",\"object\":\"chat.completion\",\"created\":1792257576,\"model\":\"qwen/qwen3-30b-a3b\",\"provider\":\"DeepInfra\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"\\nOkay, the user is asking to check the health of the database service. Let me look at the tools provided. There's a function "
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 327.48,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257578-EnzyOnlsimU7pe71Hpgg\",\"object\":\"chat.completion\",\"created\":1792257578,\"model\":\"qwen/qwen3-30b-a3b\",\"provider\":\"DeepInfra\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"\\nOkay, the user wants to check the status of both 'database' and 'redis' services at the same time. Let me look at the tools "
+    }
+  }
+}

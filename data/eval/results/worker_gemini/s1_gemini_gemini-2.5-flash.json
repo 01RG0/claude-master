@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_gemini:gemini-2.5-flash",
+  "route_id": "gemini:gemini-2.5-flash",
+  "canonical_id": "google/gemini-2.5-flash",
+  "provider": "gemini",
+  "provider_model_id": "gemini-2.5-flash",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257651.3984194,
+  "duration_seconds": 11.35,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 951.64,
+      "output_text": "<answer>42</answer",
+      "passed": true,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"message\":{\"content\":\"<answer>42</answer\",\"role\":\"assistant\"}}],\"created\":1792257646,\"id\":\"bq7TapygDpuc28oPoMTg6Ag\",\"model\":\"gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":7,\"prompt_tokens\":25,\"total_tokens\":71}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1242.93,
+      "has_tool_call": false,
+      "tool_name": null,
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"function_call_filter: MALFORMED_FUNCTION_CALL\",\"index\":0,\"message\":{\"role\":\"assistant\"}}],\"created\":1792257651,\"id\":\"c67TaobHF-TkxN8P4aumkAU\",\"model\":\"gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":0,\"prompt_tokens\":47,\"total_tokens\":47}}"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1150.12,
+      "tool_count": 0,
+      "passed": false,
+      "raw_response": "{\"choices\":[{\"finish_reason\":\"length\",\"index\":0,\"message\":{\"content\":\"I can only check\",\"role\":\"assistant\"}}],\"created\":1792257657,\"id\":\"eK7TaqahC4OrxN8Pm5-9iAk\",\"model\":\"gemini-2.5-flash\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":4,\"prompt_tokens\":51,\"total_tokens\":197}}"
+    }
+  }
+}

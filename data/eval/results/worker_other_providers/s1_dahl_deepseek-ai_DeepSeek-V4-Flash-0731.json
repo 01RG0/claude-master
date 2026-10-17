@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_dahl:deepseek-ai/DeepSeek-V4-Flash-0731",
+  "route_id": "dahl:deepseek-ai/DeepSeek-V4-Flash-0731",
+  "canonical_id": "deepseek/deepseek-v4-flash",
+  "provider": "dahl",
+  "provider_model_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_522_cloudflare_timeout",
+  "timestamp": 1792257743.298697,
+  "duration_seconds": 0.17,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 522,
+      "latency_ms": 173.66,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "error code: 522\n"
+    }
+  }
+}

@@ -43,6 +43,9 @@ DEFAULT_GUARD_PATHS = [
 ]
 
 
+from brain.routing.privacy_policy import list_provider_policies
+
+
 def get_privacy_config(conn: Optional[sqlite3.Connection] = None) -> PrivacyConfigResponse:
     config = read_gateway_config()
     prov_policies: Dict[str, str] = {}
@@ -58,6 +61,7 @@ def get_privacy_config(conn: Optional[sqlite3.Connection] = None) -> PrivacyConf
         secret_redaction_patterns=secrets_pat,
         pii_redaction_patterns=pii_pat,
         guard_paths=guard_paths,
+        retention_evidence=list_provider_policies(),
     )
 
 

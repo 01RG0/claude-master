@@ -82,6 +82,20 @@ export interface KeyPoolItem {
   daily_cap: number;
 }
 
+export interface ProviderPolicyDetails {
+  provider: string;
+  display_name: string;
+  zero_retention_compliant: boolean;
+  policy_tier: "zero_retention" | "internal" | "public_data_only";
+  retention_period: string;
+  training_policy: string;
+  exact_terms: string;
+  source_url: string;
+  verified_date: string;
+  provenance: string;
+  conditions?: string;
+}
+
 export interface ProviderItem {
   name: string;
   base_url: string;
@@ -93,6 +107,7 @@ export interface ProviderItem {
   region: string;
   tags: string[];
   detected_dialect?: "openai" | "anthropic" | "cohere" | "google" | "mistral";
+  policy_info?: ProviderPolicyDetails;
 }
 
 export type RoutingPreset = "cheapest" | "fastest" | "most_capable" | "balanced" | "custom";
@@ -419,3 +434,19 @@ export interface TestCaseResult {
   cost_usd: number;
   log?: string;
 }
+
+export interface RouteCooldownEntry {
+  key_hash: string;
+  model: string;
+  status: string;
+  state: "rate_limited" | "exhausted" | "dead" | "restricted" | "probing" | "active" | string;
+  cooldown_until: string;
+  backoff_s: number;
+  remaining_s: number;
+  duration_ms: number;
+  learned_backoff_ms: number;
+  failure_count: number;
+  provenance: "retry_after_header" | "adaptive_backoff" | "probe_recovery" | "status_code_default" | string;
+  last_tested_at: string;
+}
+

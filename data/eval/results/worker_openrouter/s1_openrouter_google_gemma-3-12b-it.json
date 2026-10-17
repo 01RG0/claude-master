@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:google/gemma-3-12b-it",
+  "route_id": "openrouter:google/gemma-3-12b-it",
+  "canonical_id": "google/gemma-3-12b-it",
+  "provider": "openrouter",
+  "provider_model_id": "google/gemma-3-12b-it",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "screening_tool_call_invalid",
+  "timestamp": 1792257579.9072676,
+  "duration_seconds": 4.04,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 371.78,
+      "output_text": "\n<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"gen-1792257581-t7gMCxFQlkB9ofSih4l2\",\"object\":\"chat.completion\",\"created\":1792257581,\"model\":\"google/gemma-3-12b-it\",\"provider\":\"NextBit\",\"system_fingerprint\":\"vllm-0.28.0-tp2-c8678658\",\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"stop\",\"native_finish_reason\":\"stop\",\"message\":{\"role\":\"assistant\",\"content\":\"\\n<answer>42</answer>\",\"refusal\":null,\"reasoning\":null}}],\"usage\":{\"prompt_tokens\":33,\"completion_tokens\":10,\"total_tokens\":43,\"cost\":0.00000315,\"is_byok\":"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 579.77,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": false,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257583-NNqdbAWVBT3MIFeJrM0b\",\"object\":\"chat.completion\",\"created\":1792257583,\"model\":\"google/gemma-3-12b-it\",\"provider\":\"DeepInfra\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":null,\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"chatcmpl-tool-a10aff2cebcd10b9\",\"function\":{\"name\":\"check_stat"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 333.27,
+      "tool_count": 1,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257585-mnzlF717xnnkehd7ceN0\",\"object\":\"chat.completion\",\"created\":1792257585,\"model\":\"google/gemma-3-12b-it\",\"provider\":\"DeepInfra\",\"system_fingerprint\":null,\"service_tier\":\"default\",\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":null,\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"chatcmpl-tool-837127e2bcb444d5\",\"function\":{\"name\":\"check_stat"
+    }
+  }
+}

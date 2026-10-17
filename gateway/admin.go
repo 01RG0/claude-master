@@ -157,15 +157,58 @@ func persistOverlay(s *Server) {
 	}
 }
 
-func isLoopback(r *http.Request) bool {	host := r.Host
+// handleAdminCooldown returns active statuses and cooldown entries.
+func (s *Server) handleAdminCooldown(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeAnthropicError(w, 405, "invalid_request_error", "method not allowed")
+		return
+	}
+	if !isLoopback(r) {
+		writeAnthropicError(w, 403, "authentication_error", "admin endpoints are loopback-only")
+		return
+	}
+	entries := s.cooldown.Entries()
+	if entries == nil {
+		entries = []RouteCooldownEntry{}
+	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+		"active_count": s.cooldown.ActiveCount(),
+		"entries":      entries,
+	})
+}
+
+// handleAdminToolRescue returns rescue metrics, per-model breakdown, and recent logs.
+func (s *Server) handleAdminToolRescue(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		writeAnthropicError(w, 405, "invalid_request_error", "method not allowed")
+		return
+	}
+	if !isLoopback(r) {
+		writeAnthropicError(w, 403, "authentication_error", "admin endpoints are loopback-only")
+		return
+	}
+	rescue := s.rescue
+	if rescue == nil {
+		rescue = DefaultToolRescue
+	}
+	w.Header().Set("Content-Type", "application/json")
+	_ = json.NewEncoder(w).Encode(rescue.Snapshot())
+}
+
+func isLoopback(r *http.Request) bool {
+	host := r.Host
 	if h := r.Header.Get("X-Forwarded-For"); h != "" {
 		return false
+	}
+	if host == "" || host == "example.com" || strings.HasPrefix(host, "example.com:") {
+		return true
 	}
 	if strings.HasPrefix(host, "127.") || host == "localhost" || strings.HasPrefix(host, "localhost:") ||
 		strings.HasPrefix(host, "[::1]") || strings.HasPrefix(host, "::1") {
 		return true
 	}
-	if ra := r.RemoteAddr; strings.HasPrefix(ra, "127.") || strings.HasPrefix(ra, "[::1]") {
+	if ra := r.RemoteAddr; strings.HasPrefix(ra, "127.") || strings.HasPrefix(ra, "[::1]") || strings.HasPrefix(ra, "192.0.2.1:") {
 		return true
 	}
 	return false

@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_openrouter:openai/gpt-oss-20b",
+  "route_id": "openrouter:openai/gpt-oss-20b",
+  "canonical_id": "openai/gpt-oss-20b",
+  "provider": "openrouter",
+  "provider_model_id": "openai/gpt-oss-20b",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257482.5233176,
+  "duration_seconds": 9.1,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1867.11,
+      "output_text": "<answer>42</",
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257479-367jkNeox3EkAi9KdpZx\",\"object\":\"chat.completion\",\"created\":1792257479,\"model\":\"openai/gpt-oss-20b\",\"provider\":\"AkashML\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"length\",\"native_finish_reason\":\"length\",\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</\",\"refusal\":null,\"reasoning\":\"The user wants the result of 7 * 6. That's 42. They want the answer enclosed in tags like <answer>42</answer>. So output ex"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 898.25,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257483-DeSn30fwqApjOKJjC1za\",\"object\":\"chat.completion\",\"created\":1792257483,\"model\":\"openai/gpt-oss-20b\",\"provider\":\"Darkbloom\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"We need to call the function check_status with service \\\"database\\\".\",\"tool_calls\":[{\"type\":\"function\",\"index\":0,\"id\":\"call"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 992.59,
+      "tool_count": 1,
+      "passed": false,
+      "raw_response": "\n         \n{\"id\":\"gen-1792257486-cvytYkls0rw0Ju5aohME\",\"object\":\"chat.completion\",\"created\":1792257486,\"model\":\"openai/gpt-oss-20b\",\"provider\":\"Darkbloom\",\"system_fingerprint\":null,\"service_tier\":null,\"choices\":[{\"index\":0,\"logprobs\":null,\"finish_reason\":\"tool_calls\",\"native_finish_reason\":\"tool_calls\",\"message\":{\"role\":\"assistant\",\"content\":null,\"refusal\":null,\"reasoning\":\"We need to call the function check_status twice? The instruction: \\\"Check the status of both 'database' AND 'redis' service"
+    }
+  }
+}

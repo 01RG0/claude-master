@@ -1,0 +1,40 @@
+{
+  "job_id": "s1_alibaba:qwen-flash",
+  "route_id": "alibaba:qwen-flash",
+  "canonical_id": "qwen/qwen-flash",
+  "provider": "alibaba",
+  "provider_model_id": "qwen-flash",
+  "stage": 1,
+  "state": "done",
+  "reason_code": null,
+  "timestamp": 1792257759.5263562,
+  "duration_seconds": 5.57,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 200,
+      "latency_ms": 1025.21,
+      "output_text": "<answer>42</answer>",
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-1263c14c-c040-987c-a773-445e9421f163\",\"object\":\"chat.completion\",\"created\":1792257760,\"model\":\"qwen-flash\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"<answer>42</answer>\"},\"finish_reason\":\"stop\",\"logprobs\":null}],\"usage\":{\"prompt_tokens\":32,\"total_tokens\":40,\"completion_tokens\":8,\"prompt_tokens_details\":{\"cached_tokens\":0}}}"
+    },
+    "single_tool_call": {
+      "test": "single_tool_call",
+      "http_status": 200,
+      "latency_ms": 1019.5,
+      "has_tool_call": true,
+      "tool_name": "check_status",
+      "schema_valid": true,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-492ad619-83d2-9ae4-b08d-ed513b9774a0\",\"object\":\"chat.completion\",\"created\":1792257762,\"model\":\"qwen-flash\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_601a4b87b29b4af99011f2\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\": \\\"database\\\"}\"},\"index\":0}]},\"finish_reason\":\"tool_calls\",\"logprobs\":null}],\"usage\":{\"prompt_tokens\":161,\"total_tokens\":180,\"completion_tokens\":19,\"prompt_tokens_details\":{\"cached_tok"
+    },
+    "parallel_tool_call": {
+      "test": "parallel_tool_call",
+      "http_status": 200,
+      "latency_ms": 1522.64,
+      "tool_count": 2,
+      "passed": true,
+      "raw_response": "{\"id\":\"chatcmpl-dcd2ac11-a7a3-9cab-bb21-c758d86c66f7\",\"object\":\"chat.completion\",\"created\":1792257764,\"model\":\"qwen-flash\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_94bb2e9a01634f98a99801\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\": \\\"database\\\"}\"},\"index\":0},{\"id\":\"call_4c3725a32b4e4971a3f024\",\"type\":\"function\",\"function\":{\"name\":\"check_status\",\"arguments\":\"{\\\"service\\\": \\\"redis\\\"}\"},\"index\":1}]},\"finish_reason\""
+    }
+  }
+}

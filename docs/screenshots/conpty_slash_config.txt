@@ -1,0 +1,33 @@
+Claude Code's fullscreen renderer didn't finish starting last time on this machine, so this launch is using the classic
+renderer. It will try fullscreen again next launch; /tui default keeps the classic renderer.
+[ u[>mpact;2m ▐▛███▛█   Claude Code v2.1.296
+  ⎿  Not▀enough messagesItoscompact.ing
+
+❯ /config            Config
+
+
+  ╭                                                                                                                  ╮
+  │ ⌕ Search settings…                                                                                               │
+❯ ╰                                                                                                                  ╯
+
+  ❯ Auto-compact                                true
+  SeContinueSautomaticallygat usage limitts     true
+❯ ⎿ SwitchUmodelsmwhenta messagedisaflaggedaude Switch automatically ›
+    Show tips                                   true
+    Claude-drafted feedback                     notify
+    Reduce motion                               false
+    Thinking mode                               true
+    Thinking can't be turned off for Opus 5.5
+    Prompt suggestions                          true
+    Session recap                               true
+    Rewind code (checkpoints)                   true
+    Dynamic workflows                           true
+    Ultracode keyword trigger                   true
+    Dynamic workflow size                       medium (default)
+    Artifacts                                   true
+    Verbose output                              false
+    Terminal progress bar                       true
+    Show turn duration                          true
+    ↓ 24 more
+
+  Type to filter · Enter/↓ to select · ↑ to tabs · Esc to clear

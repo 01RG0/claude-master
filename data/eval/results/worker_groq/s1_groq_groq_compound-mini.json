@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_groq:groq/compound-mini",
+  "route_id": "groq:groq/compound-mini",
+  "canonical_id": "groq/compound-mini",
+  "provider": "groq",
+  "provider_model_id": "groq/compound-mini",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_404",
+  "timestamp": 1792257505.283868,
+  "duration_seconds": 2.34,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 404,
+      "latency_ms": 335.74,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "{\"error\":{\"message\":\"The model `groq/compound-mini` does not exist or you do not have access to it.\",\"type\":\"invalid_request_error\",\"code\":\"model_not_found\"}}\n"
+    }
+  }
+}

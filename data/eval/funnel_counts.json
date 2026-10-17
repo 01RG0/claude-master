@@ -1,0 +1,10 @@
+{
+  "total_canonical_models": 1036,
+  "total_routes": 2046,
+  "excluded_not_chat_capable": 80,
+  "excluded_no_tool_calling": 15,
+  "excluded_alias_unknown_identity": 2,
+  "excluded_no_key_no_access": 0,
+  "privacy_filter_flagged": 1416,
+  "eligible_routes": 1949
+}

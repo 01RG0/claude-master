@@ -1,0 +1,22 @@
+{
+  "job_id": "s1_gemini:models/gemma-4-31b-it",
+  "route_id": "gemini:models/gemma-4-31b-it",
+  "canonical_id": "google/gemma-4-31b-instruct",
+  "provider": "gemini",
+  "provider_model_id": "models/gemma-4-31b-it",
+  "stage": 1,
+  "state": "failed",
+  "reason_code": "probe_error:http_500",
+  "timestamp": 1792257568.747939,
+  "duration_seconds": 4.45,
+  "probes": {
+    "instruction_following": {
+      "test": "instruction_following",
+      "http_status": 500,
+      "latency_ms": 447.74,
+      "output_text": "",
+      "passed": false,
+      "raw_response": "[{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"
+    }
+  }
+}
