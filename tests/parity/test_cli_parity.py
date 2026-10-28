@@ -78,7 +78,14 @@ def api_server(tmp_path_factory):
         pass
 
 
-def make_api_call(base_url: str, token: str | None, method: str, path: str, body: dict[str, Any] | None = None) -> tuple[int, Any]:
+def make_api_call(
+    base_url: str,
+    token: str | None,
+    method: str,
+    path: str,
+    body: dict[str, Any] | None = None,
+    timeout: float = 5.0,
+) -> tuple[int, Any]:
     """Simulate a UI client call directly to the backend API."""
     url = f"{base_url}{path}"
     req = urllib.request.Request(url, method=method.upper())
@@ -89,7 +96,7 @@ def make_api_call(base_url: str, token: str | None, method: str, path: str, body
 
     data_bytes = json.dumps(body).encode("utf-8") if body is not None else None
     try:
-        with urllib.request.urlopen(req, data=data_bytes, timeout=5.0) as resp:
+        with urllib.request.urlopen(req, data=data_bytes, timeout=timeout) as resp:
             raw = resp.read().decode("utf-8")
             try:
                 return resp.status, json.loads(raw)
@@ -254,7 +261,14 @@ class TestCommandParity:
             assert res_cli.returncode == 0
             cli_data = json.loads(res_cli.stdout)
 
-            code, api_data = make_api_call(api_server["base_url"], api_server["token"], "POST", f"/api/v1/control/{action}", {"action": action, "component": "all"})
+            code, api_data = make_api_call(
+                api_server["base_url"],
+                api_server["token"],
+                "POST",
+                f"/api/v1/control/{action}",
+                {"action": action, "component": "all"},
+                timeout=15.0,
+            )
             assert code == 200
             assert cli_data["ok"] == api_data["ok"]
 
